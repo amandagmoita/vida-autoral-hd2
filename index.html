@@ -17,7 +17,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -28,7 +27,6 @@
       overflow-x: hidden;
     }
 
-    /* ── BACKGROUND TEXTURE ── */
     body::before {
       content: '';
       position: fixed;
@@ -41,7 +39,6 @@
       z-index: 0;
     }
 
-    /* ── GEOMETRIC DECORATION ── */
     .geo-bg {
       position: fixed;
       top: 0; right: 0;
@@ -52,7 +49,6 @@
       opacity: 0.45;
     }
 
-    /* ── HEADER ── */
     header {
       position: relative;
       z-index: 10;
@@ -78,7 +74,6 @@
       text-transform: uppercase;
     }
 
-    /* ── MAIN LAYOUT ── */
     main {
       position: relative;
       z-index: 10;
@@ -92,7 +87,6 @@
       margin: 0 auto;
     }
 
-    /* ── LEFT SIDE ── */
     .left {
       padding-right: 4rem;
       animation: fadeInLeft 1s ease forwards;
@@ -105,7 +99,6 @@
     }
 
     .eyebrow {
-      font-family: 'Work Sans', sans-serif;
       font-weight: 200;
       font-size: 0.75rem;
       letter-spacing: 0.35em;
@@ -120,8 +113,7 @@
     .eyebrow::before {
       content: '';
       display: block;
-      width: 32px;
-      height: 1px;
+      width: 32px; height: 1px;
       background: var(--eucalyptus);
     }
 
@@ -181,7 +173,6 @@
       flex-shrink: 0;
     }
 
-    /* ── RIGHT SIDE — FORM ── */
     .right {
       animation: fadeInRight 1s ease 0.3s forwards;
       opacity: 0;
@@ -198,9 +189,7 @@
       border: 1px solid rgba(155,125,97,0.2);
       border-radius: 2px;
       padding: 2.5rem 2.75rem;
-      box-shadow:
-        0 4px 40px rgba(155,125,97,0.08),
-        0 1px 2px rgba(155,125,97,0.1);
+      box-shadow: 0 4px 40px rgba(155,125,97,0.08), 0 1px 2px rgba(155,125,97,0.1);
       position: relative;
       overflow: hidden;
     }
@@ -231,17 +220,9 @@
       margin-bottom: 2rem;
     }
 
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
+    .field-group { display: flex; flex-direction: column; gap: 1.25rem; }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
+    .field { display: flex; flex-direction: column; gap: 0.4rem; }
 
     label {
       font-size: 0.72rem;
@@ -266,10 +247,7 @@
     }
 
     input::placeholder { color: #c4b0a0; }
-
-    input:focus, select:focus {
-      border-bottom-color: var(--milky-coffee);
-    }
+    input:focus, select:focus { border-bottom-color: var(--milky-coffee); }
 
     select {
       cursor: pointer;
@@ -281,11 +259,7 @@
       padding-right: 1.5rem;
     }
 
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 
     .privacy-note {
       font-size: 0.72rem;
@@ -296,7 +270,18 @@
       margin-top: 0.5rem;
     }
 
-    /* ── SUBMIT BUTTON ── */
+    /* ── Error message ── */
+    .error-msg {
+      background: rgba(200,80,60,0.08);
+      border-left: 3px solid #c0392b;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #8b2c1a;
+      display: none;
+      margin-top: 0.5rem;
+      border-radius: 0 2px 2px 0;
+    }
+
     .btn-submit {
       width: 100%;
       margin-top: 1.5rem;
@@ -332,13 +317,23 @@
     }
 
     .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { pointer-events: none; opacity: 0.7; }
 
-    .btn-submit.loading {
-      pointer-events: none;
-      opacity: 0.7;
+    /* ── Loading spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
     }
 
-    /* ── SUCCESS STATE ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Success state ── */
     .success-state {
       display: none;
       text-align: center;
@@ -377,18 +372,15 @@
       font-weight: 300;
     }
 
-    /* ── DECORATIVE TRIANGLE ── */
     .deco-triangle {
       position: fixed;
-      bottom: 8vh;
-      left: 3rem;
+      bottom: 8vh; left: 3rem;
       opacity: 0.07;
       z-index: 0;
     }
 
     .deco-triangle svg { width: 200px; height: 200px; }
 
-    /* ── FOOTER ── */
     footer {
       position: relative;
       z-index: 10;
@@ -400,22 +392,12 @@
       font-weight: 200;
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       header { padding: 1.5rem 2rem; }
-
-      main {
-        grid-template-columns: 1fr;
-        padding: 1.5rem 1.75rem 3rem;
-        gap: 3rem;
-      }
-
+      main { grid-template-columns: 1fr; padding: 1.5rem 1.75rem 3rem; gap: 3rem; }
       .left { padding-right: 0; }
-
       .geo-bg { display: none; }
-
       h1 { font-size: 2rem; }
-
       .field-row { grid-template-columns: 1fr; }
     }
   </style>
@@ -437,16 +419,12 @@
   </header>
 
   <main>
-    <!-- LEFT: Copy -->
     <div class="left">
       <p class="eyebrow">Autoconhecimento</p>
-
       <h1>Descubra o seu<br><span>Desenho Humano</span></h1>
-
       <p class="subtitle">
         Seu mapa de Desenho Humano revela como você foi projetada para tomar decisões, usar sua energia e viver de forma autêntica — no trabalho, nas finanças e nos relacionamentos.
       </p>
-
       <ul class="benefits">
         <li>Descubra seu Tipo, Estratégia e Autoridade</li>
         <li>Entenda seus canais e centros definidos</li>
@@ -455,11 +433,9 @@
       </ul>
     </div>
 
-    <!-- RIGHT: Form -->
     <div class="right">
       <div class="form-card">
 
-        <!-- Form state -->
         <div id="form-state">
           <p class="form-title">Calcular Meu Mapa</p>
           <p class="form-subtitle">preencha seus dados de nascimento</p>
@@ -488,12 +464,13 @@
               </div>
               <div class="field">
                 <label for="pais">País</label>
-                <select id="pais" name="pais" required onchange="atualizarCidades()">
+                <select id="pais" name="pais" required>
                   <option value="" disabled selected>Selecione</option>
-                  <option value="BR">Brasil</option>
-                  <option value="PT">Portugal</option>
-                  <option value="US">Estados Unidos</option>
-                  <option value="OTHER">Outro</option>
+                  <option value="Brasil">Brasil</option>
+                  <option value="Portugal">Portugal</option>
+                  <option value="Estados Unidos">Estados Unidos</option>
+                  <option value="Argentina">Argentina</option>
+                  <option value="outro">Outro</option>
                 </select>
               </div>
             </div>
@@ -502,6 +479,8 @@
               <label for="cidade">Cidade de nascimento</label>
               <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo, SP" required />
             </div>
+
+            <div class="error-msg" id="error-msg"></div>
 
             <p class="privacy-note">
               Seus dados são protegidos e usados apenas para calcular e enviar seu mapa. Sem spam.
@@ -514,11 +493,10 @@
           </form>
         </div>
 
-        <!-- Success state -->
         <div class="success-state" id="success-state">
           <div class="success-icon">◇</div>
           <p class="success-title">Mapa Calculado!</p>
-          <p class="success-text">
+          <p class="success-text" id="success-text">
             Seu mapa de Desenho Humano está a caminho.<br>
             Verifique sua caixa de entrada em breve.<br><br>
             <em style="color: var(--roasted-peach); font-style: normal;">Bem-vinda ao seu autoconhecimento.</em>
@@ -532,48 +510,59 @@
   <footer>© Vida Autoral — todos os direitos reservados</footer>
 
   <script>
+    // ← IMPORTANTE: quando você republicar o backend, cole aqui a URL do Vercel
+    const API_URL = '/api/calcular-mapa';
+
     async function handleSubmit(e) {
       e.preventDefault();
 
-      const btn = document.getElementById('btn-submit');
+      const btn     = document.getElementById('btn-submit');
       const btnText = document.getElementById('btn-text');
-      btn.classList.add('loading');
-      btnText.textContent = 'Calculando...';
+      const errorEl = document.getElementById('error-msg');
+
+      // Reset
+      errorEl.style.display = 'none';
+      btn.disabled = true;
+      btnText.innerHTML = '<span class="spinner"></span> Calculando...';
 
       const dados = {
-        nome:    document.getElementById('nome').value,
-        email:   document.getElementById('email').value,
-        data:    document.getElementById('data').value,
-        hora:    document.getElementById('hora').value,
-        pais:    document.getElementById('pais').value,
-        cidade:  document.getElementById('cidade').value,
+        nome:   document.getElementById('nome').value,
+        email:  document.getElementById('email').value,
+        data:   document.getElementById('data').value,
+        hora:   document.getElementById('hora').value,
+        pais:   document.getElementById('pais').value,
+        cidade: document.getElementById('cidade').value,
       };
 
       try {
-        // ────────────────────────────────────────────────────────────────
-        // AQUI VAI A CHAMADA PARA SUA API BACKEND
-        // Quando você tiver o backend configurado, substitua a URL abaixo:
-        //
-        // const res = await fetch('https://SUA-URL.vercel.app/api/calcular-mapa', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(dados)
-        // });
-        //
-        // Por enquanto, simulamos um sucesso após 2 segundos:
-        // ────────────────────────────────────────────────────────────────
-        await new Promise(r => setTimeout(r, 2000));
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados),
+        });
 
-        // Mostrar tela de sucesso
+        const json = await res.json();
+
+        if (!res.ok || json.erro) {
+          throw new Error(json.erro || 'Erro desconhecido.');
+        }
+
+        // Sucesso
         document.getElementById('form-state').style.display = 'none';
         const successEl = document.getElementById('success-state');
+        document.getElementById('success-text').innerHTML = `
+          Seu mapa de Desenho Humano foi enviado para<br>
+          <strong style="color:var(--milky-coffee)">${dados.email}</strong><br><br>
+          Verifique sua caixa de entrada (e o spam, por precaução).<br><br>
+          <em style="color: var(--roasted-peach); font-style: normal;">Bem-vinda ao seu autoconhecimento.</em>
+        `;
         successEl.style.display = 'block';
 
       } catch (err) {
-        btnText.textContent = 'Erro — tente novamente';
-        btn.classList.remove('loading');
-        btn.style.background = '#c0392b';
-        console.error(err);
+        errorEl.textContent = err.message || 'Ocorreu um erro. Tente novamente.';
+        errorEl.style.display = 'block';
+        btnText.textContent = 'Calcular Meu Mapa ◇';
+        btn.disabled = false;
       }
     }
   </script>
