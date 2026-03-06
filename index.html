@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa de Desenho Humano — Vida Autoral</title>
+  <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Work+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --milky-coffee: #9B7D61;
+      --roasted-peach: #DAA38F;
+      --whole-wheat: #E9D7C0;
+      --eucalyptus: #92ADA4;
+      --cream: #FED8A6;
+      --dark: #1a1410;
+      --text: #3a2e25;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 300;
+      background-color: #f5ede2;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(155,125,97,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 90% 80%, rgba(218,163,143,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(146,173,164,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── GEOMETRIC DECORATION ── */
+    .geo-bg {
+      position: fixed;
+      top: 0; right: 0;
+      width: 55vw; height: 100vh;
+      background: linear-gradient(135deg, var(--whole-wheat) 0%, rgba(218,163,143,0.3) 100%);
+      clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%);
+      z-index: 0;
+      opacity: 0.45;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-mark {
+      width: 32px; height: 32px;
+      border: 1.5px solid var(--milky-coffee);
+      clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+      transform: rotate(180deg);
+      background: transparent;
+    }
+
+    .logo-text {
+      font-family: 'Aboreto', cursive;
+      font-size: 0.9rem;
+      letter-spacing: 0.25em;
+      color: var(--milky-coffee);
+      text-transform: uppercase;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      position: relative;
+      z-index: 10;
+      min-height: 90vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 0;
+      padding: 2rem 4rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── LEFT SIDE ── */
+    .left {
+      padding-right: 4rem;
+      animation: fadeInLeft 1s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .eyebrow {
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 200;
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--eucalyptus);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--eucalyptus);
+    }
+
+    h1 {
+      font-family: 'Aboreto', cursive;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.04em;
+    }
+
+    h1 span {
+      color: var(--milky-coffee);
+      position: relative;
+      display: inline-block;
+    }
+
+    h1 span::after {
+      content: '';
+      position: absolute;
+      bottom: 2px; left: 0;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, var(--roasted-peach), transparent);
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #6b5744;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+      max-width: 440px;
+    }
+
+    .benefits {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .benefits li {
+      font-size: 0.9rem;
+      color: #7a6354;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .benefits li::before {
+      content: '◇';
+      color: var(--roasted-peach);
+      font-size: 0.65rem;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── RIGHT SIDE — FORM ── */
+    .right {
+      animation: fadeInRight 1s ease 0.3s forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .form-card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(155,125,97,0.2);
+      border-radius: 2px;
+      padding: 2.5rem 2.75rem;
+      box-shadow:
+        0 4px 40px rgba(155,125,97,0.08),
+        0 1px 2px rgba(155,125,97,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--milky-coffee), var(--roasted-peach), var(--eucalyptus));
+    }
+
+    .form-title {
+      font-family: 'Aboreto', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      color: var(--milky-coffee);
+      margin-bottom: 0.35rem;
+      text-align: center;
+    }
+
+    .form-subtitle {
+      font-size: 0.8rem;
+      color: #a08070;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--milky-coffee);
+    }
+
+    input, select {
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.95rem;
+      border: none;
+      border-bottom: 1px solid rgba(155,125,97,0.3);
+      background: transparent;
+      padding: 0.6rem 0;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s ease;
+      width: 100%;
+    }
+
+    input::placeholder { color: #c4b0a0; }
+
+    input:focus, select:focus {
+      border-bottom-color: var(--milky-coffee);
+    }
+
+    select {
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239B7D61' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 4px center;
+      padding-right: 1.5rem;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .privacy-note {
+      font-size: 0.72rem;
+      color: #b0a090;
+      font-weight: 200;
+      text-align: center;
+      line-height: 1.6;
+      margin-top: 0.5rem;
+    }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-submit {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--milky-coffee);
+      color: white;
+      font-family: 'Aboreto', cursive;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--roasted-peach), var(--milky-coffee));
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .btn-submit:hover::before { opacity: 1; }
+    .btn-submit span { position: relative; z-index: 1; }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(155,125,97,0.3);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* ── SUCCESS STATE ── */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-icon {
+      width: 60px; height: 60px;
+      border: 1px solid var(--eucalyptus);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    .success-title {
+      font-family: 'Aboreto', cursive;
+      font-size: 1.3rem;
+      color: var(--milky-coffee);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+
+    .success-text {
+      font-size: 0.9rem;
+      color: #7a6354;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── DECORATIVE TRIANGLE ── */
+    .deco-triangle {
+      position: fixed;
+      bottom: 8vh;
+      left: 3rem;
+      opacity: 0.07;
+      z-index: 0;
+    }
+
+    .deco-triangle svg { width: 200px; height: 200px; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: #b0a090;
+      font-weight: 200;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      header { padding: 1.5rem 2rem; }
+
+      main {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1.75rem 3rem;
+        gap: 3rem;
+      }
+
+      .left { padding-right: 0; }
+
+      .geo-bg { display: none; }
+
+      h1 { font-size: 2rem; }
+
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="geo-bg"></div>
+
+  <div class="deco-triangle">
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="100,10 190,190 10,190" stroke="#9B7D61" stroke-width="1.5" fill="none"/>
+      <polygon points="100,40 165,175 35,175" stroke="#9B7D61" stroke-width="0.75" fill="none"/>
+    </svg>
+  </div>
+
+  <header>
+    <div class="logo-mark"></div>
+    <span class="logo-text">Vida Autoral</span>
+  </header>
+
+  <main>
+    <!-- LEFT: Copy -->
+    <div class="left">
+      <p class="eyebrow">Autoconhecimento</p>
+
+      <h1>Descubra o seu<br><span>Desenho Humano</span></h1>
+
+      <p class="subtitle">
+        Seu mapa de Desenho Humano revela como você foi projetada para tomar decisões, usar sua energia e viver de forma autêntica — no trabalho, nas finanças e nos relacionamentos.
+      </p>
+
+      <ul class="benefits">
+        <li>Descubra seu Tipo, Estratégia e Autoridade</li>
+        <li>Entenda seus canais e centros definidos</li>
+        <li>Receba seu mapa completo em PDF por email</li>
+        <li>Gratuito — sem cartão de crédito</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT: Form -->
+    <div class="right">
+      <div class="form-card">
+
+        <!-- Form state -->
+        <div id="form-state">
+          <p class="form-title">Calcular Meu Mapa</p>
+          <p class="form-subtitle">preencha seus dados de nascimento</p>
+
+          <form class="field-group" id="hd-form" onsubmit="handleSubmit(event)">
+
+            <div class="field">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" name="nome" placeholder="Como prefere ser chamada" required />
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="Seu melhor email" required />
+            </div>
+
+            <div class="field">
+              <label for="data">Data de nascimento</label>
+              <input type="date" id="data" name="data" required />
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="hora">Hora de nascimento</label>
+                <input type="time" id="hora" name="hora" required />
+              </div>
+              <div class="field">
+                <label for="pais">País</label>
+                <select id="pais" name="pais" required onchange="atualizarCidades()">
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="BR">Brasil</option>
+                  <option value="PT">Portugal</option>
+                  <option value="US">Estados Unidos</option>
+                  <option value="OTHER">Outro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="cidade">Cidade de nascimento</label>
+              <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo, SP" required />
+            </div>
+
+            <p class="privacy-note">
+              Seus dados são protegidos e usados apenas para calcular e enviar seu mapa. Sem spam.
+            </p>
+
+            <button type="submit" class="btn-submit" id="btn-submit">
+              <span id="btn-text">Calcular Meu Mapa ◇</span>
+            </button>
+
+          </form>
+        </div>
+
+        <!-- Success state -->
+        <div class="success-state" id="success-state">
+          <div class="success-icon">◇</div>
+          <p class="success-title">Mapa Calculado!</p>
+          <p class="success-text">
+            Seu mapa de Desenho Humano está a caminho.<br>
+            Verifique sua caixa de entrada em breve.<br><br>
+            <em style="color: var(--roasted-peach); font-style: normal;">Bem-vinda ao seu autoconhecimento.</em>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>© Vida Autoral — todos os direitos reservados</footer>
+
+  <script>
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-text');
+      btn.classList.add('loading');
+      btnText.textContent = 'Calculando...';
+
+      const dados = {
+        nome:    document.getElementById('nome').value,
+        email:   document.getElementById('email').value,
+        data:    document.getElementById('data').value,
+        hora:    document.getElementById('hora').value,
+        pais:    document.getElementById('pais').value,
+        cidade:  document.getElementById('cidade').value,
+      };
+
+      try {
+        // ────────────────────────────────────────────────────────────────
+        // AQUI VAI A CHAMADA PARA SUA API BACKEND
+        // Quando você tiver o backend configurado, substitua a URL abaixo:
+        //
+        // const res = await fetch('https://SUA-URL.vercel.app/api/calcular-mapa', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify(dados)
+        // });
+        //
+        // Por enquanto, simulamos um sucesso após 2 segundos:
+        // ────────────────────────────────────────────────────────────────
+        await new Promise(r => setTimeout(r, 2000));
+
+        // Mostrar tela de sucesso
+        document.getElementById('form-state').style.display = 'none';
+        const successEl = document.getElementById('success-state');
+        successEl.style.display = 'block';
+
+      } catch (err) {
+        btnText.textContent = 'Erro — tente novamente';
+        btn.classList.remove('loading');
+        btn.style.background = '#c0392b';
+        console.error(err);
+      }
+    }
+  </script>
+
+</body>
+</html>
