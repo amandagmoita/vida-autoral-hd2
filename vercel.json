@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "api/submit.mjs": {
+    "api/submit.js": {
       "maxDuration": 30,
       "includeFiles": "node_modules/@resvg/resvg-wasm/**,fonts/DejaVuSans.ttf"
     }
