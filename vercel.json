@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/submit.js": {
-      "includeFiles": "node_modules/@resvg/resvg-wasm/**"
+      "includeFiles": "node_modules/@resvg/resvg-wasm/**,node_modules/dejavu-fonts-ttf/ttf/DejaVuSans.ttf"
     }
   },
   "routes": [
