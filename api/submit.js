@@ -59,29 +59,29 @@ const TRADUCOES = {
 // Autoridades
 ‘Sacral’:             ‘Sacral’,
 ‘Emotional’:          ‘Emocional’,
-‘Splenic’:            ‘Esplênica’,
+‘Splenic’:            ‘Esplen?tica’,
 ‘Ego’:                ‘Ego’,
-‘Self-Projected’:     ‘Projeção do Eu’,
+‘Self-Projected’:     ‘Projecao do Eu’,
 ‘Mental’:             ‘Mental’,
 ‘No Authority’:       ‘Sem Autoridade Interna’,
 ‘Lunar’:              ‘Lunar’,
 ‘Ego Manifestor’:     ‘Ego (Manifestador)’,
 // Definicoes
-‘Single Definition’:      ‘Definição Única’,
-‘Split Definition’:       ‘Definição Dividida’,
-‘Triple Split Definition’:‘Tripla Divisão’,
-‘Quadruple Split’:        ‘Quádrupla Divisão’,
-‘No Definition’:          ‘Sem Definição’,
+‘Single Definition’:      ‘Definicao Unica’,
+‘Split Definition’:       ‘Definicao Dividida’,
+‘Triple Split Definition’:‘Tripla Divisao’,
+‘Quadruple Split’:        ‘Quadrupla Divisao’,
+‘No Definition’:          ‘Sem Definicao’,
 // Assinaturas
-‘Satisfaction’: ‘Satisfação’,
+‘Satisfaction’: ‘Satisfacao’,
 ‘Success’:      ‘Sucesso’,
 ‘Peace’:        ‘Paz’,
 ‘Surprise’:     ‘Surpresa’,
 // Temas Nao-Self
-‘Frustration’:   ‘Frustração’,
+‘Frustration’:   ‘Frustracao’,
 ‘Bitterness’:    ‘Amargura’,
 ‘Anger’:         ‘Raiva’,
-‘Disappointment’:‘Decepção’,
+‘Disappointment’:‘Decepcao’,
 };
 
 function traduzir(valor) {
@@ -95,7 +95,7 @@ const url = `${BODYGRAPH_BASE}/v210502/locations?api_key=${BODYGRAPH_API_KEY}&qu
 const res  = await fetch(url);
 if (!res.ok) throw new Error(`Locations API error: ${res.status}`);
 const data = await res.json();
-if (!data?.length) throw new Error(`Cidade não encontrada: ${city}`);
+if (!data?.length) throw new Error(`Cidade nao encontrada: ${city}`);
 return data[0].timezone;
 }
 
@@ -300,9 +300,9 @@ const PILL_TOTAL = AREA_H / 13; // altura alocada por linha de planeta
 
 // Cores das pills
 const designBg   = rgb(0.780, 0.510, 0.470); // salmon mais escuro - contraste para branco
-const designText = rgb(0.420, 0.180, 0.149); // #6B2E26 (cabeçalho)
+const designText = rgb(0.420, 0.180, 0.149); // #6B2E26 (cabecalho)
 const persBg     = rgb(0.490, 0.659, 0.627); // mint mais escuro - contraste para branco
-const persText   = rgb(0.129, 0.302, 0.278); // #214D47 (cabeçalho)
+const persText   = rgb(0.129, 0.302, 0.278); // #214D47 (cabecalho)
 
 // – Labels de cabecalho –
 page.drawText(‘DESIGN’,      { x: 3,                   y: height - 25, size: 6.5, color: designText });
@@ -368,9 +368,9 @@ imgY = AREA_BOT  + (AREA_H  - dims.height) / 2;
 imgW = dims.width;
 imgH = dims.height;
 page.drawImage(pngImg, { x: imgX, y: imgY, width: imgW, height: imgH });
-console.log(’[PDF] Gráfico embedado [OK] dims:’, Math.round(imgW), ‘x’, Math.round(imgH));
+console.log(’[PDF] Grafico embedado [OK] dims:’, Math.round(imgW), ‘x’, Math.round(imgH));
 } catch (e) {
-console.error(’[PDF] Erro gráfico:’, e.message);
+console.error(’[PDF] Erro grafico:’, e.message);
 }
 }
 
@@ -380,8 +380,8 @@ const headY   = imgY + imgH * 0.88;
 const rootY   = imgY + imgH * 0.08;
 
 // X: centro de cada coluna de planetas
-// Coluna DESIGN  : x = 0 até COL_W      -> centro = COL_W/2
-// Coluna PERS    : x = DIVIDER-COL_W até DIVIDER -> centro = DIVIDER - COL_W/2
+// Coluna DESIGN  : x = 0 ate COL_W -> centro = COL_W/2
+// Coluna PERS    : x = DIVIDER-COL_W ate DIVIDER -> centro = DIVIDER - COL_W/2
 const leftColCenter  = COL_W / 2;                // ~36
 const rightColCenter = DIVIDER - COL_W / 2;      // ~454
 
@@ -413,7 +413,7 @@ thickness: 1, color: cinzaMedio,
 
 // – Painel direito –
 const px = 500;
-const pw = 330; // largura útil do painel
+const pw = 330; // largura util do painel
 
 // Cabecalho do painel
 page.drawRectangle({ x: 490, y: height - 36, width: width - 490, height: 36, color: coffee });
@@ -434,14 +434,14 @@ page.drawLine({ start: { x: px, y: height - 60 }, end: { x: px + pw, y: height -
 
 // – 8 propriedades em cards compactos –
 const propriedades = [
-[‘Tipo Energético’,    traduzir(props?.Type?.id)],
-[‘Estratégia’,         traduzir(props?.Strategy?.id)],
+[‘Tipo Energetico’,    traduzir(props?.Type?.id)],
+[‘Estrategia’,         traduzir(props?.Strategy?.id)],
 [‘Autoridade Interna’, traduzir(props?.InnerAuthority?.id)],
 [‘Perfil’,             props?.Profile?.id || ‘-’],
-[‘Definição’,          traduzir(props?.Definition?.id)],
+[‘Definicao’,          traduzir(props?.Definition?.id)],
 [‘Assinatura’,         traduzir(props?.Signature?.id)],
-[‘Tema Não-Self’,      traduzir(props?.NotSelfTheme?.id)],
-[‘Cruz de Encarnação’, props?.IncarnationCross?.id || ‘-’],
+[‘Tema Nao-Self’,      traduzir(props?.NotSelfTheme?.id)],
+[‘Cruz de Encarnacao’, props?.IncarnationCross?.id || ‘-’],
 ];
 
 // Duas colunas de 4 para caber melhor
@@ -476,7 +476,7 @@ if (v.length > 20) {
 const secY = startY - 4 * (cardH + 4) - 2;
 
 page.drawLine({ start: { x: px, y: secY }, end: { x: px + pw, y: secY }, thickness: 0.5, color: cinzaMedio });
-page.drawText(‘PORTÕES ATIVADOS’, { x: px, y: secY - 12, size: 6, color: coffee });
+page.drawText(‘PORTOES ATIVADOS’, { x: px, y: secY - 12, size: 6, color: coffee });
 
 if (portoes.length > 0) {
 // Desenha cada portao como um badge pequeno
@@ -490,7 +490,7 @@ page.drawText(label, { x: bx + (bw - label.length * 4.5) / 2, y: by + 1, size: 7
 bx += bw + 3;
 });
 } else {
-page.drawText(‘Dados não disponíveis’, { x: px, y: secY - 26, size: 7, color: textMedio });
+page.drawText(‘Dados nao disponiveis’, { x: px, y: secY - 26, size: 7, color: textMedio });
 }
 
 // – Canais ativados –
@@ -511,7 +511,7 @@ page.drawText(label, { x: cx + 5, y: cy + 1, size: 7, color: textEscuro });
 cx += cw + 4;
 });
 } else {
-page.drawText(‘Dados não disponíveis’, { x: px, y: canaisY - 26, size: 7, color: textMedio });
+page.drawText(‘Dados nao disponiveis’, { x: px, y: canaisY - 26, size: 7, color: textMedio });
 }
 
 // – Rodape –
@@ -547,11 +547,11 @@ return emailBase + `<div class="wrap">
     <h1>Vida Autoral</h1>
   </div>
   <div class="body">
-    <p>Olá, <strong>${nome}</strong>,</p>
-    <p>Recebemos seus dados com sucesso! Seu mapa de Desenho Humano está sendo gerado - em instantes você receberá o PDF personalizado.</p>
+    <p>Ola, <strong>${nome}</strong>,</p>
+    <p>Recebemos seus dados com sucesso! Seu mapa de Desenho Humano esta sendo gerado - em instantes voce recebera o PDF personalizado.</p>
     <div class="info"><p>&#128197; <strong>${data}</strong> &nbsp;.&nbsp; &#128336; <strong>${hora}</strong><br/>&#128205; ${local}</p></div>
-    <div class="badge">* &nbsp; Seu PDF está a caminho</div>
-    <p>Se não chegar em até 5 minutos, verifique a pasta de spam.</p>
+    <div class="badge">* &nbsp; Seu PDF esta a caminho</div>
+    <p>Se nao chegar em ate 5 minutos, verifique a pasta de spam.</p>
     <p style="font-size:.83rem;color:#9b836f;">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>
   </div>
   <div class="footer"><p>(c) 2025 Vida Autoral</p></div>
@@ -566,10 +566,10 @@ return emailBase + `<div class="wrap">
     <h1>Vida Autoral</h1>
   </div>
   <div class="body">
-    <p>Olá, <strong>${nome}</strong>,</p>
-    <p>Seu mapa de Desenho Humano está pronto! &#127881; O PDF personalizado está em anexo.</p>
+    <p>Ola, <strong>${nome}</strong>,</p>
+    <p>Seu mapa de Desenho Humano est? pronto! &#127881; O PDF personalizado est? em anexo.</p>
     <div class="info"><p>&#128197; <strong>${data}</strong> &nbsp;.&nbsp; &#128336; <strong>${hora}</strong><br/>&#128205; ${local}</p></div>
-    <p>O PDF inclui seu gráfico completo com Tipo, Estratégia, Autoridade, Perfil, Centros, Canais e Portões ativados.</p>
+    <p>O PDF inclui seu gr?fico completo com Tipo, Estrategia, Autoridade, Perfil, Centros, Canais e Port?es ativados.</p>
     <p style="font-size:.83rem;color:#9b836f;">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>
   </div>
   <div class="footer"><p>(c) 2025 Vida Autoral</p></div>
@@ -594,7 +594,7 @@ return res.json();
 // Vercel nao parseia req.body automaticamente em funcoes ESM (export default).
 // E necessario ler o stream e fazer JSON.parse manualmente.
 async function parseBody(req) {
-if (req.body && typeof req.body === ‘object’) return req.body; // já parseado (dev local)
+if (req.body && typeof req.body === ‘object’) return req.body; // j? parseado (dev local)
 return new Promise((resolve, reject) => {
 let raw = ‘’;
 req.on(‘data’, chunk => { raw += chunk; });
@@ -613,21 +613,21 @@ res.setHeader(‘Access-Control-Allow-Origin’, ‘*’);
 const body = await parseBody(req);
 const { nome, email, data, hora, local } = body;
 if (!nome || !email || !data || !hora || !local)
-return res.status(400).json({ error: ‘Todos os campos são obrigatórios.’ });
+return res.status(400).json({ error: ‘Todos os campos s?o obrigat?rios.’ });
 
 try {
 console.log(`[1] Iniciando para ${email}`);
 
 ```
 await sendEmail({ to: email, subject: `${nome}, recebemos seus dados *`, html: buildConfirmationEmail({ nome, data, hora, local }) });
-console.log(`[2] Confirmação enviada`);
+console.log(`[2] Confirma??o enviada`);
 
 const timezone = await resolveTimezone(local);
 console.log(`[3] Timezone: ${timezone}`);
 
 const hdData = await generateHDChart(data, hora, timezone);
 const { portoes, canais } = extrairPortoesCanais(hdData);
-console.log(`[4] Tipo: ${hdData?.Properties?.Type?.id} | SVG: ${hdData?.SVG?.length || 0} chars | Portões: ${portoes.length} | Canais: ${canais.length}`);
+console.log(`[4] Tipo: ${hdData?.Properties?.Type?.id} | SVG: ${hdData?.SVG?.length || 0} chars | Port?es: ${portoes.length} | Canais: ${canais.length}`);
 console.log(`[4] hdData keys: ${Object.keys(hdData).join(", ")}`);
 const hdDebug = Object.fromEntries(Object.entries(hdData).filter(([k]) => k !== "SVG"));
 console.log(`[4] FULL: ${JSON.stringify(hdDebug).slice(0, 3000)}`);
@@ -638,7 +638,7 @@ console.log(`[5] PDF: ${pdfBytes.length} bytes`);
 
 await sendEmail({
   to: email,
-  subject: `${nome}, seu mapa de Desenho Humano está pronto *`,
+  subject: `${nome}, seu mapa de Desenho Humano est? pronto *`,
   html: buildPdfEmail({ nome, data, hora, local }),
   attachments: [{ filename: `mapa-desenho-humano-${nome.split(' ')[0].toLowerCase()}.pdf`, content: pdfBase64 }],
 });
