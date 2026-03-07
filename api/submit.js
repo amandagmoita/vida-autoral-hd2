@@ -1,9 +1,3 @@
-/**
- * api/submit.js — Vercel Serverless Function
- * SVG→PNG via @resvg/resvg-js (WebAssembly, funciona na Vercel)
- * PNG embutido no PDF via pdf-lib
- */
-
 import { Resvg } from '@resvg/resvg-js';
 import { PDFDocument, rgb } from 'pdf-lib';
 
@@ -16,7 +10,6 @@ const REPLY_TO          = process.env.REPLY_TO;
 const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
 const BODYGRAPH_BASE    = 'https://api.bodygraphchart.com';
 
-// ── 1. Timezone ───────────────────────────────────────────────────────────────
 async function resolveTimezone(city) {
   const url = `${BODYGRAPH_BASE}/v210502/locations?api_key=${BODYGRAPH_API_KEY}&query=${encodeURIComponent(city)}`;
   const res  = await fetch(url);
@@ -26,31 +19,43 @@ async function resolveTimezone(city) {
   return data[0].timezone;
 }
 
-// ── 2. Dados HD + SVG ─────────────────────────────────────────────────────────
 async function generateHDChart(date, hora, timezone) {
   const datetime = `${date} ${hora}`;
-  const url = `${BODYGRAPH_BASE}/v221006/hd-data?api_key=${BODYGRAPH_API_KEY}&date=${encodeURIComponent(datetime)}&timezone=${encodeURIComponent(timezone)}&design=default`;
+  const url = `${BODYGRAPH_BASE}/v221006/hd-data?api_key=${BODYGRAPH_API_KEY}&date=${encodeURIComponent(datetime)}&timezone=${encodeURIComponent(timezone)}&design=Leo`;
   const res  = await fetch(url);
   if (!res.ok) throw new Error(`HD Data API error: ${res.status}`);
   return await res.json();
 }
 
-// ── 3. SVG → PNG via resvg-js (WebAssembly, sem binários nativos) ─────────────
 function svgToPng(svgString) {
-  const resvg = new Resvg(svgString, {
+  let svg = svgString;
+
+  // Garante xmlns — obrigatório para o resvg processar
+  if (!svg.includes('xmlns=')) {
+    svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  // Remove hrefs externos que resvg não consegue resolver em serverless
+  svg = svg.replace(/xlink:href="https?:\/\/[^"]*"/g, 'xlink:href=""');
+  svg = svg.replace(/ href="https?:\/\/[^"]*"/g, '');
+
+  // Substitui elementos <image> com src/href externo por elemento vazio
+  svg = svg.replace(/<image[^>]*(https?:\/\/)[^>]*\/>/g, '<g/>');
+  svg = svg.replace(/<image[^>]*(https?:\/\/)[^/]*>[^<]*<\/image>/g, '<g/>');
+
+  const resvg = new Resvg(svg, {
     fitTo: { mode: 'width', value: 700 },
-    background: 'rgba(0,0,0,0)'
+    background: '#1a1410',
   });
-  return resvg.render().asPng(); // Buffer
+  return resvg.render().asPng();
 }
 
-// ── 4. Monta PDF: gráfico à esquerda + painel de dados à direita ─────────────
 async function buildPdf(nome, hdData) {
   const props = hdData.Properties || {};
   const svgString = hdData.SVG;
 
   const pdfDoc = await PDFDocument.create();
-  const page   = pdfDoc.addPage([841.89, 595.28]); // A4 paisagem
+  const page   = pdfDoc.addPage([841.89, 595.28]);
   const { width, height } = page.getSize();
 
   const cream  = rgb(0.914, 0.847, 0.753);
@@ -59,49 +64,47 @@ async function buildPdf(nome, hdData) {
   const dark   = rgb(0.102, 0.078, 0.063);
   const mid    = rgb(0.155, 0.118, 0.094);
 
-  // Fundo
   page.drawRectangle({ x: 0, y: 0, width, height, color: dark });
 
-  // ── Gráfico (lado esquerdo) ──
+  // Gráfico lado esquerdo
   if (svgString) {
     try {
-      const pngBuf  = svgToPng(svgString);
-      const pngImg  = await pdfDoc.embedPng(pngBuf);
-      const dims    = pngImg.scaleToFit(460, height - 40);
+      const pngBuf = svgToPng(svgString);
+      console.log('[PDF] PNG gerado:', pngBuf.length, 'bytes');
+      const pngImg = await pdfDoc.embedPng(pngBuf);
+      const dims   = pngImg.scaleToFit(460, height - 40);
       page.drawImage(pngImg, {
         x: 20,
         y: (height - dims.height) / 2,
         width:  dims.width,
         height: dims.height,
       });
+      console.log('[PDF] Gráfico embedado com sucesso');
     } catch (e) {
-      console.error('[PDF] Erro ao embedar gráfico:', e.message);
+      console.error('[PDF] Erro ao processar SVG:', e.message);
     }
+  } else {
+    console.warn('[PDF] SVG ausente na resposta da API');
   }
 
-  // Divisória vertical
-  page.drawLine({
-    start: { x: 490, y: 30 }, end: { x: 490, y: height - 30 },
-    thickness: 0.4, color: coffee
-  });
+  // Divisória
+  page.drawLine({ start: { x: 490, y: 30 }, end: { x: 490, y: height - 30 }, thickness: 0.4, color: coffee });
 
-  // ── Painel direito ──
+  // Painel direito
   const px = 505;
 
-  // Logo / triângulo
+  // Triângulo logo
   page.drawLine({ start: { x: 668, y: height - 18 }, end: { x: 682, y: height - 36 }, thickness: 1, color: coffee });
   page.drawLine({ start: { x: 682, y: height - 36 }, end: { x: 654, y: height - 36 }, thickness: 1, color: coffee });
   page.drawLine({ start: { x: 654, y: height - 36 }, end: { x: 668, y: height - 18 }, thickness: 1, color: coffee });
 
-  page.drawText('VIDA AUTORAL',              { x: 530, y: height - 24, size: 9,  color: coffee });
-  page.drawText('MAPA DO DESENHO HUMANO',   { x: 510, y: height - 38, size: 7,  color: rgb(0.6, 0.55, 0.5) });
+  page.drawText('VIDA AUTORAL',           { x: 530, y: height - 24, size: 9,  color: coffee });
+  page.drawText('MAPA DO DESENHO HUMANO', { x: 510, y: height - 38, size: 7,  color: rgb(0.6, 0.55, 0.5) });
   page.drawLine({ start: { x: px, y: height - 46 }, end: { x: 825, y: height - 46 }, thickness: 0.4, color: coffee });
 
-  // Nome
   page.drawText(nome.toUpperCase(), { x: px, y: height - 62, size: 14, color: cream });
   page.drawLine({ start: { x: px, y: height - 72 }, end: { x: 825, y: height - 72 }, thickness: 0.3, color: mid });
 
-  // Dados HD
   const rows = [
     ['Tipo Energético',    props?.Type?.id             || '—'],
     ['Estratégia',         props?.Strategy?.id         || '—'],
@@ -127,14 +130,12 @@ async function buildPdf(nome, hdData) {
     }
   });
 
-  // Rodapé
   page.drawRectangle({ x: 0, y: 0, width, height: 22, color: mid });
   page.drawText('© 2025 Vida Autoral · Todos os direitos reservados', { x: 285, y: 7, size: 6.5, color: rgb(0.4, 0.35, 0.3) });
 
   return await pdfDoc.save();
 }
 
-// ── E-mails ───────────────────────────────────────────────────────────────────
 function buildConfirmationEmail({ nome, data, hora, local }) {
   return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>
 <style>body{margin:0;padding:0;background:#E9D7C0;font-family:Georgia,serif;}.wrap{max-width:580px;margin:0 auto;background:#fff;}.header{background:#1a1410;padding:2.5rem 2rem;text-align:center;}.header h1{color:#E9D7C0;font-size:1.3rem;font-weight:400;letter-spacing:.15em;margin:.8rem 0 0;}.body{padding:2.5rem 2rem;}p{color:#4a3a2e;font-size:.95rem;line-height:1.8;margin-bottom:1rem;}.info{background:#FED8A6;border-left:3px solid #9B7D61;padding:1rem 1.2rem;margin:1.5rem 0;}.info p{margin:0;font-size:.88rem;color:#5a3f28;line-height:1.8;}.badge{display:inline-block;background:#E9D7C0;border:1px solid rgba(155,125,97,.3);padding:.6rem 1.2rem;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:#9B7D61;margin:1.5rem 0;}.footer{background:#1a1410;padding:1.5rem 2rem;text-align:center;}.footer p{color:rgba(233,215,192,.35);font-size:.7rem;margin:0;}</style>
@@ -180,7 +181,6 @@ async function sendEmail({ to, subject, html, attachments = [] }) {
   return res.json();
 }
 
-// ── Handler ───────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -204,7 +204,11 @@ export default async function handler(req, res) {
     console.log(`[3] Timezone: ${timezone}`);
 
     const hdData = await generateHDChart(data, hora, timezone);
-    console.log(`[4] Dados HD — Tipo: ${hdData?.Properties?.Type?.id} | SVG: ${hdData?.SVG ? hdData.SVG.length + ' chars' : 'ausente'}`);
+    const svgLen = hdData?.SVG?.length || 0;
+    console.log(`[4] Dados HD — Tipo: ${hdData?.Properties?.Type?.id} | SVG: ${svgLen} chars`);
+
+    // Log das primeiras 300 chars do SVG para diagnóstico
+    if (hdData?.SVG) console.log(`[4b] SVG início: ${hdData.SVG.slice(0, 300)}`);
 
     const pdfBytes  = await buildPdf(nome, hdData);
     const pdfBase64 = Buffer.from(pdfBytes).toString('base64');
