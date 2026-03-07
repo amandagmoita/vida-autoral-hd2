@@ -5,13 +5,23 @@ import { PDFDocument, rgb } from 'pdf-lib';
 
 export const maxDuration = 30;
 
-// ─── WASM singleton ────────────────────────────────────────────────────────────
+// ─── WASM + Font singleton ─────────────────────────────────────────────────────
+// DIAGNÓSTICO: resvg-wasm em ambiente serverless NÃO tem fontes do sistema.
+// Sem fonte carregada, todos os elementos <text> são silenciosamente ignorados.
+// Solução: bundlar DejaVu Sans TTF e carregá-la explicitamente via fontBuffers.
 let wasmInitialized = false;
+let fontBuffer = null;
+
 async function ensureWasm() {
   if (wasmInitialized) return;
   const require = createRequire(import.meta.url);
+
   const wasmPath = require.resolve('@resvg/resvg-wasm/index_bg.wasm');
   await initWasm(await readFile(wasmPath));
+
+  const fontPath = require.resolve('dejavu-fonts-ttf/ttf/DejaVuSans.ttf');
+  fontBuffer = await readFile(fontPath);
+
   wasmInitialized = true;
 }
 
@@ -148,6 +158,13 @@ async function svgParaPng(svgString) {
   const resvg = new Resvg(svg, {
     fitTo:      { mode: 'width', value: 720 },
     background: '#ffffff',
+    font: {
+      // Sem fonte explícita, resvg-wasm ignora todos os <text> silenciosamente.
+      // DejaVu Sans é bundlada no projeto para garantir renderização dos números dos portões.
+      fontBuffers:       [fontBuffer],
+      defaultFontFamily: 'DejaVu Sans',
+      loadSystemFonts:   false,
+    },
   });
   return resvg.render().asPng();
 }
