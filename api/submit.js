@@ -595,11 +595,28 @@ return res.json();
 }
 
 // ─── HANDLER ───────────────────────────────────────────────────────────────────
+
+// Vercel não parseia req.body automaticamente em funções ESM (export default).
+// É necessário ler o stream e fazer JSON.parse manualmente.
+async function parseBody(req) {
+if (req.body && typeof req.body === ‘object’) return req.body; // já parseado (dev local)
+return new Promise((resolve, reject) => {
+let raw = ‘’;
+req.on(‘data’, chunk => { raw += chunk; });
+req.on(‘end’, () => {
+try { resolve(JSON.parse(raw || ‘{}’)); }
+catch { resolve({}); }
+});
+req.on(‘error’, reject);
+});
+}
+
 export default async function handler(req, res) {
 if (req.method !== ‘POST’) return res.status(405).json({ error: ‘Method not allowed’ });
 res.setHeader(‘Access-Control-Allow-Origin’, ‘*’);
 
-const { nome, email, data, hora, local } = req.body;
+const body = await parseBody(req);
+const { nome, email, data, hora, local } = body;
 if (!nome || !email || !data || !hora || !local)
 return res.status(400).json({ error: ‘Todos os campos são obrigatórios.’ });
 
