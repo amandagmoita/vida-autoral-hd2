@@ -1,12 +1,11 @@
-import { dirname, join } from ‘path’;
-import { fileURLToPath } from ‘url’;
-import { readFile } from ‘fs/promises’;
-import { PDFDocument, rgb } from ‘pdf-lib’;
+const { dirname, join } = require(‘path’);
+const { readFile } = require(‘fs/promises’);
+const { PDFDocument, rgb } = require(‘pdf-lib’);
 // @resvg/resvg-wasm e carregado via dynamic import no ensureWasm()
 // para evitar que o bundler do Vercel (esbuild) tente resolver binarios nativos
 let Resvg = null;
 
-export const maxDuration = 30;
+const maxDuration = 30;
 
 // — WASM + Font singleton —————————————————–
 // DIAGNOSTICO: resvg-wasm em ambiente serverless NAO tem fontes do sistema.
@@ -18,22 +17,15 @@ let fontBuffer = null;
 async function ensureWasm() {
 if (wasmInitialized) return;
 
-const __dir = dirname(fileURLToPath(import.meta.url));
-
-// Dynamic import do .mjs puro - bypassa o bundler do Vercel (esbuild).
-// O import estatico de ‘@resvg/resvg-wasm’ seria resolvido em build-time
-// e tentaria carregar binarios nativos de plataforma que nao existem no serverless.
-const mjsPath = join(__dir, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index.mjs’);
-const resvgModule = await import(/* @vite-ignore */ ‘file://’ + mjsPath);
+// Em CJS, require() funciona normalmente sem bundler interferindo
+const resvgModule = require(’@resvg/resvg-wasm’);
 Resvg = resvgModule.Resvg;
 const initWasm = resvgModule.initWasm;
 
-// Le e inicializa o WASM binary
-const wasmPath = join(__dir, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
+const wasmPath = join(__dirname, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
 await initWasm(await readFile(wasmPath));
 
-// TTF commitada em /fonts/ - caminho resolvido via import.meta.url
-const fontPath = join(__dir, ‘..’, ‘fonts’, ‘DejaVuSans.ttf’);
+const fontPath = join(__dirname, ‘..’, ‘fonts’, ‘DejaVuSans.ttf’);
 fontBuffer = await readFile(fontPath);
 
 wasmInitialized = true;
@@ -612,7 +604,7 @@ req.on(‘error’, reject);
 });
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
 if (req.method !== ‘POST’) return res.status(405).json({ error: ‘Method not allowed’ });
 res.setHeader(‘Access-Control-Allow-Origin’, ‘*’);
 
@@ -658,3 +650,6 @@ console.error(’[Erro]’, err.message);
 return res.status(500).json({ error: err.message });
 }
 }
+
+module.exports = handler;
+module.exports.maxDuration = maxDuration;
