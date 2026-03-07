@@ -2,16 +2,16 @@ import { dirname, join } from ‘path’;
 import { fileURLToPath } from ‘url’;
 import { readFile } from ‘fs/promises’;
 import { PDFDocument, rgb } from ‘pdf-lib’;
-// @resvg/resvg-wasm é carregado via dynamic import no ensureWasm()
-// para evitar que o bundler do Vercel (esbuild) tente resolver binários nativos
+// @resvg/resvg-wasm e carregado via dynamic import no ensureWasm()
+// para evitar que o bundler do Vercel (esbuild) tente resolver binarios nativos
 let Resvg = null;
 
 export const maxDuration = 30;
 
-// ─── WASM + Font singleton ─────────────────────────────────────────────────────
-// DIAGNÓSTICO: resvg-wasm em ambiente serverless NÃO tem fontes do sistema.
-// Sem fonte carregada, todos os elementos <text> são silenciosamente ignorados.
-// Solução: bundlar DejaVu Sans TTF e carregá-la explicitamente via fontBuffers.
+// — WASM + Font singleton —————————————————–
+// DIAGNOSTICO: resvg-wasm em ambiente serverless NAO tem fontes do sistema.
+// Sem fonte carregada, todos os elementos <text> sao silenciosamente ignorados.
+// Solucao: bundlar DejaVu Sans TTF e carrega-la explicitamente via fontBuffers.
 let wasmInitialized = false;
 let fontBuffer = null;
 
@@ -20,26 +20,26 @@ if (wasmInitialized) return;
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 
-// Dynamic import do .mjs puro — bypassa o bundler do Vercel (esbuild).
-// O import estático de ‘@resvg/resvg-wasm’ seria resolvido em build-time
-// e tentaria carregar binários nativos de plataforma que não existem no serverless.
+// Dynamic import do .mjs puro - bypassa o bundler do Vercel (esbuild).
+// O import estatico de ‘@resvg/resvg-wasm’ seria resolvido em build-time
+// e tentaria carregar binarios nativos de plataforma que nao existem no serverless.
 const mjsPath = join(__dir, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index.mjs’);
 const resvgModule = await import(/* @vite-ignore */ ‘file://’ + mjsPath);
 Resvg = resvgModule.Resvg;
 const initWasm = resvgModule.initWasm;
 
-// Lê e inicializa o WASM binary
+// Le e inicializa o WASM binary
 const wasmPath = join(__dir, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
 await initWasm(await readFile(wasmPath));
 
-// TTF commitada em /fonts/ — caminho resolvido via import.meta.url
+// TTF commitada em /fonts/ - caminho resolvido via import.meta.url
 const fontPath = join(__dir, ‘..’, ‘fonts’, ‘DejaVuSans.ttf’);
 fontBuffer = await readFile(fontPath);
 
 wasmInitialized = true;
 }
 
-// ─── ENV ───────────────────────────────────────────────────────────────────────
+// — ENV ———————————————————————–
 const RESEND_API_KEY    = process.env.RESEND_API_KEY;
 const FROM_EMAIL        = process.env.FROM_EMAIL;
 const FROM_NAME         = process.env.FROM_NAME;
@@ -47,7 +47,7 @@ const REPLY_TO          = process.env.REPLY_TO;
 const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
 const BODYGRAPH_BASE    = ‘https://api.bodygraphchart.com’;
 
-// ─── TRADUÇÕES ─────────────────────────────────────────────────────────────────
+// — TRADUCOES —————————————————————–
 const TRADUCOES = {
 // Tipos
 ‘Generator’:            ‘Gerador’,
@@ -55,7 +55,7 @@ const TRADUCOES = {
 ‘Manifestor’:           ‘Manifestador’,
 ‘Projector’:            ‘Projetor’,
 ‘Reflector’:            ‘Refletor’,
-// Estratégias
+// Estrategias
 ‘To Respond’:                ‘Responder’,
 ‘To Inform’:                 ‘Informar’,
 ‘To Initiate’:               ‘Iniciar’,
@@ -72,7 +72,7 @@ const TRADUCOES = {
 ‘No Authority’:       ‘Sem Autoridade Interna’,
 ‘Lunar’:              ‘Lunar’,
 ‘Ego Manifestor’:     ‘Ego (Manifestador)’,
-// Definições
+// Definicoes
 ‘Single Definition’:      ‘Definição Única’,
 ‘Split Definition’:       ‘Definição Dividida’,
 ‘Triple Split Definition’:‘Tripla Divisão’,
@@ -83,7 +83,7 @@ const TRADUCOES = {
 ‘Success’:      ‘Sucesso’,
 ‘Peace’:        ‘Paz’,
 ‘Surprise’:     ‘Surpresa’,
-// Temas Não-Self
+// Temas Nao-Self
 ‘Frustration’:   ‘Frustração’,
 ‘Bitterness’:    ‘Amargura’,
 ‘Anger’:         ‘Raiva’,
@@ -91,11 +91,11 @@ const TRADUCOES = {
 };
 
 function traduzir(valor) {
-if (!valor) return ‘—’;
+if (!valor) return ‘-’;
 return TRADUCOES[valor] || valor;
 }
 
-// ─── BODYGRAPH API ─────────────────────────────────────────────────────────────
+// — BODYGRAPH API ———————————————————––
 async function resolveTimezone(city) {
 const url = `${BODYGRAPH_BASE}/v210502/locations?api_key=${BODYGRAPH_API_KEY}&query=${encodeURIComponent(city)}`;
 const res  = await fetch(url);
@@ -113,19 +113,19 @@ if (!res.ok) throw new Error(`HD Data API error: ${res.status}`);
 return await res.json();
 }
 
-// ─── SVG → PNG ─────────────────────────────────────────────────────────────────
+// — SVG -> PNG —————————————————————–
 
 /**
 
-- Prepara o SVG do Bodygraph para renderização com resvg-wasm.
+- Prepara o SVG do Bodygraph para renderizacao com resvg-wasm.
 - 
-- IMPORTANTE: NÃO alteramos cores de texto.
-- O SVG já tem cores intencionais: texto branco dentro de círculos escuros
-- (centros ativados) e texto escuro nas áreas claras. As cores eram corretas
-- desde sempre — o problema anterior era apenas ausência de fonte TTF no
+- IMPORTANTE: NAO alteramos cores de texto.
+- O SVG ja tem cores intencionais: texto branco dentro de circulos escuros
+- (centros ativados) e texto escuro nas areas claras. As cores eram corretas
+- desde sempre - o problema anterior era apenas ausencia de fonte TTF no
 - ambiente serverless, que fazia o resvg ignorar todos os <text> silenciosamente.
 - 
-- Agora que a DejaVu Sans é carregada via fontBuffers, basta:
+- Agora que a DejaVu Sans e carregada via fontBuffers, basta:
 - 1. Garantir namespace xmlns
 - 1. Remover recursos externos (URLs http) que travam o resvg
    */
@@ -152,8 +152,8 @@ const resvg = new Resvg(svg, {
 fitTo:      { mode: ‘width’, value: 720 },
 background: ‘#ffffff’,
 font: {
-// Sem fonte explícita, resvg-wasm ignora todos os <text> silenciosamente.
-// DejaVu Sans é bundlada no projeto para garantir renderização dos números dos portões.
+// Sem fonte explicita, resvg-wasm ignora todos os <text> silenciosamente.
+// DejaVu Sans e bundlada no projeto para garantir renderizacao dos numeros dos portoes.
 fontBuffers:       [fontBuffer],
 defaultFontFamily: ‘DejaVu Sans’,
 loadSystemFonts:   false,
@@ -162,11 +162,11 @@ loadSystemFonts:   false,
 return resvg.render().asPng();
 }
 
-// ─── PLANETAS E SETAS ──────────────────────────────────────────────────────────
+// — PLANETAS E SETAS –––––––––––––––––––––––––––––
 
 const PLANET_ORDER = [‘Sun’,‘Earth’,‘North Node’,‘South Node’,‘Moon’,‘Mercury’,‘Venus’,‘Mars’,‘Jupiter’,‘Saturn’,‘Uranus’,‘Neptune’,‘Pluto’];
 
-// Abreviações ASCII (WinAnsi-safe para pdf-lib sem fonte embedada)
+// Abreviacoes ASCII (WinAnsi-safe para pdf-lib sem fonte embedada)
 const PLANET_SYMBOL = {
 ‘Sun’:‘Sol’, ‘Earth’:‘Ter’, ‘North Node’:‘NN’, ‘South Node’:‘NS’,
 ‘Moon’:‘Lua’, ‘Mercury’:‘Mer’, ‘Venus’:‘Ven’, ‘Mars’:‘Mar’,
@@ -176,7 +176,7 @@ const PLANET_SYMBOL = {
 function extrairPlanetas(hdData) {
 console.log(’[Planets] hdData keys:’, Object.keys(hdData).join(’, ’));
 
-// Documentação oficial: campos são hdData.Personality e hdData.Design
+// Documentacao oficial: campos sao hdData.Personality e hdData.Design
 // estrutura: { “Sun”: { Gate, Line, Color, Tone, Base, FixingState }, “Earth”: {…}, … }
 const personality = hdData.Personality || {};
 const design      = hdData.Design      || {};
@@ -205,7 +205,7 @@ temDados: Object.keys(personality).length > 0 || Object.keys(design).length > 0,
 }
 
 function calcularSetas(hdData) {
-// Documentação: hdData.Variables = { Digestion, Environment, Awareness, Perspective }
+// Documentacao: hdData.Variables = { Digestion, Environment, Awareness, Perspective }
 // Valores: “left” ou “right”
 // Mapeamento das 4 setas visuais do bodygraph:
 //   topo-esquerda  = Digestion (Design)
@@ -225,7 +225,7 @@ bottomRight: dir(V.Awareness),
 };
 }
 
-// ─── EXTRAI PORTÕES E CANAIS ───────────────────────────────────────────────────
+// — EXTRAI PORTOES E CANAIS —————————————————
 function extrairPortoesCanais(hdData) {
 // Canais: array de objetos com id tipo “1-8” ou campo name
 const canaisBrutos = hdData.Channels || hdData.channels || hdData.ActiveChannels || [];
@@ -234,7 +234,7 @@ if (typeof c === ‘string’) return c;
 return c.id || c.name || c.gates || JSON.stringify(c);
 }).filter(Boolean).sort();
 
-// Portões: extraídos dos canais (cada canal = 2 portões) + campo Gates se existir
+// Portoes: extraidos dos canais (cada canal = 2 portoes) + campo Gates se existir
 const portoesSet = new Set();
 canaisBrutos.forEach(c => {
 const id = typeof c === ‘string’ ? c : (c.id || ‘’);
@@ -254,7 +254,7 @@ const portoes = […portoesSet].sort((a, b) => a - b);
 return { portoes, canais };
 }
 
-// ─── MONTA PDF ─────────────────────────────────────────────────────────────────
+// — MONTA PDF —————————————————————–
 async function buildPdf(nome, hdData) {
 const props = hdData.Properties || {};
 const { portoes, canais } = extrairPortoesCanais(hdData);
@@ -266,7 +266,7 @@ const pdfDoc = await PDFDocument.create();
 const page   = pdfDoc.addPage([841.89, 595.28]);
 const { width, height } = page.getSize();
 
-// Paleta Vida Autoral — tema claro
+// Paleta Vida Autoral - tema claro
 const branco      = rgb(1.000, 1.000, 1.000);
 const cinzaClaro  = rgb(0.965, 0.957, 0.949); // #F6F4F2 fundo cards
 const cinzaMedio  = rgb(0.878, 0.863, 0.847); // #E0DCD8 bordas
@@ -276,20 +276,20 @@ const eucalyptus  = rgb(0.573, 0.678, 0.643); // #92ADA4
 const textEscuro  = rgb(0.180, 0.141, 0.114); // #2E2419
 const textMedio   = rgb(0.420, 0.353, 0.294); // #6B5A4B
 const wheat       = rgb(0.914, 0.843, 0.753); // #E9D7C0
-// designCor/persCor substituídos por designText/persText com pills coloridas
+// designCor/persCor substituidos por designText/persText com pills coloridas
 
-// ── Fundo branco ──
+// – Fundo branco –
 page.drawRectangle({ x: 0, y: 0, width, height, color: branco });
 
-// ── Faixa de cabeçalho esquerda ──
+// – Faixa de cabecalho esquerda –
 page.drawRectangle({ x: 0, y: height - 36, width: 490, height: 36, color: wheat });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LAYOUT da coluna esquerda (0–490):
-//   [0–72]   coluna DESIGN    (pills salmon/coral)
-//   [72–418] gráfico Bodygraph centralizado
-//   [418–490] coluna PERSONALITY (pills mint/eucalyptus)
-// ─────────────────────────────────────────────────────────────────────────────
+// —————————————————————————–
+// LAYOUT da coluna esquerda (0-490):
+//   [0-72]   coluna DESIGN    (pills salmon/coral)
+//   [72-418] grafico Bodygraph centralizado
+//   [418-490] coluna PERSONALITY (pills mint/eucalyptus)
+// —————————————————————————–
 const DIVIDER    = 490;
 const COL_W      = 72;   // largura de cada coluna de planetas
 const CHART_X0   = COL_W;
@@ -305,16 +305,16 @@ const PILL_MARGIN = 3;
 const PILL_TOTAL = AREA_H / 13; // altura alocada por linha de planeta
 
 // Cores das pills
-const designBg   = rgb(0.780, 0.510, 0.470); // salmon mais escuro — contraste para branco
+const designBg   = rgb(0.780, 0.510, 0.470); // salmon mais escuro - contraste para branco
 const designText = rgb(0.420, 0.180, 0.149); // #6B2E26 (cabeçalho)
-const persBg     = rgb(0.490, 0.659, 0.627); // mint mais escuro — contraste para branco
+const persBg     = rgb(0.490, 0.659, 0.627); // mint mais escuro - contraste para branco
 const persText   = rgb(0.129, 0.302, 0.278); // #214D47 (cabeçalho)
 
-// ── Labels de cabeçalho ──
+// – Labels de cabecalho –
 page.drawText(‘DESIGN’,      { x: 3,                   y: height - 25, size: 6.5, color: designText });
 page.drawText(‘PERSONALITY’, { x: DIVIDER - COL_W + 3, y: height - 25, size: 5.5, color: persText });
 
-// ── Pills de planetas ──
+// – Pills de planetas –
 PLANET_ORDER.forEach((planetName, i) => {
 // y centro da linha (de cima para baixo em coordenadas PDF)
 const lineTop = AREA_TOP - i * PILL_TOTAL;
@@ -324,7 +324,7 @@ const pillY   = lineTop  - PILL_TOTAL + (PILL_TOTAL - PILL_H) / 2;
 const dp = designPlanets[i];
 const pp = personalityPlanets[i];
 
-// ── Design pill (esquerda) ──
+// -- Design pill (esquerda) --
 if (dp) {
   const px0  = PILL_MARGIN;
   const abbr = dp.symbol || '';
@@ -341,7 +341,7 @@ if (dp) {
   });
 }
 
-// ── Personality pill (direita) ──
+// -- Personality pill (direita) --
 if (pp) {
   const px0  = DIVIDER - COL_W + PILL_MARGIN;
   const abbr = pp.symbol || '';
@@ -361,7 +361,7 @@ if (pp) {
 
 });
 
-// ── Gráfico Bodygraph ──
+// – Grafico Bodygraph –
 let imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
 if (hdData.SVG) {
 try {
@@ -374,16 +374,16 @@ imgY = AREA_BOT  + (AREA_H  - dims.height) / 2;
 imgW = dims.width;
 imgH = dims.height;
 page.drawImage(pngImg, { x: imgX, y: imgY, width: imgW, height: imgH });
-console.log(’[PDF] Gráfico embedado ✅ dims:’, Math.round(imgW), ‘x’, Math.round(imgH));
+console.log(’[PDF] Gráfico embedado [OK] dims:’, Math.round(imgW), ‘x’, Math.round(imgH));
 } catch (e) {
 console.error(’[PDF] Erro gráfico:’, e.message);
 }
 }
 
-// ── Quatro setas do Variable ──
-// Cabeça ≈ 88% da altura (parte superior do gráfico)
-// Raiz   ≈  8% da altura (parte inferior)
-// x: flancos internos do centro Cabeça e Raiz (≈ 22% e 60% da largura)
+// – Quatro setas do Variable –
+// Cabeca ~= 88% da altura (parte superior do grafico)
+// Raiz   ~=  8% da altura (parte inferior)
+// x: flancos internos do centro Cabeca e Raiz (~= 22% e 60% da largura)
 const headY   = imgY + imgH * 0.88;
 const rootY   = imgY + imgH * 0.08;
 const arrowLX = imgX + imgW * 0.20;  // flanco esquerdo
@@ -392,38 +392,38 @@ const arrowRX = imgX + imgW * 0.62;  // flanco direito
 function desenharSeta(tipX, cy, dir, cor) {
 const W = 9, H = 4;
 if (dir === ‘R’) {
-// →  seta apontando para direita
+// ->  seta apontando para direita
 page.drawLine({ start: { x: tipX - W, y: cy }, end: { x: tipX, y: cy }, thickness: 1.5, color: cor });
 page.drawLine({ start: { x: tipX, y: cy }, end: { x: tipX - 5, y: cy + H }, thickness: 1.5, color: cor });
 page.drawLine({ start: { x: tipX, y: cy }, end: { x: tipX - 5, y: cy - H }, thickness: 1.5, color: cor });
 } else {
-// ← seta apontando para esquerda
+// <- seta apontando para esquerda
 page.drawLine({ start: { x: tipX + W, y: cy }, end: { x: tipX, y: cy }, thickness: 1.5, color: cor });
 page.drawLine({ start: { x: tipX, y: cy }, end: { x: tipX + 5, y: cy + H }, thickness: 1.5, color: cor });
 page.drawLine({ start: { x: tipX, y: cy }, end: { x: tipX + 5, y: cy - H }, thickness: 1.5, color: cor });
 }
 }
 
-// Design (vermelho): setas externas ao gráfico, do lado das colunas
+// Design (vermelho): setas externas ao grafico, do lado das colunas
 desenharSeta(arrowLX - 4, headY, setas.topLeft,     designText);
 desenharSeta(arrowRX + 4, headY, setas.topRight,    persText);
 desenharSeta(arrowLX - 4, rootY, setas.bottomLeft,  designText);
 desenharSeta(arrowRX + 4, rootY, setas.bottomRight, persText);
 
-// ── Divisória vertical ──
+// – Divisoria vertical –
 page.drawLine({
 start: { x: 490, y: 22 }, end: { x: 490, y: height },
 thickness: 1, color: cinzaMedio,
 });
 
-// ── Painel direito ──
+// – Painel direito –
 const px = 500;
 const pw = 330; // largura útil do painel
 
-// Cabeçalho do painel
+// Cabecalho do painel
 page.drawRectangle({ x: 490, y: height - 36, width: width - 490, height: 36, color: coffee });
 
-// Logo triângulo
+// Logo triangulo
 const tx = 497, ty = height - 28;
 page.drawLine({ start: { x: tx + 8, y: ty + 16 }, end: { x: tx + 16, y: ty },     thickness: 1, color: branco });
 page.drawLine({ start: { x: tx + 16, y: ty },      end: { x: tx,      y: ty },     thickness: 1, color: branco });
@@ -437,16 +437,16 @@ const nomeDisplay = nome.length > 28 ? nome.slice(0, 26) + ‘…’ : nome;
 page.drawText(nomeDisplay.toUpperCase(), { x: px, y: height - 54, size: 12, color: textEscuro });
 page.drawLine({ start: { x: px, y: height - 60 }, end: { x: px + pw, y: height - 60 }, thickness: 0.5, color: cinzaMedio });
 
-// ── 8 propriedades em cards compactos ──
+// – 8 propriedades em cards compactos –
 const propriedades = [
 [‘Tipo Energético’,    traduzir(props?.Type?.id)],
 [‘Estratégia’,         traduzir(props?.Strategy?.id)],
 [‘Autoridade Interna’, traduzir(props?.InnerAuthority?.id)],
-[‘Perfil’,             props?.Profile?.id || ‘—’],
+[‘Perfil’,             props?.Profile?.id || ‘-’],
 [‘Definição’,          traduzir(props?.Definition?.id)],
 [‘Assinatura’,         traduzir(props?.Signature?.id)],
 [‘Tema Não-Self’,      traduzir(props?.NotSelfTheme?.id)],
-[‘Cruz de Encarnação’, props?.IncarnationCross?.id || ‘—’],
+[‘Cruz de Encarnação’, props?.IncarnationCross?.id || ‘-’],
 ];
 
 // Duas colunas de 4 para caber melhor
@@ -477,14 +477,14 @@ if (v.length > 20) {
 
 });
 
-// ── Portões ativados ──
+// – Portoes ativados –
 const secY = startY - 4 * (cardH + 4) - 2;
 
 page.drawLine({ start: { x: px, y: secY }, end: { x: px + pw, y: secY }, thickness: 0.5, color: cinzaMedio });
 page.drawText(‘PORTÕES ATIVADOS’, { x: px, y: secY - 12, size: 6, color: coffee });
 
 if (portoes.length > 0) {
-// Desenha cada portão como um badge pequeno
+// Desenha cada portao como um badge pequeno
 let bx = px, by = secY - 26;
 portoes.forEach(p => {
 const label = String(p);
@@ -498,7 +498,7 @@ bx += bw + 3;
 page.drawText(‘Dados não disponíveis’, { x: px, y: secY - 26, size: 7, color: textMedio });
 }
 
-// ── Canais ativados ──
+// – Canais ativados –
 const canaisY = secY - (portoes.length > 0 ? Math.ceil(portoes.length / 16) * 16 + 36 : 36);
 
 page.drawLine({ start: { x: px, y: canaisY }, end: { x: px + pw, y: canaisY }, thickness: 0.5, color: cinzaMedio });
@@ -519,15 +519,15 @@ cx += cw + 4;
 page.drawText(‘Dados não disponíveis’, { x: px, y: canaisY - 26, size: 7, color: textMedio });
 }
 
-// ── Rodapé ──
+// – Rodape –
 page.drawRectangle({ x: 0, y: 0, width, height: 20, color: cinzaClaro });
 page.drawLine({ start: { x: 0, y: 20 }, end: { x: width, y: 20 }, thickness: 0.5, color: cinzaMedio });
-page.drawText(‘© 2025 Vida Autoral · Todos os direitos reservados’, { x: 300, y: 6, size: 6, color: textMedio });
+page.drawText(’(c) 2025 Vida Autoral . Todos os direitos reservados’, { x: 300, y: 6, size: 6, color: textMedio });
 
 return await pdfDoc.save();
 }
 
-// ─── EMAILS ────────────────────────────────────────────────────────────────────
+// — EMAILS ––––––––––––––––––––––––––––––––––
 const emailBase = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>
 
 <style>
@@ -553,13 +553,13 @@ return emailBase + `<div class="wrap">
   </div>
   <div class="body">
     <p>Olá, <strong>${nome}</strong>,</p>
-    <p>Recebemos seus dados com sucesso! Seu mapa de Desenho Humano está sendo gerado — em instantes você receberá o PDF personalizado.</p>
-    <div class="info"><p>📅 <strong>${data}</strong> &nbsp;·&nbsp; 🕐 <strong>${hora}</strong><br/>📍 ${local}</p></div>
-    <div class="badge">✦ &nbsp; Seu PDF está a caminho</div>
+    <p>Recebemos seus dados com sucesso! Seu mapa de Desenho Humano está sendo gerado - em instantes você receberá o PDF personalizado.</p>
+    <div class="info"><p>&#128197; <strong>${data}</strong> &nbsp;.&nbsp; &#128336; <strong>${hora}</strong><br/>&#128205; ${local}</p></div>
+    <div class="badge">* &nbsp; Seu PDF está a caminho</div>
     <p>Se não chegar em até 5 minutos, verifique a pasta de spam.</p>
     <p style="font-size:.83rem;color:#9b836f;">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>
   </div>
-  <div class="footer"><p>© 2025 Vida Autoral</p></div>
+  <div class="footer"><p>(c) 2025 Vida Autoral</p></div>
 </div></body></html>`;
 }
 
@@ -572,16 +572,16 @@ return emailBase + `<div class="wrap">
   </div>
   <div class="body">
     <p>Olá, <strong>${nome}</strong>,</p>
-    <p>Seu mapa de Desenho Humano está pronto! 🎉 O PDF personalizado está em anexo.</p>
-    <div class="info"><p>📅 <strong>${data}</strong> &nbsp;·&nbsp; 🕐 <strong>${hora}</strong><br/>📍 ${local}</p></div>
+    <p>Seu mapa de Desenho Humano está pronto! &#127881; O PDF personalizado está em anexo.</p>
+    <div class="info"><p>&#128197; <strong>${data}</strong> &nbsp;.&nbsp; &#128336; <strong>${hora}</strong><br/>&#128205; ${local}</p></div>
     <p>O PDF inclui seu gráfico completo com Tipo, Estratégia, Autoridade, Perfil, Centros, Canais e Portões ativados.</p>
     <p style="font-size:.83rem;color:#9b836f;">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>
   </div>
-  <div class="footer"><p>© 2025 Vida Autoral</p></div>
+  <div class="footer"><p>(c) 2025 Vida Autoral</p></div>
 </div></body></html>`;
 }
 
-// ─── RESEND ────────────────────────────────────────────────────────────────────
+// — RESEND ––––––––––––––––––––––––––––––––––
 async function sendEmail({ to, subject, html, attachments = [] }) {
 const body = { from: `${FROM_NAME} <${FROM_EMAIL}>`, to: [to], reply_to: REPLY_TO, subject, html };
 if (attachments.length) body.attachments = attachments;
@@ -594,10 +594,10 @@ if (!res.ok) throw new Error(`Resend error: ${JSON.stringify(await res.json())}`
 return res.json();
 }
 
-// ─── HANDLER ───────────────────────────────────────────────────────────────────
+// — HANDLER —————————————————————––
 
-// Vercel não parseia req.body automaticamente em funções ESM (export default).
-// É necessário ler o stream e fazer JSON.parse manualmente.
+// Vercel nao parseia req.body automaticamente em funcoes ESM (export default).
+// E necessario ler o stream e fazer JSON.parse manualmente.
 async function parseBody(req) {
 if (req.body && typeof req.body === ‘object’) return req.body; // já parseado (dev local)
 return new Promise((resolve, reject) => {
@@ -624,7 +624,7 @@ try {
 console.log(`[1] Iniciando para ${email}`);
 
 ```
-await sendEmail({ to: email, subject: `${nome}, recebemos seus dados ✦`, html: buildConfirmationEmail({ nome, data, hora, local }) });
+await sendEmail({ to: email, subject: `${nome}, recebemos seus dados *`, html: buildConfirmationEmail({ nome, data, hora, local }) });
 console.log(`[2] Confirmação enviada`);
 
 const timezone = await resolveTimezone(local);
@@ -643,7 +643,7 @@ console.log(`[5] PDF: ${pdfBytes.length} bytes`);
 
 await sendEmail({
   to: email,
-  subject: `${nome}, seu mapa de Desenho Humano está pronto ✦`,
+  subject: `${nome}, seu mapa de Desenho Humano está pronto *`,
   html: buildPdfEmail({ nome, data, hora, local }),
   attachments: [{ filename: `mapa-desenho-humano-${nome.split(' ')[0].toLowerCase()}.pdf`, content: pdfBase64 }],
 });
