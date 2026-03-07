@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "fluid": false,
   "functions": {
     "api/submit.js": {
       "maxDuration": 30,
