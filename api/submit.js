@@ -1,4 +1,3 @@
-import { createRequire } from 'module';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { readFile } from 'fs/promises';
@@ -16,14 +15,17 @@ let fontBuffer = null;
 
 async function ensureWasm() {
   if (wasmInitialized) return;
-  const require = createRequire(import.meta.url);
 
-  const wasmPath = require.resolve('@resvg/resvg-wasm/index_bg.wasm');
+  // require.resolve NAO funciona no Vercel para arquivos .wasm/.ttf fora de JS.
+  // Usamos import.meta.url (aponta para /var/task/api/submit.js no Vercel)
+  // para construir caminhos relativos confiáveis em qualquer ambiente.
+  const __dir = dirname(fileURLToPath(import.meta.url));
+
+  // WASM: api/../node_modules/@resvg/resvg-wasm/index_bg.wasm
+  const wasmPath = join(__dir, '..', 'node_modules', '@resvg', 'resvg-wasm', 'index_bg.wasm');
   await initWasm(await readFile(wasmPath));
 
-  // TTF com caminho fixo relativo ao projeto (/fonts/DejaVuSans.ttf).
-  // require.resolve NAO funciona para .ttf no Vercel — caminho via import.meta.url.
-  const __dir = dirname(fileURLToPath(import.meta.url));
+  // TTF: api/../fonts/DejaVuSans.ttf  (arquivo commitado no repositório)
   const fontPath = join(__dir, '..', 'fonts', 'DejaVuSans.ttf');
   fontBuffer = await readFile(fontPath);
 
