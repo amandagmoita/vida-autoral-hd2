@@ -299,7 +299,7 @@ const AREA_BOT   = 20;
 const AREA_H     = AREA_TOP - AREA_BOT; // 539px
 
 // Pill dimensions
-const PILL_H     = 18;
+const PILL_H     = 22;
 const PILL_W     = COL_W - 6;  // 66px, margem 3 de cada lado
 const PILL_MARGIN = 3;
 const PILL_TOTAL = AREA_H / 13; // altura alocada por linha de planeta
@@ -335,8 +335,8 @@ if (dp) {
     color: temDados ? designBg : cinzaClaro, borderRadius: 6 });
 
   page.drawText(label, {
-    x: px0 + 4, y: pillY + 5,
-    size: 8,
+    x: px0 + 4, y: pillY + 6,
+    size: 12,
     color: temDados ? branco : textMedio,
   });
 }
@@ -352,8 +352,8 @@ if (pp) {
     color: temDados ? persBg : cinzaClaro, borderRadius: 6 });
 
   page.drawText(label, {
-    x: px0 + 4, y: pillY + 5,
-    size: 8,
+    x: px0 + 4, y: pillY + 6,
+    size: 12,
     color: temDados ? branco : textMedio,
   });
 }
@@ -381,37 +381,35 @@ console.error(’[PDF] Erro gráfico:’, e.message);
 }
 
 // – Quatro setas do Variable –
-// Posicionadas no espaco entre as colunas de planetas e o grafico
-// Eixo Y: cabeca ~88% da altura do grafico, raiz ~8%
+// Y: nivel da cabeca (~88% da altura do grafico) e da raiz (~8%)
 const headY   = imgY + imgH * 0.88;
 const rootY   = imgY + imgH * 0.08;
 
-// Eixo X: centro do espaco entre pill e borda do grafico
-const leftGapCenter  = (COL_W + imgX) / 2;               // entre fim das pills Design e inicio do grafico
-const rightGapCenter = (imgX + imgW + (DIVIDER - COL_W)) / 2; // entre fim do grafico e inicio das pills Personality
+// X: centro de cada coluna de planetas
+// Coluna DESIGN  : x = 0 até COL_W      -> centro = COL_W/2
+// Coluna PERS    : x = DIVIDER-COL_W até DIVIDER -> centro = DIVIDER - COL_W/2
+const leftColCenter  = COL_W / 2;                // ~36
+const rightColCenter = DIVIDER - COL_W / 2;      // ~454
 
 function desenharSeta(cx, cy, dir, cor) {
-const W = 10, H = 4.5;
+const W = 12, H = 5;
 if (dir === ‘R’) {
-// -> seta apontando para direita, ponta em cx + W/2
 const tip = cx + W / 2;
-page.drawLine({ start: { x: cx - W / 2, y: cy }, end: { x: tip, y: cy }, thickness: 1.8, color: cor });
-page.drawLine({ start: { x: tip, y: cy }, end: { x: tip - 5, y: cy + H }, thickness: 1.8, color: cor });
-page.drawLine({ start: { x: tip, y: cy }, end: { x: tip - 5, y: cy - H }, thickness: 1.8, color: cor });
+page.drawLine({ start: { x: tip - W, y: cy }, end: { x: tip,     y: cy       }, thickness: 2, color: cor });
+page.drawLine({ start: { x: tip,     y: cy }, end: { x: tip - 6, y: cy + H   }, thickness: 2, color: cor });
+page.drawLine({ start: { x: tip,     y: cy }, end: { x: tip - 6, y: cy - H   }, thickness: 2, color: cor });
 } else {
-// <- seta apontando para esquerda, ponta em cx - W/2
 const tip = cx - W / 2;
-page.drawLine({ start: { x: cx + W / 2, y: cy }, end: { x: tip, y: cy }, thickness: 1.8, color: cor });
-page.drawLine({ start: { x: tip, y: cy }, end: { x: tip + 5, y: cy + H }, thickness: 1.8, color: cor });
-page.drawLine({ start: { x: tip, y: cy }, end: { x: tip + 5, y: cy - H }, thickness: 1.8, color: cor });
+page.drawLine({ start: { x: tip + W, y: cy }, end: { x: tip,     y: cy       }, thickness: 2, color: cor });
+page.drawLine({ start: { x: tip,     y: cy }, end: { x: tip + 6, y: cy + H   }, thickness: 2, color: cor });
+page.drawLine({ start: { x: tip,     y: cy }, end: { x: tip + 6, y: cy - H   }, thickness: 2, color: cor });
 }
 }
 
-// Setas Design (salmon) na gap esquerda; Personality (mint) na gap direita
-desenharSeta(leftGapCenter,  headY, setas.topLeft,     designText);
-desenharSeta(rightGapCenter, headY, setas.topRight,    persText);
-desenharSeta(leftGapCenter,  rootY, setas.bottomLeft,  designText);
-desenharSeta(rightGapCenter, rootY, setas.bottomRight, persText);
+desenharSeta(leftColCenter,  headY, setas.topLeft,     designText);
+desenharSeta(rightColCenter, headY, setas.topRight,    persText);
+desenharSeta(leftColCenter,  rootY, setas.bottomLeft,  designText);
+desenharSeta(rightColCenter, rootY, setas.bottomRight, persText);
 
 // – Divisoria vertical –
 page.drawLine({
