@@ -165,11 +165,11 @@ async function svgParaPng(svgString) {
 
 const PLANET_ORDER = ['Sun','Earth','North Node','South Node','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
 
-// Símbolos unicode suportados pelo DejaVu Sans
+// Abreviações ASCII (WinAnsi-safe para pdf-lib sem fonte embedada)
 const PLANET_SYMBOL = {
-  'Sun':'☉','Earth':'⊕','North Node':'☊','South Node':'☋',
-  'Moon':'☽','Mercury':'☿','Venus':'♀','Mars':'♂',
-  'Jupiter':'♃','Saturn':'♄','Uranus':'♅','Neptune':'♆','Pluto':'♇',
+  'Sun':'Sol', 'Earth':'Ter', 'North Node':'NN', 'South Node':'NS',
+  'Moon':'Lua', 'Mercury':'Mer', 'Venus':'Ven', 'Mars':'Mar',
+  'Jupiter':'Jup', 'Saturn':'Sat', 'Uranus':'Ura', 'Neptune':'Nep', 'Pluto':'Plu',
 };
 
 function extrairPlanetas(hdData) {
@@ -325,32 +325,36 @@ async function buildPdf(nome, hdData) {
     // ── Design pill (esquerda) ──
     if (dp) {
       const px0  = PILL_MARGIN;
-      const sym  = dp.symbol || '';
-      const gate = dp.gate > 0 ? `${dp.gate}.${dp.line}` : '—';
+      const abbr = dp.symbol || '';
+      const gate = dp.gate > 0 ? `${dp.gate}.${dp.line}` : '';
 
-      // Fundo pill arredondado (simulado com retângulo)
       page.drawRectangle({ x: px0, y: pillY, width: PILL_W, height: PILL_H,
         color: temDados ? designBg : cinzaClaro, borderRadius: 3 });
 
-      // Símbolo planeta (esquerda da pill)
-      page.drawText(sym,  { x: px0 + 3,  y: pillY + 3.5, size: 7, color: temDados ? designText : textMedio });
-      // Gate.Line (centro/direita)
-      page.drawText(gate, { x: px0 + 16, y: pillY + 3.5, size: 7.5, color: temDados ? designText : textMedio });
+      if (temDados && gate) {
+        // Duas linhas: abrev no topo, gate.line abaixo
+        page.drawText(abbr, { x: px0 + 3, y: pillY + 6,   size: 5.5, color: designText });
+        page.drawText(gate, { x: px0 + 3, y: pillY + 1.5, size: 7,   color: designText });
+      } else {
+        page.drawText(abbr, { x: px0 + 3, y: pillY + 3.5, size: 6, color: textMedio });
+      }
     }
 
     // ── Personality pill (direita) ──
     if (pp) {
       const px0  = DIVIDER - COL_W + PILL_MARGIN;
-      const sym  = pp.symbol || '';
-      const gate = pp.gate > 0 ? `${pp.gate}.${pp.line}` : '—';
+      const abbr = pp.symbol || '';
+      const gate = pp.gate > 0 ? `${pp.gate}.${pp.line}` : '';
 
       page.drawRectangle({ x: px0, y: pillY, width: PILL_W, height: PILL_H,
         color: temDados ? persBg : cinzaClaro, borderRadius: 3 });
 
-      // Gate.Line (esquerda da pill)
-      page.drawText(gate, { x: px0 + 3,         y: pillY + 3.5, size: 7.5, color: temDados ? persText : textMedio });
-      // Símbolo planeta (direita)
-      page.drawText(sym,  { x: px0 + PILL_W - 11, y: pillY + 3.5, size: 7, color: temDados ? persText : textMedio });
+      if (temDados && gate) {
+        page.drawText(abbr, { x: px0 + 3, y: pillY + 6,   size: 5.5, color: persText });
+        page.drawText(gate, { x: px0 + 3, y: pillY + 1.5, size: 7,   color: persText });
+      } else {
+        page.drawText(abbr, { x: px0 + 3, y: pillY + 3.5, size: 6, color: textMedio });
+      }
     }
   });
 
