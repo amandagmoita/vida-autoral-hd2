@@ -172,66 +172,55 @@ const PLANET_SYMBOL = {
   'Jupiter':'♃','Saturn':'♄','Uranus':'♅','Neptune':'♆','Pluto':'♇',
 };
 
-function normalizarPlaneta(p) {
-  const name  = p.planet || p.Planet || p.name || p.Name || p.PlanetName || '';
-  const gate  = parseInt(p.gate  || p.Gate  || p.gateNumber  || p.GateNumber  || 0) || 0;
-  const line  = parseInt(p.line  || p.Line  || p.lineNumber  || p.LineNumber  || 0) || 0;
-  const color = parseInt(p.color || p.Color || p.colorNumber || p.ColorNumber || 0) || 0;
-  const tone  = parseInt(p.tone  || p.Tone  || 0) || 0;
-  return { name, gate, line, color, tone, symbol: PLANET_SYMBOL[name] || name.slice(0,3) };
-}
-
 function extrairPlanetas(hdData) {
   console.log('[Planets] hdData keys:', Object.keys(hdData).join(', '));
 
-  // Tenta todos os caminhos possíveis que a API Bodygraph usa
-  let personality = [], design = [];
+  // Documentação oficial: campos são hdData.Personality e hdData.Design
+  // estrutura: { "Sun": { Gate, Line, Color, Tone, Base, FixingState }, "Earth": {...}, ... }
+  const personality = hdData.Personality || {};
+  const design      = hdData.Design      || {};
 
-  const P = hdData.Planets || hdData.planets || hdData.PlanetaryData || {};
-  personality = P.Personality || P.personality || P.PersonalityPlanets || [];
-  design      = P.Design      || P.design      || P.DesignPlanets      || [];
+  console.log('[Planets] Personality keys:', Object.keys(personality).join(', '));
+  console.log('[Planets] Sun pers:', JSON.stringify(personality['Sun']));
+  console.log('[Planets] Sun design:', JSON.stringify(design['Sun']));
 
-  // Fallback: campos diretos no root
-  if (!personality.length) personality = hdData.PersonalityPlanets || hdData.personalityPlanets || [];
-  if (!design.length)      design      = hdData.DesignPlanets      || hdData.designPlanets      || [];
-
-  // Fallback: BirthData / DesignData
-  if (!personality.length && hdData.BirthData)  personality = hdData.BirthData.Planets  || hdData.BirthData.planets  || [];
-  if (!design.length && hdData.DesignData)       design      = hdData.DesignData.Planets || hdData.DesignData.planets || [];
-
-  console.log('[Planets] personality:', personality.length, '| design:', design.length,
-    personality[0] ? JSON.stringify(personality[0]).slice(0,100) : '(vazio)');
-
-  const sortByOrder = (arr) => {
-    const normalized = arr.map(normalizarPlaneta);
-    return PLANET_ORDER.map(name => {
-      const found = normalized.find(p =>
-        p.name === name ||
-        (name === 'North Node' && (p.name.includes('North') || p.name === 'NNode')) ||
-        (name === 'South Node' && (p.name.includes('South') || p.name === 'SNode'))
-      );
-      return found || { name, gate: 0, line: 0, color: 0, tone: 0, symbol: PLANET_SYMBOL[name] || '?' };
-    });
-  };
+  const makeRow = (side) => PLANET_ORDER.map(name => {
+    const p = side[name] || {};
+    return {
+      name,
+      gate:   parseInt(p.Gate  || 0) || 0,
+      line:   parseInt(p.Line  || 0) || 0,
+      color:  parseInt(p.Color || 0) || 0,
+      tone:   parseInt(p.Tone  || 0) || 0,
+      symbol: PLANET_SYMBOL[name] || name.slice(0, 3),
+    };
+  });
 
   return {
-    personalityPlanets: sortByOrder(personality),
-    designPlanets:      sortByOrder(design),
-    temDados: personality.length > 0 || design.length > 0,
+    personalityPlanets: makeRow(personality),
+    designPlanets:      makeRow(design),
+    temDados: Object.keys(personality).length > 0 || Object.keys(design).length > 0,
   };
 }
 
-function calcularSetas(designPlanets, personalityPlanets) {
-  const dir = (color) => (parseInt(color) || 0) <= 3 ? 'R' : 'L';
-  const dSun = designPlanets.find(p => p.name === 'Sun');
-  const pSun = personalityPlanets.find(p => p.name === 'Sun');
-  const dNN  = designPlanets.find(p => p.name === 'North Node');
-  const pNN  = personalityPlanets.find(p => p.name === 'North Node');
+function calcularSetas(hdData) {
+  // Documentação: hdData.Variables = { Digestion, Environment, Awareness, Perspective }
+  // Valores: "left" ou "right"
+  // Mapeamento das 4 setas visuais do bodygraph:
+  //   topo-esquerda  = Digestion (Design)
+  //   topo-direita   = Perspective (Personality)
+  //   base-esquerda  = Environment (Design)
+  //   base-direita   = Awareness (Personality)
+  const V = hdData.Variables || {};
+  console.log('[Variables]', JSON.stringify(V));
+
+  const dir = (v) => (v || '').toLowerCase() === 'right' ? 'R' : 'L';
+
   return {
-    topLeft:     dir(dSun?.color),
-    topRight:    dir(pSun?.color),
-    bottomLeft:  dir(dNN?.color),
-    bottomRight: dir(pNN?.color),
+    topLeft:     dir(V.Digestion),
+    topRight:    dir(V.Perspective),
+    bottomLeft:  dir(V.Environment),
+    bottomRight: dir(V.Awareness),
   };
 }
 
@@ -268,8 +257,8 @@ function extrairPortoesCanais(hdData) {
 async function buildPdf(nome, hdData) {
   const props = hdData.Properties || {};
   const { portoes, canais } = extrairPortoesCanais(hdData);
-  const { personalityPlanets, designPlanets } = extrairPlanetas(hdData);
-  const setas = calcularSetas(designPlanets, personalityPlanets);
+  const { personalityPlanets, designPlanets, temDados } = extrairPlanetas(hdData);
+  const setas = calcularSetas(hdData);
   console.log('[PDF] Setas:', JSON.stringify(setas));
 
   const pdfDoc = await PDFDocument.create();
