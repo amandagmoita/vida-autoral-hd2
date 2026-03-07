@@ -17,8 +17,10 @@ let fontBuffer = null;
 async function ensureWasm() {
 if (wasmInitialized) return;
 
-// Em CJS, require() funciona normalmente sem bundler interferindo
-const resvgModule = require(’@resvg/resvg-wasm’);
+// @resvg/resvg-wasm e ESM-only, nao funciona com require().
+// CJS Node 18+ suporta dynamic import() - carrega o .mjs diretamente pelo path.
+const mjsPath = join(__dirname, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index.mjs’);
+const resvgModule = await import(‘file://’ + mjsPath);
 Resvg = resvgModule.Resvg;
 const initWasm = resvgModule.initWasm;
 
