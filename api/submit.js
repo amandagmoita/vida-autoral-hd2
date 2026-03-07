@@ -1,8 +1,10 @@
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { readFile } from 'fs/promises';
-import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import { PDFDocument, rgb } from 'pdf-lib';
+// @resvg/resvg-wasm é carregado via dynamic import no ensureWasm()
+// para evitar que o bundler do Vercel (esbuild) tente resolver binários nativos
+let Resvg = null;
 
 export const maxDuration = 30;
 
@@ -16,16 +18,21 @@ let fontBuffer = null;
 async function ensureWasm() {
   if (wasmInitialized) return;
 
-  // require.resolve NAO funciona no Vercel para arquivos .wasm/.ttf fora de JS.
-  // Usamos import.meta.url (aponta para /var/task/api/submit.js no Vercel)
-  // para construir caminhos relativos confiáveis em qualquer ambiente.
   const __dir = dirname(fileURLToPath(import.meta.url));
 
-  // WASM: api/../node_modules/@resvg/resvg-wasm/index_bg.wasm
+  // Dynamic import do .mjs puro — bypassa o bundler do Vercel (esbuild).
+  // O import estático de '@resvg/resvg-wasm' seria resolvido em build-time
+  // e tentaria carregar binários nativos de plataforma que não existem no serverless.
+  const mjsPath = join(__dir, '..', 'node_modules', '@resvg', 'resvg-wasm', 'index.mjs');
+  const resvgModule = await import(/* @vite-ignore */ 'file://' + mjsPath);
+  Resvg = resvgModule.Resvg;
+  const initWasm = resvgModule.initWasm;
+
+  // Lê e inicializa o WASM binary
   const wasmPath = join(__dir, '..', 'node_modules', '@resvg', 'resvg-wasm', 'index_bg.wasm');
   await initWasm(await readFile(wasmPath));
 
-  // TTF: api/../fonts/DejaVuSans.ttf  (arquivo commitado no repositório)
+  // TTF commitada em /fonts/ — caminho resolvido via import.meta.url
   const fontPath = join(__dir, '..', 'fonts', 'DejaVuSans.ttf');
   fontBuffer = await readFile(fontPath);
 
