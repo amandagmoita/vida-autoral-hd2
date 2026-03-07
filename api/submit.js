@@ -116,14 +116,17 @@ async function generateHDChart(date, hora, timezone) {
 // ─── SVG → PNG ─────────────────────────────────────────────────────────────────
 
 /**
- * O SVG do Bodygraph define cores de texto de três formas:
- *   1. Bloco <style> interno com classes CSS (ex: .gate-text { fill: white })
- *   2. Atributo fill="white" direto na tag <text> ou <tspan>
- *   3. Atributo style="fill:white" inline na tag <text> ou <tspan>
- *   4. Herança via <g fill="white"> pai
+ * Prepara o SVG do Bodygraph para renderização com resvg-wasm.
  *
- * O resvg processa o <style> interno e ignora CSS injetado externamente,
- * então precisamos reescrever o SVG diretamente antes de renderizar.
+ * IMPORTANTE: NÃO alteramos cores de texto.
+ * O SVG já tem cores intencionais: texto branco dentro de círculos escuros
+ * (centros ativados) e texto escuro nas áreas claras. As cores eram corretas
+ * desde sempre — o problema anterior era apenas ausência de fonte TTF no
+ * ambiente serverless, que fazia o resvg ignorar todos os <text> silenciosamente.
+ *
+ * Agora que a DejaVu Sans é carregada via fontBuffers, basta:
+ *   1. Garantir namespace xmlns
+ *   2. Remover recursos externos (URLs http) que travam o resvg
  */
 function prepararSvg(svgString) {
   let svg = svgString;
@@ -133,35 +136,10 @@ function prepararSvg(svgString) {
     svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
   }
 
-  // 2. Remove recursos externos
+  // 2. Remove recursos externos que podem travar o resvg em ambiente sem rede
   svg = svg.replace(/xlink:href="https?:\/\/[^"]*"/g, 'xlink:href=""');
   svg = svg.replace(/ href="https?:\/\/[^"]*"/g, '');
   svg = svg.replace(/<image[^>]*(https?:\/\/)[^>]*\/>/g, '<g/>');
-
-  // 3. Reescreve o bloco <style> interno — principal fonte do problema.
-  //    O Bodygraph gera classes como `.gate-text { fill: white }` e `text { fill: white }`.
-  svg = svg.replace(/(<style[^>]*>)([\s\S]*?)(<\/style>)/g, (_, open, css, close) => {
-    const fixedCss = css
-      .replace(/\bfill\s*:\s*(white|#[fF]{3,6})\b/g, 'fill: #111111')
-      .replace(/\bcolor\s*:\s*(white|#[fF]{3,6})\b/g, 'color: #111111');
-    return open + fixedCss + close;
-  });
-
-  // Helpers para corrigir atributos inline
-  const fixFill  = (s) => s
-    .replace(/\bfill="(white|#[fF]{3,6})"/gi, 'fill="#111111"')
-    .replace(/\bfill='(white|#[fF]{3,6})'/gi, "fill='#111111'");
-  const fixStyle = (s) => s
-    .replace(/style="([^"]*)"/g, (m, v) =>
-      `style="${v.replace(/\bfill\s*:\s*(white|#[fF]{3,6})/gi, 'fill:#111111')}"`);
-
-  // 4. Corrige atributo fill= e style= em <text> e <tspan>
-  svg = svg.replace(/<text([^>]*)>/g,  (_, a) => `<text${fixStyle(fixFill(a))}>`);
-  svg = svg.replace(/<tspan([^>]*)>/g, (_, a) => `<tspan${fixStyle(fixFill(a))}>`);
-
-  // 5. Corrige <g fill="white"> que propaga branco para texto filho
-  svg = svg.replace(/<g([^>]*)\bfill="(white|#[fF]{3,6})"([^>]*)>/gi,
-    (_, pre, __, post) => `<g${pre}fill="#111111"${post}>`);
 
   return svg;
 }
@@ -244,10 +222,16 @@ async function buildPdf(nome, hdData) {
       const pngBuf = await svgParaPng(hdData.SVG);
       console.log('[PDF] PNG:', pngBuf.length, 'bytes');
       const pngImg = await pdfDoc.embedPng(pngBuf);
-      const dims   = pngImg.scaleToFit(460, height - 58);
+      // Coluna esquerda: 0..490, cabeçalho 36px no topo, 10px margem em baixo
+      const colWidth  = 490;
+      const colHeight = height - 36 - 10; // área útil abaixo do header
+      const dims      = pngImg.scaleToFit(colWidth - 20, colHeight);
+      // Centraliza horizontal e verticalmente dentro da área útil
+      const imgX = (colWidth  - dims.width)  / 2;
+      const imgY = 10 + (colHeight - dims.height) / 2; // 10 = margem inferior
       page.drawImage(pngImg, {
-        x: 15,
-        y: (height - 36 - dims.height) / 2,
+        x: imgX,
+        y: imgY,
         width:  dims.width,
         height: dims.height,
       });
