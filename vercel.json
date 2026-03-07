@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/submit.js": {
+      "includeFiles": "node_modules/@resvg/resvg-wasm/**"
+    }
+  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)",     "dest": "/public/$1" }
