@@ -1,8 +1,10 @@
 /**
  * api/submit.js — Vercel Serverless Function
- * Sem sharp — PDF gerado com pdf-lib puro (só texto e formas)
+ * SVG→PNG via @resvg/resvg-js (WebAssembly, funciona na Vercel)
+ * PNG embutido no PDF via pdf-lib
  */
 
+import { Resvg } from '@resvg/resvg-js';
 import { PDFDocument, rgb } from 'pdf-lib';
 
 export const maxDuration = 30;
@@ -14,7 +16,7 @@ const REPLY_TO          = process.env.REPLY_TO;
 const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
 const BODYGRAPH_BASE    = 'https://api.bodygraphchart.com';
 
-// ── 1. Resolve timezone ───────────────────────────────────────────────────────
+// ── 1. Timezone ───────────────────────────────────────────────────────────────
 async function resolveTimezone(city) {
   const url = `${BODYGRAPH_BASE}/v210502/locations?api_key=${BODYGRAPH_API_KEY}&query=${encodeURIComponent(city)}`;
   const res  = await fetch(url);
@@ -24,51 +26,82 @@ async function resolveTimezone(city) {
   return data[0].timezone;
 }
 
-// ── 2. Gera dados HD ──────────────────────────────────────────────────────────
+// ── 2. Dados HD + SVG ─────────────────────────────────────────────────────────
 async function generateHDChart(date, hora, timezone) {
   const datetime = `${date} ${hora}`;
-  // sem &design= pois não usamos mais o SVG
-  const url = `${BODYGRAPH_BASE}/v221006/hd-data?api_key=${BODYGRAPH_API_KEY}&date=${encodeURIComponent(datetime)}&timezone=${encodeURIComponent(timezone)}`;
+  const url = `${BODYGRAPH_BASE}/v221006/hd-data?api_key=${BODYGRAPH_API_KEY}&date=${encodeURIComponent(datetime)}&timezone=${encodeURIComponent(timezone)}&design=default`;
   const res  = await fetch(url);
   if (!res.ok) throw new Error(`HD Data API error: ${res.status}`);
   return await res.json();
 }
 
-// ── 3. Gera PDF com pdf-lib (sem imagens, só texto e formas) ─────────────────
+// ── 3. SVG → PNG via resvg-js (WebAssembly, sem binários nativos) ─────────────
+function svgToPng(svgString) {
+  const resvg = new Resvg(svgString, {
+    fitTo: { mode: 'width', value: 700 },
+    background: 'rgba(0,0,0,0)'
+  });
+  return resvg.render().asPng(); // Buffer
+}
+
+// ── 4. Monta PDF: gráfico à esquerda + painel de dados à direita ─────────────
 async function buildPdf(nome, hdData) {
   const props = hdData.Properties || {};
+  const svgString = hdData.SVG;
 
   const pdfDoc = await PDFDocument.create();
-  const page   = pdfDoc.addPage([595.28, 841.89]); // A4 retrato
+  const page   = pdfDoc.addPage([841.89, 595.28]); // A4 paisagem
   const { width, height } = page.getSize();
 
-  const cream  = rgb(0.914, 0.847, 0.753);  // #E9D7C0
-  const peach  = rgb(0.855, 0.639, 0.561);  // #DAA38F
-  const coffee = rgb(0.608, 0.490, 0.380);  // #9B7D61
-  const dark   = rgb(0.102, 0.078, 0.063);  // #1a1410
-  const mid    = rgb(0.16,  0.12,  0.10);
+  const cream  = rgb(0.914, 0.847, 0.753);
+  const peach  = rgb(0.855, 0.639, 0.561);
+  const coffee = rgb(0.608, 0.490, 0.380);
+  const dark   = rgb(0.102, 0.078, 0.063);
+  const mid    = rgb(0.155, 0.118, 0.094);
 
-  // Fundo escuro
+  // Fundo
   page.drawRectangle({ x: 0, y: 0, width, height, color: dark });
 
-  // Faixa de topo
-  page.drawRectangle({ x: 0, y: height - 90, width, height: 90, color: mid });
+  // ── Gráfico (lado esquerdo) ──
+  if (svgString) {
+    try {
+      const pngBuf  = svgToPng(svgString);
+      const pngImg  = await pdfDoc.embedPng(pngBuf);
+      const dims    = pngImg.scaleToFit(460, height - 40);
+      page.drawImage(pngImg, {
+        x: 20,
+        y: (height - dims.height) / 2,
+        width:  dims.width,
+        height: dims.height,
+      });
+    } catch (e) {
+      console.error('[PDF] Erro ao embedar gráfico:', e.message);
+    }
+  }
 
-  // Triângulo decorativo
-  page.drawLine({ start: { x: 297, y: height - 15 }, end: { x: 317, y: height - 38 }, thickness: 1.2, color: coffee });
-  page.drawLine({ start: { x: 317, y: height - 38 }, end: { x: 277, y: height - 38 }, thickness: 1.2, color: coffee });
-  page.drawLine({ start: { x: 277, y: height - 38 }, end: { x: 297, y: height - 15 }, thickness: 1.2, color: coffee });
+  // Divisória vertical
+  page.drawLine({
+    start: { x: 490, y: 30 }, end: { x: 490, y: height - 30 },
+    thickness: 0.4, color: coffee
+  });
 
-  // Nome da marca
-  page.drawText('VIDA AUTORAL', { x: 218, y: height - 60, size: 13, color: coffee });
-  page.drawText('MAPA DO DESENHO HUMANO', { x: 172, y: height - 78, size: 9,  color: cream });
+  // ── Painel direito ──
+  const px = 505;
 
-  // Nome do lead
-  const nomeX = Math.max(50, (width - nome.length * 8.5) / 2);
-  page.drawText(nome.toUpperCase(), { x: nomeX, y: height - 115, size: 17, color: cream });
-  page.drawLine({ start: { x: 50, y: height - 128 }, end: { x: width - 50, y: height - 128 }, thickness: 0.5, color: coffee });
+  // Logo / triângulo
+  page.drawLine({ start: { x: 668, y: height - 18 }, end: { x: 682, y: height - 36 }, thickness: 1, color: coffee });
+  page.drawLine({ start: { x: 682, y: height - 36 }, end: { x: 654, y: height - 36 }, thickness: 1, color: coffee });
+  page.drawLine({ start: { x: 654, y: height - 36 }, end: { x: 668, y: height - 18 }, thickness: 1, color: coffee });
 
-  // Dados em grade 2x4
+  page.drawText('VIDA AUTORAL',              { x: 530, y: height - 24, size: 9,  color: coffee });
+  page.drawText('MAPA DO DESENHO HUMANO',   { x: 510, y: height - 38, size: 7,  color: rgb(0.6, 0.55, 0.5) });
+  page.drawLine({ start: { x: px, y: height - 46 }, end: { x: 825, y: height - 46 }, thickness: 0.4, color: coffee });
+
+  // Nome
+  page.drawText(nome.toUpperCase(), { x: px, y: height - 62, size: 14, color: cream });
+  page.drawLine({ start: { x: px, y: height - 72 }, end: { x: 825, y: height - 72 }, thickness: 0.3, color: mid });
+
+  // Dados HD
   const rows = [
     ['Tipo Energético',    props?.Type?.id             || '—'],
     ['Estratégia',         props?.Strategy?.id         || '—'],
@@ -81,48 +114,22 @@ async function buildPdf(nome, hdData) {
   ];
 
   rows.forEach(([label, value], i) => {
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const x   = col === 0 ? 50  : 315;
-    const y   = height - 195 - row * 90;
-
-    page.drawRectangle({ x: x - 2, y: y - 10, width: 245, height: 62, color: rgb(0.14, 0.10, 0.08) });
-    page.drawLine({ start: { x, y: y + 44 }, end: { x: x + 240, y: y + 44 }, thickness: 0.3, color: coffee });
-    page.drawText(label.toUpperCase(), { x, y: y + 30, size: 7,  color: peach });
-
-    // Quebra valor longo em duas linhas se necessário
+    const y = height - 96 - i * 56;
+    page.drawRectangle({ x: px - 2, y: y - 10, width: 320, height: 48, color: rgb(0.14, 0.10, 0.08) });
+    page.drawLine({ start: { x: px, y: y + 30 }, end: { x: px + 314, y: y + 30 }, thickness: 0.3, color: coffee });
+    page.drawText(label.toUpperCase(), { x: px + 4, y: y + 18, size: 6.5, color: peach });
     const val = String(value);
-    if (val.length > 30) {
-      const mid = val.indexOf(' ', 20);
-      if (mid > 0) {
-        page.drawText(val.slice(0, mid),  { x, y: y + 16, size: 9, color: cream });
-        page.drawText(val.slice(mid + 1), { x, y: y + 4,  size: 9, color: cream });
-      } else {
-        page.drawText(val, { x, y: y + 10, size: 8, color: cream });
-      }
+    if (val.length > 34) {
+      page.drawText(val.slice(0, 34), { x: px + 4, y: y + 6,  size: 8, color: cream });
+      page.drawText(val.slice(34),    { x: px + 4, y: y - 4,  size: 8, color: cream });
     } else {
-      page.drawText(val, { x, y: y + 10, size: 10, color: cream });
+      page.drawText(val, { x: px + 4, y: y + 4, size: 9, color: cream });
     }
   });
 
-  // Seção: centros e canais
-  const secY = height - 580;
-  page.drawLine({ start: { x: 50, y: secY + 16 }, end: { x: width - 50, y: secY + 16 }, thickness: 0.3, color: coffee });
-
-  const defined  = (hdData.DefinedCenters || []).map(c => c.replace(' center','').replace(/^\w/, s => s.toUpperCase())).join(', ') || '—';
-  const openCtrs = (hdData.OpenCenters    || []).map(c => c.replace(' center','').replace(/^\w/, s => s.toUpperCase())).join(', ') || '—';
-  const channels = (hdData.Channels       || []).join(' · ') || '—';
-
-  page.drawText('CENTROS DEFINIDOS', { x: 50, y: secY,      size: 7, color: peach });
-  page.drawText(defined,             { x: 50, y: secY - 14, size: 9, color: cream });
-  page.drawText('CENTROS ABERTOS',   { x: 50, y: secY - 36, size: 7, color: peach });
-  page.drawText(openCtrs,            { x: 50, y: secY - 50, size: 9, color: cream });
-  page.drawText('CANAIS ATIVOS',     { x: 50, y: secY - 72, size: 7, color: peach });
-  page.drawText(channels,            { x: 50, y: secY - 86, size: 9, color: cream });
-
   // Rodapé
-  page.drawRectangle({ x: 0, y: 0, width, height: 45, color: mid });
-  page.drawText('© 2025 Vida Autoral · Todos os direitos reservados', { x: 148, y: 16, size: 7, color: rgb(0.4, 0.35, 0.3) });
+  page.drawRectangle({ x: 0, y: 0, width, height: 22, color: mid });
+  page.drawText('© 2025 Vida Autoral · Todos os direitos reservados', { x: 285, y: 7, size: 6.5, color: rgb(0.4, 0.35, 0.3) });
 
   return await pdfDoc.save();
 }
@@ -154,7 +161,7 @@ function buildPdfEmail({ nome, data, hora, local }) {
     <p>Olá, <strong>${nome}</strong>,</p>
     <p>Seu mapa de Human Design está pronto! O PDF completo está em anexo neste e-mail.</p>
     <div class="info"><p><strong>Seus dados:</strong><br/>📅 ${data} &nbsp;·&nbsp; 🕐 ${hora}<br/>📍 ${local}</p></div>
-    <p>O PDF contém seu Tipo Energético, Autoridade, Perfil, Centros, Canais e Cruz de Encarnação. Qualquer dúvida, responda este e-mail.</p>
+    <p>O PDF contém o gráfico personalizado com seu Tipo Energético, Autoridade, Perfil, Centros e Canais. Qualquer dúvida, responda este e-mail.</p>
     <p style="font-size:.85rem;color:#9b836f;">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>
   </div>
   <div class="footer"><p>© 2025 Vida Autoral · Todos os direitos reservados</p></div>
@@ -197,7 +204,7 @@ export default async function handler(req, res) {
     console.log(`[3] Timezone: ${timezone}`);
 
     const hdData = await generateHDChart(data, hora, timezone);
-    console.log(`[4] Dados HD recebidos — Tipo: ${hdData?.Properties?.Type?.id}`);
+    console.log(`[4] Dados HD — Tipo: ${hdData?.Properties?.Type?.id} | SVG: ${hdData?.SVG ? hdData.SVG.length + ' chars' : 'ausente'}`);
 
     const pdfBytes  = await buildPdf(nome, hdData);
     const pdfBase64 = Buffer.from(pdfBytes).toString('base64');
