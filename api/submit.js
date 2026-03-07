@@ -1,4 +1,6 @@
 import { createRequire } from 'module';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { readFile } from 'fs/promises';
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import { PDFDocument, rgb } from 'pdf-lib';
@@ -19,7 +21,10 @@ async function ensureWasm() {
   const wasmPath = require.resolve('@resvg/resvg-wasm/index_bg.wasm');
   await initWasm(await readFile(wasmPath));
 
-  const fontPath = require.resolve('dejavu-fonts-ttf/ttf/DejaVuSans.ttf');
+  // TTF com caminho fixo relativo ao projeto (/fonts/DejaVuSans.ttf).
+  // require.resolve NAO funciona para .ttf no Vercel — caminho via import.meta.url.
+  const __dir = dirname(fileURLToPath(import.meta.url));
+  const fontPath = join(__dir, '..', 'fonts', 'DejaVuSans.ttf');
   fontBuffer = await readFile(fontPath);
 
   wasmInitialized = true;
