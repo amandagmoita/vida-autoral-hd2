@@ -1,7 +1,20 @@
-import { Resvg } from '@resvg/resvg-js';
+import { createRequire } from 'module';
+import { readFile } from 'fs/promises';
+import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import { PDFDocument, rgb } from 'pdf-lib';
 
 export const maxDuration = 30;
+
+// Inicializa o WASM uma única vez (singleton)
+let wasmInitialized = false;
+async function ensureWasm() {
+  if (wasmInitialized) return;
+  const require = createRequire(import.meta.url);
+  const wasmPath = require.resolve('@resvg/resvg-wasm/index_bg.wasm');
+  const wasmBuffer = await readFile(wasmPath);
+  await initWasm(wasmBuffer);
+  wasmInitialized = true;
+}
 
 const RESEND_API_KEY    = process.env.RESEND_API_KEY;
 const FROM_EMAIL        = process.env.FROM_EMAIL;
@@ -27,22 +40,21 @@ async function generateHDChart(date, hora, timezone) {
   return await res.json();
 }
 
-function svgToPng(svgString) {
+function cleanSvg(svgString) {
   let svg = svgString;
-
-  // Garante xmlns — obrigatório para o resvg processar
   if (!svg.includes('xmlns=')) {
     svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
   }
-
-  // Remove hrefs externos que resvg não consegue resolver em serverless
+  // Remove hrefs externos (resvg não acessa URLs externas em serverless)
   svg = svg.replace(/xlink:href="https?:\/\/[^"]*"/g, 'xlink:href=""');
   svg = svg.replace(/ href="https?:\/\/[^"]*"/g, '');
-
-  // Substitui elementos <image> com src/href externo por elemento vazio
   svg = svg.replace(/<image[^>]*(https?:\/\/)[^>]*\/>/g, '<g/>');
-  svg = svg.replace(/<image[^>]*(https?:\/\/)[^/]*>[^<]*<\/image>/g, '<g/>');
+  return svg;
+}
 
+async function svgToPng(svgString) {
+  await ensureWasm();
+  const svg = cleanSvg(svgString);
   const resvg = new Resvg(svg, {
     fitTo: { mode: 'width', value: 700 },
     background: '#1a1410',
@@ -52,7 +64,6 @@ function svgToPng(svgString) {
 
 async function buildPdf(nome, hdData) {
   const props = hdData.Properties || {};
-  const svgString = hdData.SVG;
 
   const pdfDoc = await PDFDocument.create();
   const page   = pdfDoc.addPage([841.89, 595.28]);
@@ -67,21 +78,21 @@ async function buildPdf(nome, hdData) {
   page.drawRectangle({ x: 0, y: 0, width, height, color: dark });
 
   // Gráfico lado esquerdo
-  if (svgString) {
+  if (hdData.SVG) {
     try {
-      const pngBuf = svgToPng(svgString);
+      const pngBuf = await svgToPng(hdData.SVG);
       console.log('[PDF] PNG gerado:', pngBuf.length, 'bytes');
       const pngImg = await pdfDoc.embedPng(pngBuf);
       const dims   = pngImg.scaleToFit(460, height - 40);
       page.drawImage(pngImg, {
         x: 20,
         y: (height - dims.height) / 2,
-        width:  dims.width,
+        width: dims.width,
         height: dims.height,
       });
-      console.log('[PDF] Gráfico embedado com sucesso');
+      console.log('[PDF] Gráfico embedado ✅');
     } catch (e) {
-      console.error('[PDF] Erro ao processar SVG:', e.message);
+      console.error('[PDF] Erro gráfico:', e.message);
     }
   } else {
     console.warn('[PDF] SVG ausente na resposta da API');
@@ -93,7 +104,6 @@ async function buildPdf(nome, hdData) {
   // Painel direito
   const px = 505;
 
-  // Triângulo logo
   page.drawLine({ start: { x: 668, y: height - 18 }, end: { x: 682, y: height - 36 }, thickness: 1, color: coffee });
   page.drawLine({ start: { x: 682, y: height - 36 }, end: { x: 654, y: height - 36 }, thickness: 1, color: coffee });
   page.drawLine({ start: { x: 654, y: height - 36 }, end: { x: 668, y: height - 18 }, thickness: 1, color: coffee });
@@ -162,7 +172,7 @@ function buildPdfEmail({ nome, data, hora, local }) {
     <p>Olá, <strong>${nome}</strong>,</p>
     <p>Seu mapa de Human Design está pronto! O PDF completo está em anexo neste e-mail.</p>
     <div class="info"><p><strong>Seus dados:</strong><br/>📅 ${data} &nbsp;·&nbsp; 🕐 ${hora}<br/>📍 ${local}</p></div>
-    <p>O PDF contém o gráfico personalizado com seu Tipo Energético, Autoridade, Perfil, Centros e Canais. Qualquer dúvida, responda este e-mail.</p>
+    <p>O PDF contém o gráfico personalizado com seu Tipo Energético, Autoridade, Perfil, Centros e Canais.</p>
     <p style="font-size:.85rem;color:#9b836f;">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>
   </div>
   <div class="footer"><p>© 2025 Vida Autoral · Todos os direitos reservados</p></div>
@@ -204,15 +214,11 @@ export default async function handler(req, res) {
     console.log(`[3] Timezone: ${timezone}`);
 
     const hdData = await generateHDChart(data, hora, timezone);
-    const svgLen = hdData?.SVG?.length || 0;
-    console.log(`[4] Dados HD — Tipo: ${hdData?.Properties?.Type?.id} | SVG: ${svgLen} chars`);
-
-    // Log das primeiras 300 chars do SVG para diagnóstico
-    if (hdData?.SVG) console.log(`[4b] SVG início: ${hdData.SVG.slice(0, 300)}`);
+    console.log(`[4] Tipo: ${hdData?.Properties?.Type?.id} | SVG: ${hdData?.SVG?.length || 0} chars`);
 
     const pdfBytes  = await buildPdf(nome, hdData);
     const pdfBase64 = Buffer.from(pdfBytes).toString('base64');
-    console.log(`[5] PDF gerado (${pdfBytes.length} bytes)`);
+    console.log(`[5] PDF: ${pdfBytes.length} bytes`);
 
     await sendEmail({
       to: email,
