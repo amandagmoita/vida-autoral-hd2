@@ -2,7 +2,7 @@
   "version": 2,
   "fluid": false,
   "functions": {
-    "api/submit.js": {
+    "api/submit.mjs": {
       "maxDuration": 30,
       "includeFiles": "node_modules/@resvg/resvg-wasm/**,fonts/DejaVuSans.ttf"
     }
