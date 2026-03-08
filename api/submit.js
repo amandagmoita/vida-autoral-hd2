@@ -133,12 +133,20 @@ function prepararSvg(svg) {
 
 async function svgParaPng(svgString) {
   const svg = prepararSvg(svgString);
-  const buf = Buffer.from(svg);
-  return sharp(buf)
-    .resize({ width: 700 })
-    .flatten({ background: '#ffffff' })
-    .png()
-    .toBuffer();
+  const buf = Buffer.from(svg, 'utf8');
+  console.log('[SVG] tamanho:', svg.length, 'chars');
+  try {
+    const png = await sharp(buf, { density: 150 })
+      .resize({ width: 700 })
+      .flatten({ background: '#ffffff' })
+      .png()
+      .toBuffer();
+    console.log('[SVG->PNG] OK:', png.length, 'bytes');
+    return png;
+  } catch(e) {
+    console.error('[SVG->PNG] ERRO sharp:', e.message);
+    throw e;
+  }
 }
 
 // --- PDF -----------------------------------------------------------------------
@@ -271,12 +279,12 @@ async function buildPdf(nome, hd, planetas, portoes, canais, sv) {
   const LABELS = [
     ['Tipo',         tr(props.Type && props.Type.id)],
     ['Estrat\u00e9gia', tr(props.Strategy && props.Strategy.id)],
-    ['Autoridade',   tr(props.Authority && props.Authority.id)],
-    ['Perfil',       props.Profile ? props.Profile.num1+'/'+props.Profile.num2 : '-'],
+    ['Autoridade',   tr(props.InnerAuthority && props.InnerAuthority.id)],
+    ['Perfil',       (props.Profile && props.Profile.id) || '-'],
     ['Defini\u00e7\u00e3o', tr(props.Definition && props.Definition.id)],
-    ['Cross',        (props.Incarnation && props.Incarnation.id) || '-'],
+    ['Cruz',         (props.IncarnationCross && props.IncarnationCross.id) || '-'],
     ['Assinatura',   tr(props.Signature && props.Signature.id)],
-    ['N\u00e3o-Self', tr(props.NotSelf && props.NotSelf.id)],
+    ['N\u00e3o-Self', tr(props.NotSelfTheme && props.NotSelfTheme.id)],
   ];
   const CW2 = pw / 2 - 5;
   LABELS.forEach(([label, val], i) => {
