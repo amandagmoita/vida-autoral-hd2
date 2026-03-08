@@ -1,36 +1,6 @@
 ‘use strict’;
-const { join }         = require(‘path’);
-const { readFile }     = require(‘fs’).promises;
-const { PDFDocument, rgb } = require(‘pdf-lib’);
-const fontkit          = eval(‘require’)(’@pdf-lib/fontkit’);
-// @resvg/resvg-wasm carregado via require() - CJS nativo, sem ESM/dynamic import
-let Resvg = null;
-
 const maxDuration = 30;
-
-// — WASM + Font singleton —————————————————–
-// DIAGNOSTICO: resvg-wasm em ambiente serverless NAO tem fontes do sistema.
-// Sem fonte carregada, todos os elementos <text> sao silenciosamente ignorados.
-// Solucao: bundlar DejaVu Sans TTF e carrega-la explicitamente via fontBuffers.
-let wasmInitialized = false;
-let fontBuffer = null;
-
-async function ensureWasm() {
-if (wasmInitialized) return;
-
-// eval(“require”) evita que o bundler do Fluid (esbuild) analise estaticamente este modulo WASM
-// O require ocorre apenas em runtime, quando o modulo ja esta disponivel em node_modules
-const resvgCjs = eval(‘require’)(’@resvg/resvg-wasm’);
-Resvg = resvgCjs.Resvg;
-
-const wasmPath = join(__dirname, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
-await resvgCjs.initWasm(await readFile(wasmPath));
-
-const fontPath = join(__dirname, ‘..’, ‘fonts’, ‘DejaVuSans.ttf’);
-fontBuffer = await readFile(fontPath);
-
-wasmInitialized = true;
-}
+const { PDFDocument, rgb, StandardFonts } = require(‘pdf-lib’);
 
 // — ENV ———————————————————————–
 const RESEND_API_KEY    = process.env.RESEND_API_KEY;
@@ -104,55 +74,6 @@ const url = `${BODYGRAPH_BASE}/v221006/hd-data?api_key=${BODYGRAPH_API_KEY}&date
 const res  = await fetch(url);
 if (!res.ok) throw new Error(`HD Data API error: ${res.status}`);
 return await res.json();
-}
-
-// — SVG -> PNG —————————————————————–
-
-/**
-
-- Prepara o SVG do Bodygraph para renderizacao com resvg-wasm.
-- 
-- IMPORTANTE: NAO alteramos cores de texto.
-- O SVG ja tem cores intencionais: texto branco dentro de circulos escuros
-- (centros ativados) e texto escuro nas areas claras. As cores eram corretas
-- desde sempre - o problema anterior era apenas ausencia de fonte TTF no
-- ambiente serverless, que fazia o resvg ignorar todos os <text> silenciosamente.
-- 
-- Agora que a DejaVu Sans e carregada via fontBuffers, basta:
-- 1. Garantir namespace xmlns
-- 1. Remover recursos externos (URLs http) que travam o resvg
-   */
-   function prepararSvg(svgString) {
-   let svg = svgString;
-
-// 1. Garante namespace
-if (!svg.includes(‘xmlns=’)) {
-svg = svg.replace(’<svg’, ‘<svg xmlns=“http://www.w3.org/2000/svg”’);
-}
-
-// 2. Remove recursos externos que podem travar o resvg em ambiente sem rede
-svg = svg.replace(/xlink:href=“https?://[^”]*”/g, ‘xlink:href=””’);
-svg = svg.replace(/ href=“https?://[^”]*”/g, ‘’);
-svg = svg.replace(/<image[^>]*(https?://)[^>]*/>/g, ‘<g/>’);
-
-return svg;
-}
-
-async function svgParaPng(svgString) {
-await ensureWasm();
-const svg   = prepararSvg(svgString);
-const resvg = new Resvg(svg, {
-fitTo:      { mode: ‘width’, value: 720 },
-background: ‘#ffffff’,
-font: {
-// Sem fonte explicita, resvg-wasm ignora todos os <text> silenciosamente.
-// DejaVu Sans e bundlada no projeto para garantir renderizacao dos numeros dos portoes.
-fontBuffers:       [fontBuffer],
-defaultFontFamily: ‘DejaVu Sans’,
-loadSystemFonts:   false,
-},
-});
-return resvg.render().asPng();
 }
 
 // — PLANETAS E SETAS –––––––––––––––––––––––––––––
@@ -266,8 +187,7 @@ const setas = calcularSetas(hdData);
 console.log(’[PDF] Setas:’, JSON.stringify(setas));
 
 const pdfDoc = await PDFDocument.create();
-pdfDoc.registerFontkit(fontkit);
-const dejaVuFont = await pdfDoc.embedFont(fontBuffer);
+const dejaVuFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 const page   = pdfDoc.addPage([841.89, 595.28]);
 const { width, height } = page.getSize();
 
@@ -369,24 +289,13 @@ if (pp) {
 
 });
 
-// – Grafico Bodygraph –
-let imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
-if (hdData.SVG) {
-try {
-const pngBuf = await svgParaPng(hdData.SVG);
-console.log(’[PDF] PNG:’, pngBuf.length, ‘bytes’);
-const pngImg = await pdfDoc.embedPng(pngBuf);
-const dims   = pngImg.scaleToFit(CHART_W, AREA_H);
-imgX = CHART_X0 + (CHART_W - dims.width) / 2;
-imgY = AREA_BOT  + (AREA_H  - dims.height) / 2;
-imgW = dims.width;
-imgH = dims.height;
-page.drawImage(pngImg, { x: imgX, y: imgY, width: imgW, height: imgH });
-console.log(’[PDF] Grafico embedado [OK] dims:’, Math.round(imgW), ‘x’, Math.round(imgH));
-} catch (e) {
-console.error(’[PDF] Erro grafico:’, e.message);
-}
-}
+// – Area do Bodygraph: placeholder visual com borda arredondada –
+const imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
+page.drawRectangle({ x: imgX, y: imgY, width: imgW, height: imgH,
+color: rgb(0.98, 0.97, 0.96), borderColor: rgb(0.85, 0.78, 0.70), borderWidth: 1 });
+page.drawText(‘BODYGRAPH’, { x: imgX + imgW/2 - 30, y: imgY + imgH/2 + 8, size: 8, color: rgb(0.6,0.5,0.4), font: dejaVuFont });
+page.drawText(‘ver email’, { x: imgX + imgW/2 - 18, y: imgY + imgH/2 - 6, size: 7, color: rgb(0.7,0.6,0.5), font: dejaVuFont });
+console.log(’[PDF] Placeholder bodygraph desenhado’);
 
 // – Quatro setas do Variable –
 // Y: nivel da cabeca (~88%) e da raiz (~8%) do grafico
@@ -572,7 +481,7 @@ return emailBase + `<div class="wrap">
 </div></body></html>`;
 }
 
-function buildPdfEmail({ nome, data, hora, local }) {
+function buildPdfEmail({ nome, data, hora, local, svgString }) {
 return emailBase + `<div class="wrap">
 
   <div class="header">
@@ -583,7 +492,8 @@ return emailBase + `<div class="wrap">
     <p>Ola, <strong>${nome}</strong>,</p>
     <p>Seu mapa de Desenho Humano est? pronto! &#127881; O PDF personalizado est? em anexo.</p>
     <div class="info"><p>&#128197; <strong>${data}</strong> &nbsp;.&nbsp; &#128336; <strong>${hora}</strong><br/>&#128205; ${local}</p></div>
-    <p>O PDF inclui seu gr?fico completo com Tipo, Estrategia, Autoridade, Perfil, Centros, Canais e Port?es ativados.</p>
+    <p>O PDF em anexo inclui todos os dados: Tipo, Estrat??gia, Autoridade, Perfil, Canais e Port??es ativados.</p>
+    ${svgString ? '<div style="text-align:center;margin:18px 0;background:#fff;border-radius:12px;padding:12px;"><p style="font-size:.75rem;color:#9b836f;margin-bottom:8px;">Seu Bodygraph</p>' + svgString.replace('<svg', '<svg style="max-width:340px;height:auto"') + '</div>' : ''}
     <p style="font-size:.83rem;color:#9b836f;">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>
   </div>
   <div class="footer"><p>(c) 2025 Vida Autoral</p></div>
@@ -653,7 +563,7 @@ console.log(`[5] PDF: ${pdfBytes.length} bytes`);
 await sendEmail({
   to: email,
   subject: `${nome}, seu mapa de Desenho Humano est? pronto *`,
-  html: buildPdfEmail({ nome, data, hora, local }),
+  html: buildPdfEmail({ nome, data, hora, local, svgString: hdData.SVG }),
   attachments: [{ filename: `mapa-desenho-humano-${nome.split(' ')[0].toLowerCase()}.pdf`, content: pdfBase64 }],
 });
 console.log(`[6] PDF enviado com sucesso`);
