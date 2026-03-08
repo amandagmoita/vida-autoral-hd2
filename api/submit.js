@@ -198,9 +198,11 @@ async function buildPdf(nome, hd, planetas, portoes, canais, sv) {
   let imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
   if (hd.SVG) {
     try {
-      const baseUrl = process.env.VERCEL_URL
-        ? 'https://' + process.env.VERCEL_URL
-        : 'http://localhost:3000';
+      // VERCEL_URL = deployment preview (protegido por 401)
+      // VERCEL_PROJECT_PRODUCTION_URL = dominio de producao (sem protecao)
+      const baseUrl = process.env.SITE_URL
+        || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL : null)
+        || 'https://www.vidaautoral.com.br';
       const renderResp = await fetch(baseUrl + '/api/render', {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
