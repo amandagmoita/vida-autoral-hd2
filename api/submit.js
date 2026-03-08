@@ -2,7 +2,9 @@ import { dirname, join } from ‘path’;
 import { fileURLToPath } from ‘url’;
 import { readFile } from ‘fs/promises’;
 import { PDFDocument, rgb } from ‘pdf-lib’;
-import fontkit from ‘@pdf-lib/fontkit’;
+import { createRequire } from ‘module’;
+const _require = createRequire(import.meta.url);
+const fontkit = _require(’@pdf-lib/fontkit’);
 // @resvg/resvg-wasm e carregado via dynamic import no ensureWasm()
 // para evitar que o bundler do Vercel (esbuild) tente resolver binarios nativos
 let Resvg = null;
