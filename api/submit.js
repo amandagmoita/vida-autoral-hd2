@@ -1,18 +1,18 @@
 'use strict';
 // Node 20.x (ver package.json) usa runtime classico do Vercel, sem Fluid/Rust bytecode.
-// eval('require') evita analise estatica pelo bundler. Dependencias:
+// require() normal funciona pois Node 20 usa runtime classico (sem Fluid).
 //   - pdf-lib (geracao de PDF)
 //   - @pdf-lib/fontkit (unicode nos simbolos planetarios)
 //   - @resvg/resvg-wasm (SVG -> PNG para o grafico bodygraph)
-// Todas CJS puras. O .wasm e lido de node_modules em runtime.
+
 
 const maxDuration = 30;
 module.exports = handler;
 module.exports.maxDuration = maxDuration;
 
 // --- DEPS (carregadas via eval para nao serem analisadas estaticamente) --------
-const { PDFDocument, rgb } = eval('require')('pdf-lib');
-const fontkit              = eval('require')('@pdf-lib/fontkit');
+const { PDFDocument, rgb } = require('pdf-lib');
+const fontkit              = require('@pdf-lib/fontkit');
 
 // resvg inicializado uma vez (singleton)
 let Resvg = null, initWasm = null, fontBuffer = null, wasmReady = false;
@@ -21,7 +21,7 @@ async function ensureResvg() {
   if (wasmReady) return;
   const fs   = require('fs');
   const path = require('path');
-  const mod  = eval('require')('@resvg/resvg-wasm');
+  const mod  = require('@resvg/resvg-wasm');
   Resvg      = mod.Resvg;
   initWasm   = mod.initWasm;
   const wasmBuf = fs.readFileSync(path.join(__dirname, '..', 'node_modules', '@resvg', 'resvg-wasm', 'index_bg.wasm'));
