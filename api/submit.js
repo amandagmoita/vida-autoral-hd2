@@ -1,15 +1,18 @@
 'use strict';
 // ZERO dependencias WASM/nativas. Fluid runtime corrompe tudo que nao e JS puro.
 // SVG do bodygraph vai inline no email HTML - sem conversao PNG necessaria.
-const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
+const { PDFDocument, rgb } = require('pdf-lib');
+const fontkit = require('@pdf-lib/fontkit');
+const fs_ = require('fs'), path_ = require('path');
+let fontCache = null;
+function getFont() {
+  if (!fontCache) fontCache = fs_.readFileSync(path_.join(process.cwd(), 'fonts', 'DejaVuSans.ttf'));
+  return fontCache;
+}
 
 const maxDuration = 30;
 module.exports = handler;
 module.exports.maxDuration = maxDuration;
-
-// --- DEPS (carregadas via eval para nao serem analisadas estaticamente) --------
-
-
 
 // --- ENV -----------------------------------------------------------------------
 const RESEND_API_KEY    = process.env.RESEND_API_KEY;
@@ -76,7 +79,7 @@ const PLANET_PT  = {
 const PLANET_SYM = {
   'Sun':'\u2609','Earth':'\u2295','North Node':'\u260a','South Node':'\u260b',
   'Moon':'\u263d','Mercury':'\u263f','Venus':'\u2640','Mars':'\u2642',
-  'Jupiter':'\u2643','Saturn':'\u2644','Uranus':'\u2645','Neptune':'\u2646','Pluto':'\u2647',
+  'Jupiter':'\u2643','Saturn':'\u2644','Uranus':'\u2645','Neptune':'\u2646','Pluto':'\u2647'
 };
 
 function extrairPlanetas(hd) {
@@ -132,7 +135,8 @@ function getSetas(hd) {
 async function buildPdf(nome, hd, planetas, portoes, canais, sv) {
   const props = hd.Properties || {};
   const pdfDoc = await PDFDocument.create();
-  const font   = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  pdfDoc.registerFontkit(fontkit);
+  const font = await pdfDoc.embedFont(getFont());
   const page   = pdfDoc.addPage([841.89, 595.28]);
   const { width, height } = page.getSize();
 
