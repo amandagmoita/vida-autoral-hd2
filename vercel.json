@@ -5,7 +5,7 @@
   "functions": {
     "api/submit.js": {
       "maxDuration": 30,
-      "includeFiles": "node_modules/@resvg/resvg-js*/**,node_modules/@pdf-lib/fontkit/**,fonts/DejaVuSans.ttf"
+      "includeFiles": "node_modules/@img/**,node_modules/sharp/**,node_modules/@pdf-lib/fontkit/**,fonts/DejaVuSans.ttf"
     }
   },
   "routes": [
