@@ -13,9 +13,8 @@ module.exports.maxDuration = maxDuration;
 const { PDFDocument, rgb } = require(‘pdf-lib’);
 const fontkit              = require(’@pdf-lib/fontkit’);
 
-// @resvg/resvg-js: binario nativo (.node), sem WASM - nao corrompido pelo Fluid runtime
-// Especializado em SVG->PNG com suporte a fontes customizadas
-const { Resvg } = require(’@resvg/resvg-js’);
+// sharp: binario nativo (.node), sem WASM - nao corrompido pelo Fluid runtime
+const sharp = require(‘sharp’);
 const fs_   = require(‘fs’);
 const path_ = require(‘path’);
 let fontBuffer = null;
@@ -138,6 +137,19 @@ return { tl:v.Digestion||‘left’, tr:v.Perspective||‘left’, bl:v.Environm
 }
 
 // — SVG -> PNG —————————————————————
+// Injeta DejaVuSans como base64 no SVG para que sharp/librsvg renderize textos
+// sem depender de fontes do sistema (que nao existem no Vercel)
+function prepararSvgComFonte(svg, fontBuf) {
+const fontB64 = fontBuf.toString(‘base64’);
+const families = [‘Arial’,‘Helvetica’,‘sans-serif’,‘serif’,‘Georgia’,‘Verdana’,‘Tahoma’];
+const faces = families.map(f =>
+‘@font-face{font-family:”’ + f + ‘”;src:url(“data:font/truetype;base64,’ + fontB64 + ‘”) format(“truetype”);}’
+).join(’’);
+const defs = ‘<defs><style>’ + faces + ‘</style></defs>’;
+// Insere logo apos a tag <svg …>
+return svg.replace(/(<svg[^>]*>)/, ‘$1’ + defs);
+}
+
 function prepararSvg(svg) {
 // Garante namespace
 if (!svg.includes(‘xmlns=’)) {
@@ -153,30 +165,20 @@ svg = svg.replace(/font-family:\s*[^;}”’]+/g, ‘font-family: DejaVu Sans’
 return svg;
 }
 
-function svgParaPng(svgString) {
+async function svgParaPng(svgString) {
 ensureFontBuffer();
-const svg = prepararSvg(svgString);
+const svg = prepararSvgComFonte(prepararSvg(svgString), fontBuffer);
 console.log(’[SVG] tamanho:’, svg.length, ‘chars’);
 try {
-const resvg = new Resvg(svg, {
-fitTo: { mode: ‘width’, value: 700 },
-background: ‘#ffffff’,
-font: {
-fontBuffers: [fontBuffer],
-defaultFontFamily: ‘DejaVu Sans’,
-serifFamily: ‘DejaVu Sans’,
-sansSerifFamily: ‘DejaVu Sans’,
-cursiveFamily: ‘DejaVu Sans’,
-fantasyFamily: ‘DejaVu Sans’,
-monospaceFamily: ‘DejaVu Sans’,
-loadSystemFonts: false,
-},
-});
-const png = resvg.render().asPng();
+const png = await sharp(Buffer.from(svg, ‘utf8’), { density: 150, limitInputPixels: false })
+.resize({ width: 700 })
+.flatten({ background: ‘#ffffff’ })
+.png()
+.toBuffer();
 console.log(’[SVG->PNG] OK:’, png.length, ‘bytes’);
 return png;
 } catch(e) {
-console.error(’[SVG->PNG] ERRO resvg-js:’, e.message);
+console.error(’[SVG->PNG] ERRO sharp:’, e.message);
 throw e;
 }
 }
@@ -255,7 +257,7 @@ if (p.pers !== '-') page.drawText(p.pers, { x:px+19, y:pillY+6, size:8.5, font, 
 let imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
 if (hd.SVG) {
 try {
-const png  = svgParaPng(hd.SVG);
+const png  = await svgParaPng(hd.SVG);
 const img  = await pdfDoc.embedPng(png);
 const dims = img.scaleToFit(CHART_W, AREA_H);
 imgX = CHART_X0 + (CHART_W - dims.width) / 2;
