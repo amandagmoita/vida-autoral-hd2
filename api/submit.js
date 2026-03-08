@@ -3,7 +3,7 @@
 // require() normal funciona pois Node 20 usa runtime classico (sem Fluid).
 //   - pdf-lib (geracao de PDF)
 //   - @pdf-lib/fontkit (unicode nos simbolos planetarios)
-//   - @resvg/resvg-js (SVG -> PNG via binario nativo .node, sem WASM)
+//   - @resvg/resvg-wasm (SVG -> PNG: .wasm lido como Buffer binario, nao parseado pelo Fluid)
 
 const maxDuration = 30;
 module.exports = handler;
@@ -13,17 +13,28 @@ module.exports.maxDuration = maxDuration;
 const { PDFDocument, rgb } = require(‘pdf-lib’);
 const fontkit              = require(’@pdf-lib/fontkit’);
 
-// sharp: binario nativo (.node), sem WASM - nao corrompido pelo Fluid runtime
-const sharp = require(‘sharp’);
+// resvg-wasm: o .wasm e lido como Buffer binario via fs, nao parseado pelo Fluid runtime
+const { Resvg, initWasm } = require(’@resvg/resvg-wasm’);
+let wasmInitialized = false;
 const fs_   = require(‘fs’);
 const path_ = require(‘path’);
 let fontBuffer = null;
 
-function ensureFontBuffer() {
-if (fontBuffer) return;
+async function ensureFontBuffer() {
+if (fontBuffer && wasmInitialized) return;
+if (!fontBuffer) {
 const fontPath = path_.join(process.cwd(), ‘fonts’, ‘DejaVuSans.ttf’);
 console.log(’[font] path:’, fontPath, ‘exists:’, fs_.existsSync(fontPath));
 fontBuffer = fs_.readFileSync(fontPath);
+}
+if (!wasmInitialized) {
+// Le o .wasm como Buffer binario - o Fluid runtime nao parseia Buffers
+const wasmPath = path_.join(process.cwd(), ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
+const wasmBuffer = fs_.readFileSync(wasmPath);
+await initWasm(wasmBuffer);
+wasmInitialized = true;
+console.log(’[WASM] resvg inicializado’);
+}
 }
 
 // — ENV ———————————————————————–
@@ -137,19 +148,6 @@ return { tl:v.Digestion||‘left’, tr:v.Perspective||‘left’, bl:v.Environm
 }
 
 // — SVG -> PNG —————————————————————
-// Injeta DejaVuSans como base64 no SVG para que sharp/librsvg renderize textos
-// sem depender de fontes do sistema (que nao existem no Vercel)
-function prepararSvgComFonte(svg, fontBuf) {
-const fontB64 = fontBuf.toString(‘base64’);
-const families = [‘Arial’,‘Helvetica’,‘sans-serif’,‘serif’,‘Georgia’,‘Verdana’,‘Tahoma’];
-const faces = families.map(f =>
-‘@font-face{font-family:”’ + f + ‘”;src:url(“data:font/truetype;base64,’ + fontB64 + ‘”) format(“truetype”);}’
-).join(’’);
-const defs = ‘<defs><style>’ + faces + ‘</style></defs>’;
-// Insere logo apos a tag <svg …>
-return svg.replace(/(<svg[^>]*>)/, ‘$1’ + defs);
-}
-
 function prepararSvg(svg) {
 // Garante namespace
 if (!svg.includes(‘xmlns=’)) {
@@ -166,19 +164,29 @@ return svg;
 }
 
 async function svgParaPng(svgString) {
-ensureFontBuffer();
-const svg = prepararSvgComFonte(prepararSvg(svgString), fontBuffer);
+await ensureFontBuffer();
+const svg = prepararSvg(svgString);
 console.log(’[SVG] tamanho:’, svg.length, ‘chars’);
 try {
-const png = await sharp(Buffer.from(svg, ‘utf8’), { density: 150, limitInputPixels: false })
-.resize({ width: 700 })
-.flatten({ background: ‘#ffffff’ })
-.png()
-.toBuffer();
+const resvg = new Resvg(svg, {
+fitTo: { mode: ‘width’, value: 700 },
+background: ‘#ffffff’,
+font: {
+fontBuffers: [fontBuffer],
+defaultFontFamily: ‘DejaVu Sans’,
+serifFamily: ‘DejaVu Sans’,
+sansSerifFamily: ‘DejaVu Sans’,
+cursiveFamily: ‘DejaVu Sans’,
+fantasyFamily: ‘DejaVu Sans’,
+monospaceFamily: ‘DejaVu Sans’,
+loadSystemFonts: false,
+},
+});
+const png = resvg.render().asPng();
 console.log(’[SVG->PNG] OK:’, png.length, ‘bytes’);
-return png;
+return Buffer.from(png);
 } catch(e) {
-console.error(’[SVG->PNG] ERRO sharp:’, e.message);
+console.error(’[SVG->PNG] ERRO resvg-wasm:’, e.message);
 throw e;
 }
 }
