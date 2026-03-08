@@ -106,8 +106,11 @@ function extrairPlanetas(hd) {
 }
 
 function extrairPortoesCanais(hd) {
-  let portoes = hd.ActiveGates || [];
-  if (!portoes.length) {
+  // Portoes
+  let portoes = [];
+  if (hd.ActiveGates && hd.ActiveGates.length) {
+    portoes = hd.ActiveGates.map(Number);
+  } else {
     const seen = {};
     const add = side => Object.values(side).forEach(p => {
       if (p && p.Gate && !seen[p.Gate]) { seen[p.Gate]=true; portoes.push(+p.Gate); }
@@ -115,7 +118,18 @@ function extrairPortoesCanais(hd) {
     if (hd.Personality) add(hd.Personality);
     if (hd.Design) add(hd.Design);
   }
-  return { portoes, canais: hd.ActiveChannels || [] };
+  // Canais: a API pode retornar array de strings "20-57", objetos {Gate1,Gate2} ou {id}
+  let canais = [];
+  const raw = hd.ActiveChannels || hd.Channels || hd.channels || [];
+  console.log('[canais] raw type:', typeof raw, 'length:', raw.length, 'sample:', JSON.stringify(raw[0]));
+  raw.forEach(c => {
+    if (typeof c === 'string') canais.push(c);
+    else if (c && c.id) canais.push(String(c.id));
+    else if (c && c.Gate1 && c.Gate2) canais.push(c.Gate1 + '-' + c.Gate2);
+    else if (c && c.gate1 && c.gate2) canais.push(c.gate1 + '-' + c.gate2);
+    else canais.push(JSON.stringify(c));
+  });
+  return { portoes, canais };
 }
 
 function getSetas(hd) {
@@ -136,7 +150,7 @@ async function svgParaPng(svgString) {
   const buf = Buffer.from(svg, 'utf8');
   console.log('[SVG] tamanho:', svg.length, 'chars');
   try {
-    const png = await sharp(buf, { density: 150 })
+    const png = await sharp(buf, { density: 150, limitInputPixels: false })
       .resize({ width: 700 })
       .flatten({ background: '#ffffff' })
       .png()
