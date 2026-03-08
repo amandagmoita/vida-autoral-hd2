@@ -24,9 +24,12 @@ async function ensureResvg() {
   const mod  = require('@resvg/resvg-wasm');
   Resvg      = mod.Resvg;
   initWasm   = mod.initWasm;
-  const wasmBuf = fs.readFileSync(path.join(__dirname, '..', 'node_modules', '@resvg', 'resvg-wasm', 'index_bg.wasm'));
+  const base    = process.cwd(); // /var/task no Vercel
+  const wasmBuf = fs.readFileSync(path.join(base, 'node_modules', '@resvg', 'resvg-wasm', 'index_bg.wasm'));
   await initWasm(wasmBuf);
-  fontBuffer = fs.readFileSync(path.join(__dirname, '..', 'fonts', 'DejaVuSans.ttf'));
+  const fontPath = path.join(base, 'fonts', 'DejaVuSans.ttf');
+  console.log('[resvg] font path:', fontPath, 'exists:', fs.existsSync(fontPath));
+  fontBuffer = fs.readFileSync(fontPath);
   wasmReady = true;
 }
 
