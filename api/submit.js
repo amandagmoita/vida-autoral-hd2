@@ -5,7 +5,7 @@ import { PDFDocument, rgb } from ‘pdf-lib’;
 import { createRequire } from ‘module’;
 const _require = createRequire(import.meta.url);
 const fontkit = _require(’@pdf-lib/fontkit’);
-// @resvg/resvg-wasm e carregado via dynamic import no ensureWasm()
+// @resvg/resvg-wasm e carregado via createRequire (CJS) - sem dynamic import
 // para evitar que o bundler do Vercel (esbuild) tente resolver binarios nativos
 let Resvg = null;
 
@@ -21,14 +21,14 @@ let fontBuffer = null;
 async function ensureWasm() {
 if (wasmInitialized) return;
 
-const __dir = dirname(fileURLToPath(import.meta.url));
-const mjsPath = join(__dir, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index.mjs’);
-const resvgModule = await import(‘file://’ + mjsPath);
-Resvg = resvgModule.Resvg;
-const initWasm = resvgModule.initWasm;
+// Usa CJS index.js via createRequire - evita dynamic import que o esbuild nao suporta
+const _req = createRequire(import.meta.url);
+const resvgCjs = _req(’@resvg/resvg-wasm’);
+Resvg = resvgCjs.Resvg;
 
+const __dir = dirname(fileURLToPath(import.meta.url));
 const wasmPath = join(__dir, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
-await initWasm(await readFile(wasmPath));
+await resvgCjs.initWasm(await readFile(wasmPath));
 
 const fontPath = join(__dir, ‘..’, ‘fonts’, ‘DejaVuSans.ttf’);
 fontBuffer = await readFile(fontPath);
@@ -163,11 +163,21 @@ return resvg.render().asPng();
 
 const PLANET_ORDER = [‘Sun’,‘Earth’,‘North Node’,‘South Node’,‘Moon’,‘Mercury’,‘Venus’,‘Mars’,‘Jupiter’,‘Saturn’,‘Uranus’,‘Neptune’,‘Pluto’];
 
-// Abreviacoes ASCII (WinAnsi-safe para pdf-lib sem fonte embedada)
+// Simbolos astronomicos Unicode (escapes ASCII - arquivo 100% ASCII)
 const PLANET_SYMBOL = {
-‘Sun’:‘Sol’, ‘Earth’:‘Ter’, ‘North Node’:‘NN’, ‘South Node’:‘NS’,
-‘Moon’:‘Lua’, ‘Mercury’:‘Mer’, ‘Venus’:‘Ven’, ‘Mars’:‘Mar’,
-‘Jupiter’:‘Jup’, ‘Saturn’:‘Sat’, ‘Uranus’:‘Ura’, ‘Neptune’:‘Nep’, ‘Pluto’:‘Plu’,
+‘Sun’:        ‘\u2609’,
+‘Earth’:      ‘\u2295’,
+‘North Node’: ‘\u260A’,
+‘South Node’: ‘\u260B’,
+Moon:    ‘\u263D’,
+Mercury: ‘\u263F’,
+Venus:   ‘\u2640’,
+Mars:    ‘\u2642’,
+Jupiter: ‘\u2643’,
+Saturn:  ‘\u2644’,
+Uranus:  ‘\u2645’,
+Neptune: ‘\u2646’,
+Pluto:   ‘\u2647’,
 };
 
 function extrairPlanetas(hdData) {
