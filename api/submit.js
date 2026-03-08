@@ -3,7 +3,7 @@
 // require() normal funciona pois Node 20 usa runtime classico (sem Fluid).
 //   - pdf-lib (geracao de PDF)
 //   - @pdf-lib/fontkit (unicode nos simbolos planetarios)
-//   - sharp (SVG -> PNG via binario nativo .node, sem WASM)
+//   - @resvg/resvg-js (SVG -> PNG via binario nativo .node, sem WASM)
 
 
 const maxDuration = 30;
@@ -14,8 +14,9 @@ module.exports.maxDuration = maxDuration;
 const { PDFDocument, rgb } = require('pdf-lib');
 const fontkit              = require('@pdf-lib/fontkit');
 
-// sharp: binario nativo (.node), sem WASM - nao corrompido pelo Fluid runtime
-const sharp = require('sharp');
+// @resvg/resvg-js: binario nativo (.node), sem WASM - nao corrompido pelo Fluid runtime
+// Especializado em SVG->PNG com suporte a fontes customizadas
+const { Resvg } = require('@resvg/resvg-js');
 const fs_   = require('fs');
 const path_ = require('path');
 let fontBuffer = null;
@@ -162,20 +163,21 @@ function prepararSvg(svg) {
   return svg;
 }
 
-async function svgParaPng(svgString) {
+function svgParaPng(svgString) {
+  ensureFontBuffer();
   const svg = prepararSvg(svgString);
-  const buf = Buffer.from(svg, 'utf8');
   console.log('[SVG] tamanho:', svg.length, 'chars');
   try {
-    const png = await sharp(buf, { density: 150, limitInputPixels: false })
-      .resize({ width: 700 })
-      .flatten({ background: '#ffffff' })
-      .png()
-      .toBuffer();
+    const resvg = new Resvg(svg, {
+      fitTo: { mode: 'width', value: 700 },
+      background: '#ffffff',
+      font: { fontBuffers: [fontBuffer], defaultFontFamily: 'DejaVu Sans', loadSystemFonts: false },
+    });
+    const png = resvg.render().asPng();
     console.log('[SVG->PNG] OK:', png.length, 'bytes');
     return png;
   } catch(e) {
-    console.error('[SVG->PNG] ERRO sharp:', e.message);
+    console.error('[SVG->PNG] ERRO resvg-js:', e.message);
     throw e;
   }
 }
@@ -251,7 +253,7 @@ async function buildPdf(nome, hd, planetas, portoes, canais, sv) {
   let imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
   if (hd.SVG) {
     try {
-      const png  = await svgParaPng(hd.SVG);
+      const png  = svgParaPng(hd.SVG);
       const img  = await pdfDoc.embedPng(png);
       const dims = img.scaleToFit(CHART_W, AREA_H);
       imgX = CHART_X0 + (CHART_W - dims.width) / 2;
