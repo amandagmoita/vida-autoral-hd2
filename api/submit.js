@@ -1,13 +1,36 @@
 'use strict';
-// ZERO dependencias npm. Apenas APIs nativas do Node.js 18+:
-// fetch, Buffer, process.env, stream (req.on)
-// Motivo: o runtime Fluid do Vercel (Rust/V8 bytecode) corrompe qualquer
-// bundle que inclua dependencias npm de tamanho relevante (pdf-lib 20MB, resvg-wasm 2.4MB).
+// Node 20.x (ver package.json) usa runtime classico do Vercel, sem Fluid/Rust bytecode.
+// eval('require') evita analise estatica pelo bundler. Dependencias:
+//   - pdf-lib (geracao de PDF)
+//   - @pdf-lib/fontkit (unicode nos simbolos planetarios)
+//   - @resvg/resvg-wasm (SVG -> PNG para o grafico bodygraph)
+// Todas CJS puras. O .wasm e lido de node_modules em runtime.
 
 const maxDuration = 30;
 module.exports = handler;
 module.exports.maxDuration = maxDuration;
 
+// --- DEPS (carregadas via eval para nao serem analisadas estaticamente) --------
+const { PDFDocument, rgb } = eval('require')('pdf-lib');
+const fontkit              = eval('require')('@pdf-lib/fontkit');
+
+// resvg inicializado uma vez (singleton)
+let Resvg = null, initWasm = null, fontBuffer = null, wasmReady = false;
+
+async function ensureResvg() {
+  if (wasmReady) return;
+  const fs   = require('fs');
+  const path = require('path');
+  const mod  = eval('require')('@resvg/resvg-wasm');
+  Resvg      = mod.Resvg;
+  initWasm   = mod.initWasm;
+  const wasmBuf = fs.readFileSync(path.join(__dirname, '..', 'node_modules', '@resvg', 'resvg-wasm', 'index_bg.wasm'));
+  await initWasm(wasmBuf);
+  fontBuffer = fs.readFileSync(path.join(__dirname, '..', 'fonts', 'DejaVuSans.ttf'));
+  wasmReady = true;
+}
+
+// --- ENV -----------------------------------------------------------------------
 const RESEND_API_KEY    = process.env.RESEND_API_KEY;
 const FROM_EMAIL        = process.env.FROM_EMAIL;
 const FROM_NAME         = process.env.FROM_NAME;
@@ -15,6 +38,7 @@ const REPLY_TO          = process.env.REPLY_TO;
 const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
 const BODYGRAPH_BASE    = 'https://api.bodygraphchart.com';
 
+// --- TRADUCOES -----------------------------------------------------------------
 const T = {
   'Generator':'Gerador','Manifested Generator':'Gerador Manifestado',
   'Manifestor':'Manifestador','Projector':'Projetor','Reflector':'Refletor',
@@ -36,10 +60,12 @@ const T = {
   'Frustration':'Frustra\u00e7\u00e3o','Bitterness':'Amargura',
   'Anger':'Raiva','Disappointment':'Decep\u00e7\u00e3o',
 };
-function t(v) { return (v && T[v]) || v || '-'; }
+function tr(v) { return (v && T[v]) || v || '-'; }
 
+// --- BODYGRAPH API -------------------------------------------------------------
 async function resolveTimezone(city) {
-  const url = BODYGRAPH_BASE + '/v210502/locations?api_key=' + BODYGRAPH_API_KEY + '&query=' + encodeURIComponent(city);
+  const url = BODYGRAPH_BASE + '/v210502/locations?api_key=' + BODYGRAPH_API_KEY
+    + '&query=' + encodeURIComponent(city);
   const res = await fetch(url);
   if (!res.ok) throw new Error('Locations API: ' + res.status);
   const data = await res.json();
@@ -48,9 +74,8 @@ async function resolveTimezone(city) {
 }
 
 async function fetchHDData(date, hora, timezone) {
-  const dt  = date + ' ' + hora;
   const url = BODYGRAPH_BASE + '/v221006/hd-data?api_key=' + BODYGRAPH_API_KEY
-    + '&date=' + encodeURIComponent(dt)
+    + '&date=' + encodeURIComponent(date + ' ' + hora)
     + '&timezone=' + encodeURIComponent(timezone)
     + '&design=Leo';
   const res = await fetch(url);
@@ -58,215 +83,350 @@ async function fetchHDData(date, hora, timezone) {
   return res.json();
 }
 
-const PLANET_ORDER = ['Sun','Earth','North Node','South Node','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
-const PLANET_PT    = {'Sun':'Sol','Earth':'Terra','North Node':'N\u00f3 Norte','South Node':'N\u00f3 Sul','Moon':'Lua','Mercury':'Merc\u00faio','Venus':'V\u00eanus','Mars':'Marte','Jupiter':'J\u00fapiter','Saturn':'Saturno','Uranus':'Urano','Neptune':'Netuno','Pluto':'Plut\u00e3o'};
-const PLANET_SYM   = {'Sun':'\u2609','Earth':'\u2295','North Node':'\u260a','South Node':'\u260b','Moon':'\u263d','Mercury':'\u263f','Venus':'\u2640','Mars':'\u2642','Jupiter':'\u2643','Saturn':'\u2644','Uranus':'\u2645','Neptune':'\u2646','Pluto':'\u2647'};
+// --- DADOS HD ------------------------------------------------------------------
+const PLANET_ORDER = ['Sun','Earth','North Node','South Node','Moon','Mercury',
+                      'Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
+const PLANET_PT  = {
+  'Sun':'Sol','Earth':'Terra','North Node':'N\u00f3 Norte','South Node':'N\u00f3 Sul',
+  'Moon':'Lua','Mercury':'Merc\u00faio','Venus':'V\u00eanus','Mars':'Marte',
+  'Jupiter':'J\u00fapiter','Saturn':'Saturno','Uranus':'Urano',
+  'Neptune':'Netuno','Pluto':'Plut\u00e3o',
+};
+const PLANET_SYM = {
+  'Sun':'\u2609','Earth':'\u2295','North Node':'\u260a','South Node':'\u260b',
+  'Moon':'\u263d','Mercury':'\u263f','Venus':'\u2640','Mars':'\u2642',
+  'Jupiter':'\u2643','Saturn':'\u2644','Uranus':'\u2645','Neptune':'\u2646','Pluto':'\u2647',
+};
 
 function extrairPlanetas(hd) {
   const pers   = hd.Personality || {};
   const design = hd.Design      || {};
-  return PLANET_ORDER.map(function(name) {
-    const p = pers[name]   || {};
-    const d = design[name] || {};
-    return {
-      pt:   PLANET_PT[name] || name,
-      sym:  PLANET_SYM[name] || '',
-      pers:   (p.Gate) ? (p.Gate + '.' + p.Line) : '-',
-      design: (d.Gate) ? (d.Gate + '.' + d.Line) : '-',
-    };
-  });
+  return PLANET_ORDER.map(name => ({
+    name, pt: PLANET_PT[name]||name, sym: PLANET_SYM[name]||'',
+    pers:   pers[name]   && pers[name].Gate   ? pers[name].Gate   + '.' + pers[name].Line   : '-',
+    design: design[name] && design[name].Gate  ? design[name].Gate + '.' + design[name].Line : '-',
+  }));
 }
 
 function extrairPortoesCanais(hd) {
-  let portoes = [], canais = [];
-  if (hd.ActiveGates) { portoes = hd.ActiveGates; }
-  else {
+  let portoes = hd.ActiveGates || [];
+  if (!portoes.length) {
     const seen = {};
-    function add(side) {
-      Object.values(side).forEach(function(p) {
-        if (p && p.Gate && !seen[p.Gate]) { seen[p.Gate] = true; portoes.push(p.Gate); }
-      });
-    }
+    const add = side => Object.values(side).forEach(p => {
+      if (p && p.Gate && !seen[p.Gate]) { seen[p.Gate]=true; portoes.push(+p.Gate); }
+    });
     if (hd.Personality) add(hd.Personality);
     if (hd.Design) add(hd.Design);
   }
-  if (hd.ActiveChannels) canais = hd.ActiveChannels;
-  return { portoes, canais };
+  return { portoes, canais: hd.ActiveChannels || [] };
 }
 
 function getSetas(hd) {
   const v = hd.Variables || {};
-  return { tl: v.Digestion||'left', tr: v.Perspective||'left', bl: v.Environment||'left', br: v.Awareness||'left' };
+  return { tl:v.Digestion||'left', tr:v.Perspective||'left', bl:v.Environment||'left', br:v.Awareness||'left' };
 }
 
-function arrowChar(dir) { return dir === 'left' ? '\u25c4' : '\u25ba'; }
-
-function prop(label, value) {
-  return '<div class="prop"><div class="prop-label">' + label + '</div><div class="prop-value">' + (value || '-') + '</div></div>';
+// --- SVG -> PNG ---------------------------------------------------------------
+function prepararSvg(svg) {
+  if (!svg.includes('xmlns=')) svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  svg = svg.replace(/xlink:href="https?:\/\/[^"]*"/g, 'xlink:href=""');
+  svg = svg.replace(/ href="https?:\/\/[^"]*"/g, '');
+  return svg;
 }
 
-const CSS = '<style>'
-  + 'body{margin:0;padding:0;background:#f5f0eb;font-family:Georgia,serif}'
-  + '.wrap{max-width:680px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden}'
-  + '.header{background:#9B7D61;padding:28px 32px;display:flex;align-items:center;gap:16px}'
-  + '.header h1{color:#fff;margin:0;font-size:20px;letter-spacing:2px;font-weight:400}'
-  + '.header p{color:#E9D7C0;margin:0;font-size:12px;letter-spacing:1px}'
-  + '.body{padding:32px}'
-  + '.body p{color:#2E2419;line-height:1.7;font-size:15px}'
-  + '.info{background:#FEF3E8;border-left:3px solid #DAA38F;padding:14px 18px;border-radius:0 8px 8px 0;margin:20px 0;font-size:14px;color:#6B5A4B}'
-  + '.section-title{font-size:11px;letter-spacing:2px;color:#9B7D61;text-transform:uppercase;margin:28px 0 12px;border-bottom:1px solid #E9D7C0;padding-bottom:6px}'
-  + '.props-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}'
-  + '.prop{background:#F6F4F2;border-radius:8px;padding:10px 14px}'
-  + '.prop-label{font-size:10px;letter-spacing:1.5px;color:#9B7D61;text-transform:uppercase;margin-bottom:4px}'
-  + '.prop-value{font-size:14px;color:#2E2419;font-weight:500}'
-  + '.planets-table{width:100%;border-collapse:collapse;font-size:13px}'
-  + '.planets-table th{background:#E9D7C0;color:#6B5A4B;font-weight:400;letter-spacing:1px;padding:8px 10px;text-align:left;font-size:11px}'
-  + '.planets-table td{padding:7px 10px;border-bottom:1px solid #F0EBE4;color:#2E2419}'
-  + '.planets-table tr:last-child td{border-bottom:none}'
-  + '.col-pers{color:#7DAAA0;font-weight:600}'
-  + '.col-des{color:#C7826F;font-weight:600}'
-  + '.badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}'
-  + '.badge-g{background:#92ADA4;color:#fff;border-radius:20px;padding:4px 12px;font-size:12px}'
-  + '.badge-c{background:#E9D7C0;color:#6B5A4B;border-radius:6px;padding:4px 12px;font-size:12px}'
-  + '.bodygraph-wrap{text-align:center;background:#FAFAF9;border-radius:10px;padding:16px;margin:20px 0}'
-  + '.bodygraph-wrap svg{max-width:320px;height:auto}'
-  + '.arrow-box{display:flex;justify-content:space-between;background:#F6F4F2;border-radius:8px;padding:10px 20px;margin:8px 0;font-size:13px;color:#6B5A4B}'
-  + '.footer{background:#F6F4F2;padding:18px 32px;text-align:center;font-size:11px;color:#9B7D61;letter-spacing:1px}'
-  + '@media(max-width:480px){.props-grid{grid-template-columns:1fr}.header{flex-direction:column;text-align:center}}'
-  + '</style>';
-
-const LOGO_SVG = '<svg width="36" height="36" viewBox="0 0 70 70" fill="none"><polygon points="35,62 4,8 66,8" stroke="#fff" stroke-width="2.5" fill="none"/></svg>';
-
-function buildEmailHTML(opts) {
-  const { nome, data, hora, local, hd, planetas, portoes, canais, sv } = opts;
-  const props = hd.Properties || {};
-  const tipo  = t(props.Type && props.Type.id);
-  const aut   = t(props.Authority && props.Authority.id);
-  const est   = t(props.Strategy && props.Strategy.id);
-  const perf  = props.Profile ? (props.Profile.num1 + '/' + props.Profile.num2) : '-';
-  const def   = t(props.Definition && props.Definition.id);
-  const sig   = t(props.Signature && props.Signature.id);
-  const nself = t(props.NotSelf && props.NotSelf.id);
-  const inc   = (props.Incarnation && props.Incarnation.id) || '-';
-
-  const svgBlock = hd.SVG
-    ? '<div class="bodygraph-wrap"><p style="font-size:11px;letter-spacing:1.5px;color:#9B7D61;text-transform:uppercase;margin:0 0 12px">Seu Bodygraph</p>'
-      + hd.SVG.replace('<svg', '<svg style="max-width:320px;height:auto"') + '</div>'
-    : '';
-
-  const propsGrid = '<div class="props-grid">'
-    + prop('Tipo', tipo) + prop('Estrat\u00e9gia', est)
-    + prop('Autoridade', aut) + prop('Perfil', perf)
-    + prop('Defini\u00e7\u00e3o', def) + prop('Cross', inc)
-    + prop('Assinatura', sig) + prop('N\u00e3o-Self', nself)
-    + '</div>';
-
-  const setasBlock = '<div class="section-title">Setas do Variable</div>'
-    + '<div class="arrow-box"><span>' + arrowChar(sv.tl) + ' ' + sv.tl.toUpperCase() + ' (Digestion)</span><span>' + sv.tr.toUpperCase() + ' ' + arrowChar(sv.tr) + ' (Perspective)</span></div>'
-    + '<div class="arrow-box"><span>' + arrowChar(sv.bl) + ' ' + sv.bl.toUpperCase() + ' (Environment)</span><span>' + sv.br.toUpperCase() + ' ' + arrowChar(sv.br) + ' (Awareness)</span></div>';
-
-  let planetasTable = '<div class="section-title">Planetas</div>'
-    + '<table class="planets-table"><thead><tr>'
-    + '<th>Planeta</th><th class="col-pers">Personalidade</th><th class="col-des">Design</th>'
-    + '</tr></thead><tbody>';
-  planetas.forEach(function(p) {
-    planetasTable += '<tr><td>' + p.sym + ' ' + p.pt + '</td>'
-      + '<td class="col-pers">' + p.pers + '</td>'
-      + '<td class="col-des">' + p.design + '</td></tr>';
+async function svgParaPng(svgString) {
+  await ensureResvg();
+  const resvg = new Resvg(prepararSvg(svgString), {
+    fitTo: { mode:'width', value:700 },
+    background: '#ffffff',
+    font: { fontBuffers:[fontBuffer], defaultFontFamily:'DejaVu Sans', loadSystemFonts:false },
   });
-  planetasTable += '</tbody></table>';
-
-  let portBlock = '<div class="section-title">Port\u00f5es Ativados</div><div class="badges">';
-  if (portoes.length) {
-    portoes.slice().sort(function(a,b){return a-b;}).forEach(function(g) { portBlock += '<span class="badge-g">' + g + '</span>'; });
-  } else { portBlock += '<span style="color:#9B7D61;font-size:13px">-</span>'; }
-  portBlock += '</div>';
-
-  let canaisBlock = '<div class="section-title">Canais Ativados</div><div class="badges">';
-  if (canais.length) {
-    canais.forEach(function(c) { canaisBlock += '<span class="badge-c">' + c + '</span>'; });
-  } else { canaisBlock += '<span style="color:#9B7D61;font-size:13px">-</span>'; }
-  canaisBlock += '</div>';
-
-  return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">' + CSS + '</head><body>'
-    + '<div class="wrap">'
-    + '<div class="header">' + LOGO_SVG + '<div><h1>VIDA AUTORAL</h1><p>MAPA DO DESENHO HUMANO</p></div></div>'
-    + '<div class="body">'
-    + '<p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
-    + '<p>Seu Mapa de Desenho Humano est\u00e1 pronto \ud83c\udf81</p>'
-    + '<div class="info">\ud83d\udcc5 <strong>' + data + '</strong> &nbsp;&middot;&nbsp; \ud83d\udd54 <strong>' + hora + '</strong><br/>\ud83d\udccd ' + local + '</div>'
-    + '<div class="section-title">Seus Dados</div>'
-    + propsGrid + svgBlock + setasBlock + planetasTable + portBlock + canaisBlock
-    + '<p style="font-size:.83rem;color:#9b836f;margin-top:28px">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>'
-    + '</div>'
-    + '<div class="footer">&copy; 2025 Vida Autoral &middot; Todos os direitos reservados</div>'
-    + '</div></body></html>';
+  return resvg.render().asPng();
 }
 
-function buildConfirmationHTML(nome, data, hora, local) {
+// --- PDF -----------------------------------------------------------------------
+// Layout: A4 paisagem 841.89 x 595.28 pts
+// Coluna esquerda (0-490): pills Design | grafico | pills Personality + setas
+// Coluna direita (490-841): dados, portoes, canais
+
+async function buildPdf(nome, hd, planetas, portoes, canais, sv) {
+  const props = hd.Properties || {};
+  const pdfDoc = await PDFDocument.create();
+  pdfDoc.registerFontkit(fontkit);
+  const font   = await pdfDoc.embedFont(fontBuffer);   // DejaVu (unicode)
+  const page   = pdfDoc.addPage([841.89, 595.28]);
+  const { width, height } = page.getSize();
+
+  // Paleta
+  const branco     = rgb(1,1,1);
+  const coffee     = rgb(0.608,0.490,0.380);   // #9B7D61
+  const peach      = rgb(0.855,0.639,0.561);   // #DAA38F
+  const eucalyptus = rgb(0.573,0.678,0.643);   // #92ADA4
+  const wheat      = rgb(0.914,0.843,0.753);   // #E9D7C0
+  const textEsc    = rgb(0.180,0.141,0.114);
+  const textMed    = rgb(0.420,0.353,0.294);
+  const cinzaClaro = rgb(0.965,0.957,0.949);
+  const designBg   = rgb(0.780,0.510,0.435);   // salmon
+  const persBg     = rgb(0.490,0.667,0.627);   // mint
+
+  const DIVIDER = 490;
+  const COL_W   = 72;
+  const PILL_H  = 22;
+  const PILL_W  = COL_W - 6;
+  const PILL_M  = 3;
+  const MARGIN_V= 28;
+  const AREA_TOP = height - 36 - MARGIN_V;
+  const AREA_BOT = 20 + MARGIN_V;
+  const AREA_H   = AREA_TOP - AREA_BOT;
+  const CHART_X0 = COL_W;
+  const CHART_W  = DIVIDER - COL_W * 2;
+
+  // Fundo
+  page.drawRectangle({ x:0, y:0, width, height, color:branco });
+
+  // Cabecalho esquerdo
+  page.drawRectangle({ x:0, y:height-36, width:DIVIDER, height:36, color:wheat });
+  page.drawText('DESIGN',      { x:3,             y:height-25, size:6.5, color:designBg, font });
+  page.drawText('PERSONALITY', { x:DIVIDER-COL_W+3, y:height-25, size:5.5, color:persBg, font });
+
+  // Pills planetas
+  const totalH = AREA_H;
+  const pillStep = totalH / PLANET_ORDER.length;
+
+  planetas.forEach((p, i) => {
+    const pillY = AREA_BOT + (PLANET_ORDER.length - 1 - i) * pillStep + (pillStep - PILL_H) / 2;
+
+    // Design (esquerda)
+    page.drawRectangle({ x:PILL_M, y:pillY, width:PILL_W, height:PILL_H,
+      color: p.design !== '-' ? designBg : cinzaClaro, borderRadius:5 });
+    if (p.sym) page.drawText(p.sym, { x:PILL_M+3, y:pillY+5, size:12, font, color:branco });
+    if (p.design !== '-') page.drawText(p.design, { x:PILL_M+19, y:pillY+6, size:8.5, font, color:branco });
+
+    // Personality (direita)
+    const px = DIVIDER - COL_W + PILL_M;
+    page.drawRectangle({ x:px, y:pillY, width:PILL_W, height:PILL_H,
+      color: p.pers !== '-' ? persBg : cinzaClaro, borderRadius:5 });
+    if (p.sym) page.drawText(p.sym, { x:px+3, y:pillY+5, size:12, font, color:branco });
+    if (p.pers !== '-') page.drawText(p.pers, { x:px+19, y:pillY+6, size:8.5, font, color:branco });
+  });
+
+  // Grafico bodygraph
+  let imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
+  if (hd.SVG) {
+    try {
+      const png  = await svgParaPng(hd.SVG);
+      const img  = await pdfDoc.embedPng(png);
+      const dims = img.scaleToFit(CHART_W, AREA_H);
+      imgX = CHART_X0 + (CHART_W - dims.width) / 2;
+      imgY = AREA_BOT  + (AREA_H  - dims.height) / 2;
+      imgW = dims.width; imgH = dims.height;
+      page.drawImage(img, { x:imgX, y:imgY, width:imgW, height:imgH });
+      console.log('[PDF] Grafico OK:', Math.round(imgW)+'x'+Math.round(imgH));
+    } catch(e) { console.error('[PDF] Grafico erro:', e.message); }
+  }
+
+  // Setas do Variable
+  const headY = imgY + imgH * 0.88;
+  const rootY = imgY + imgH * 0.08;
+  const lgc   = (COL_W + imgX) / 2;
+  const rgc   = (imgX + imgW + (DIVIDER - COL_W)) / 2;
+
+  function seta(cx, cy, dir, cor) {
+    const W=12, H=5;
+    if (dir==='right') {
+      const tip = cx + W/2;
+      page.drawLine({ start:{x:tip-W,y:cy}, end:{x:tip,y:cy}, thickness:2, color:cor });
+      page.drawLine({ start:{x:tip,y:cy}, end:{x:tip-6,y:cy+H}, thickness:2, color:cor });
+      page.drawLine({ start:{x:tip,y:cy}, end:{x:tip-6,y:cy-H}, thickness:2, color:cor });
+    } else {
+      const tip = cx - W/2;
+      page.drawLine({ start:{x:tip+W,y:cy}, end:{x:tip,y:cy}, thickness:2, color:cor });
+      page.drawLine({ start:{x:tip,y:cy}, end:{x:tip+6,y:cy+H}, thickness:2, color:cor });
+      page.drawLine({ start:{x:tip,y:cy}, end:{x:tip+6,y:cy-H}, thickness:2, color:cor });
+    }
+  }
+  seta(lgc, headY, sv.tl, designBg);
+  seta(rgc, headY, sv.tr, persBg);
+  seta(lgc, rootY, sv.bl, designBg);
+  seta(rgc, rootY, sv.br, persBg);
+
+  // === COLUNA DIREITA ===
+  const px = DIVIDER + 14;
+  const pw = width - DIVIDER - 20;
+
+  // Cabecalho direito
+  page.drawRectangle({ x:DIVIDER, y:height-56, width:width-DIVIDER, height:56, color:coffee });
+
+  // Logo triangulo
+  page.drawLine({ start:{x:px,y:height-10},   end:{x:px+20,y:height-46}, thickness:1.5, color:branco });
+  page.drawLine({ start:{x:px+20,y:height-46},end:{x:px+40,y:height-10}, thickness:1.5, color:branco });
+  page.drawLine({ start:{x:px+40,y:height-10},end:{x:px,y:height-10},    thickness:1.5, color:branco });
+
+  page.drawText('VIDA AUTORAL',           { x:px+48, y:height-24, size:9,  color:branco, font });
+  page.drawText('MAPA DO DESENHO HUMANO', { x:px+48, y:height-37, size:6.5,color:wheat,  font });
+
+  // Nome
+  const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
+  page.drawText(nomeDisplay.toUpperCase(), { x:px, y:height-70, size:11, color:textEsc, font });
+
+  // Props em grid 2 colunas
+  const LABELS = [
+    ['Tipo',         tr(props.Type && props.Type.id)],
+    ['Estrat\u00e9gia', tr(props.Strategy && props.Strategy.id)],
+    ['Autoridade',   tr(props.Authority && props.Authority.id)],
+    ['Perfil',       props.Profile ? props.Profile.num1+'/'+props.Profile.num2 : '-'],
+    ['Defini\u00e7\u00e3o', tr(props.Definition && props.Definition.id)],
+    ['Cross',        (props.Incarnation && props.Incarnation.id) || '-'],
+    ['Assinatura',   tr(props.Signature && props.Signature.id)],
+    ['N\u00e3o-Self', tr(props.NotSelf && props.NotSelf.id)],
+  ];
+  const CW2 = pw / 2 - 5;
+  LABELS.forEach(([label, val], i) => {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const cx = px + col * (CW2 + 5);
+    const cy = height - 92 - row * 38;
+    page.drawRectangle({ x:cx, y:cy-28, width:CW2, height:32, color:cinzaClaro, borderRadius:4 });
+    page.drawRectangle({ x:cx, y:cy+4,  width:CW2, height:3,  color:peach });
+    page.drawText(label.toUpperCase(), { x:cx+4, y:cy-4,  size:5.5, color:textMed, font });
+    const valStr = (val||'-').slice(0,22);
+    page.drawText(valStr, { x:cx+4, y:cy-16, size:8, color:textEsc, font });
+  });
+
+  // Portoes
+  const secY = height - 258;
+  page.drawText('PORT\u00d5ES ATIVADOS', { x:px, y:secY, size:6, color:coffee, font });
+  const portSorted = portoes.slice().sort((a,b)=>a-b);
+  let bx = px, by = secY - 16;
+  portSorted.forEach(g => {
+    const label = String(g);
+    const bw = label.length * 5.5 + 10;
+    if (bx + bw > width - 10) { bx=px; by -= 16; }
+    page.drawRectangle({ x:bx, y:by-2, width:bw, height:13, color:eucalyptus, borderRadius:6 });
+    page.drawText(label, { x:bx+5, y:by+1, size:7, color:branco, font });
+    bx += bw + 4;
+  });
+
+  // Canais
+  const canaisY = by - 28;
+  page.drawText('CANAIS ATIVADOS', { x:px, y:canaisY, size:6, color:coffee, font });
+  let cx2 = px, cy2 = canaisY - 16;
+  canais.forEach(c => {
+    const label = String(c);
+    const cw = label.length * 5 + 10;
+    if (cx2 + cw > width - 10) { cx2=px; cy2 -= 16; }
+    page.drawRectangle({ x:cx2, y:cy2-2, width:cw, height:13, color:wheat, borderRadius:4 });
+    page.drawText(label, { x:cx2+5, y:cy2+1, size:7, color:textMed, font });
+    cx2 += cw + 4;
+  });
+
+  // Rodape
+  page.drawText('\u00a9 2025 Vida Autoral . Todos os direitos reservados', { x:300, y:6, size:5.5, color:textMed, font });
+
+  return pdfDoc.save();
+}
+
+// --- EMAIL HTML ---------------------------------------------------------------
+const CSS = '<style>'
+  + 'body{margin:0;background:#f5f0eb;font-family:Georgia,serif}'
+  + '.w{max-width:680px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden}'
+  + '.h{background:#9B7D61;padding:24px 32px;display:flex;align-items:center;gap:14px}'
+  + '.h h1{color:#fff;margin:0;font-size:18px;letter-spacing:2px;font-weight:400}'
+  + '.b{padding:28px 32px}'
+  + '.b p{color:#2E2419;line-height:1.7;font-size:15px}'
+  + '.info{background:#FEF3E8;border-left:3px solid #DAA38F;padding:12px 16px;border-radius:0 8px 8px 0;margin:18px 0;font-size:14px;color:#6B5A4B}'
+  + '.f{background:#F6F4F2;padding:14px 32px;text-align:center;font-size:11px;color:#9B7D61}'
+  + '</style>';
+const LOGO = '<svg width="32" height="32" viewBox="0 0 70 70" fill="none"><polygon points="35,62 4,8 66,8" stroke="#fff" stroke-width="2.5" fill="none"/></svg>';
+
+function emailConfirmacao(nome, data, hora, local) {
   return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body>'
-    + '<div class="wrap">'
-    + '<div class="header">' + LOGO_SVG + '<div><h1>VIDA AUTORAL</h1></div></div>'
-    + '<div class="body">'
-    + '<p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
-    + '<p>Recebemos seus dados e em instantes voc\u00ea receber\u00e1 seu mapa completo.</p>'
-    + '<div class="info">\ud83d\udcc5 <strong>' + data + '</strong> &nbsp;&middot;&nbsp; \ud83d\udd54 <strong>' + hora + '</strong><br/>\ud83d\udccd ' + local + '</div>'
-    + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br/><strong>Equipe Vida Autoral</strong></p>'
-    + '</div>'
-    + '<div class="footer">&copy; 2025 Vida Autoral</div>'
-    + '</div></body></html>';
+    + '<div class="w"><div class="h">' + LOGO + '<h1>VIDA AUTORAL</h1></div>'
+    + '<div class="b"><p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
+    + '<p>Recebemos seus dados. Seu mapa est\u00e1 sendo gerado e chegar\u00e1 em breve.</p>'
+    + '<div class="info">\ud83d\udcc5 ' + data + ' &middot; \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
+    + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
+    + '</div><div class="f">&copy; 2025 Vida Autoral</div></div></body></html>';
 }
 
-async function sendEmail(to, subject, html) {
-  const body = { from: FROM_NAME + ' <' + FROM_EMAIL + '>', to: [to], reply_to: REPLY_TO, subject, html };
+function emailPdf(nome, data, hora, local) {
+  return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body>'
+    + '<div class="w"><div class="h">' + LOGO + '<h1>VIDA AUTORAL</h1></div>'
+    + '<div class="b"><p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
+    + '<p>Seu Mapa de Desenho Humano est\u00e1 pronto \ud83c\udf81 O PDF completo com seu gr\u00e1fico Bodygraph est\u00e1 em anexo.</p>'
+    + '<div class="info">\ud83d\udcc5 ' + data + ' &middot; \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
+    + '<p>O PDF inclui: Tipo, Estrat\u00e9gia, Autoridade, Perfil, Defini\u00e7\u00e3o, planetas Design e Personalidade, setas do Variable, Port\u00f5es e Canais ativados.</p>'
+    + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
+    + '</div><div class="f">&copy; 2025 Vida Autoral</div></div></body></html>';
+}
+
+// --- RESEND -------------------------------------------------------------------
+async function sendEmail(to, subject, html, attachments) {
+  const body = {
+    from: FROM_NAME + ' <' + FROM_EMAIL + '>',
+    to: [to], reply_to: REPLY_TO, subject, html,
+  };
+  if (attachments && attachments.length) body.attachments = attachments;
   const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + RESEND_API_KEY },
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+RESEND_API_KEY },
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error('Resend: ' + JSON.stringify(await res.json()));
   return res.json();
 }
 
+// --- PARSE BODY ---------------------------------------------------------------
 async function parseBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     let raw = '';
-    req.on('data', function(chunk) { raw += chunk; });
-    req.on('end', function() { try { resolve(JSON.parse(raw || '{}')); } catch(e) { resolve({}); } });
+    req.on('data', c => { raw += c; });
+    req.on('end',  () => { try { resolve(JSON.parse(raw||'{}')); } catch(e) { resolve({}); } });
     req.on('error', reject);
   });
 }
 
+// --- HANDLER ------------------------------------------------------------------
 async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') return res.status(405).json({ error:'Method not allowed' });
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   const body = await parseBody(req);
   const { nome, email, data, hora, local } = body;
-  if (!nome || !email || !data || !hora || !local)
-    return res.status(400).json({ error: 'Todos os campos sao obrigatorios.' });
+  if (!nome||!email||!data||!hora||!local)
+    return res.status(400).json({ error:'Todos os campos sao obrigatorios.' });
 
   try {
-    console.log('[1] Iniciando para ' + email);
-    await sendEmail(email, nome + ', recebemos seus dados \u2605', buildConfirmationHTML(nome, data, hora, local));
+    console.log('[1] Iniciando para', email);
+    await sendEmail(email, nome+', recebemos seus dados \u2605', emailConfirmacao(nome,data,hora,local));
     console.log('[2] Confirmacao enviada');
 
     const timezone = await resolveTimezone(local);
-    console.log('[3] Timezone: ' + timezone);
+    console.log('[3] Timezone:', timezone);
 
     const hd = await fetchHDData(data, hora, timezone);
-    console.log('[4] HD ok. Tipo: ' + (hd.Properties && hd.Properties.Type && hd.Properties.Type.id));
+    const tipo = hd.Properties && hd.Properties.Type && hd.Properties.Type.id;
+    console.log('[4] HD ok. Tipo:', tipo, '| SVG:', (hd.SVG||'').length, 'chars');
 
     const planetas = extrairPlanetas(hd);
     const { portoes, canais } = extrairPortoesCanais(hd);
     const sv = getSetas(hd);
 
-    const html = buildEmailHTML({ nome, data, hora, local, hd, planetas, portoes, canais, sv });
-    await sendEmail(email, nome + ', seu Mapa de Desenho Humano est\u00e1 pronto \u2605', html);
-    console.log('[5] Mapa enviado com sucesso');
+    const pdfBytes  = await buildPdf(nome, hd, planetas, portoes, canais, sv);
+    const pdfBase64 = Buffer.from(pdfBytes).toString('base64');
+    console.log('[5] PDF gerado:', pdfBytes.length, 'bytes');
 
-    return res.status(200).json({ ok: true });
+    const primeiroNome = nome.split(' ')[0].toLowerCase();
+    await sendEmail(
+      email,
+      nome + ', seu Mapa de Desenho Humano est\u00e1 pronto \u2605',
+      emailPdf(nome, data, hora, local),
+      [{ filename:'mapa-desenho-humano-'+primeiroNome+'.pdf', content:pdfBase64 }]
+    );
+    console.log('[6] PDF enviado com sucesso');
+
+    return res.status(200).json({ ok:true });
   } catch(err) {
     console.error('[Erro]', err.message);
     return res.status(500).json({ error: err.message });
