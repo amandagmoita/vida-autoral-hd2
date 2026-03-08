@@ -193,12 +193,35 @@ async function buildPdf(nome, hd, planetas, portoes, canais, sv) {
     if (p.pers !== '-') page.drawText(p.pers, { x:px+19, y:pillY+6, size:8.5, font, color:branco });
   });
 
-  // Grafico bodygraph - SVG vai inline no email (sem conversao PNG)
-  const imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
-  page.drawRectangle({ x: imgX, y: imgY, width: imgW, height: imgH,
-    color: rgb(0.98, 0.97, 0.96), borderColor: rgb(0.85, 0.78, 0.70), borderWidth: 1 });
-  page.drawText('bodygraph', { x: imgX + imgW/2 - 22, y: imgY + imgH/2 + 4, size: 7, color: rgb(0.6,0.5,0.4), font });
-  page.drawText('(ver email)', { x: imgX + imgW/2 - 22, y: imgY + imgH/2 - 7, size: 7, color: rgb(0.6,0.5,0.4), font });
+  // Grafico bodygraph - converte SVG para PNG via Edge Function /api/render
+  // A Edge Function usa resvg-wasm em V8 Isolate (nao afetado pelo Fluid runtime)
+  let imgX = CHART_X0, imgY = AREA_BOT, imgW = CHART_W, imgH = AREA_H;
+  if (hd.SVG) {
+    try {
+      const baseUrl = process.env.VERCEL_URL
+        ? 'https://' + process.env.VERCEL_URL
+        : 'http://localhost:3000';
+      const renderResp = await fetch(baseUrl + '/api/render', {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: hd.SVG,
+      });
+      if (renderResp.ok) {
+        const pngBuf = Buffer.from(await renderResp.arrayBuffer());
+        const pngImg = await pdfDoc.embedPng(pngBuf);
+        const dims   = pngImg.scaleToFit(CHART_W, AREA_H);
+        imgX = CHART_X0 + (CHART_W - dims.width) / 2;
+        imgY = AREA_BOT  + (AREA_H  - dims.height) / 2;
+        imgW = dims.width; imgH = dims.height;
+        page.drawImage(pngImg, { x: imgX, y: imgY, width: imgW, height: imgH });
+        console.log('[PDF] Grafico OK:', Math.round(imgW)+'x'+Math.round(imgH));
+      } else {
+        console.error('[PDF] render retornou:', renderResp.status);
+      }
+    } catch(e) {
+      console.error('[PDF] Grafico erro:', e.message);
+    }
+  }
 
   // Setas do Variable
   const headY = imgY + imgH * 0.88;
