@@ -1,15 +1,12 @@
-import { dirname, join } from ‘path’;
-import { fileURLToPath } from ‘url’;
-import { readFile } from ‘fs/promises’;
-import { PDFDocument, rgb } from ‘pdf-lib’;
-import { createRequire } from ‘module’;
-const _require = createRequire(import.meta.url);
-const fontkit = _require(’@pdf-lib/fontkit’);
-// @resvg/resvg-wasm e carregado via createRequire (CJS) - sem dynamic import
-// para evitar que o bundler do Vercel (esbuild) tente resolver binarios nativos
+‘use strict’;
+const { join }         = require(‘path’);
+const { readFile }     = require(‘fs’).promises;
+const { PDFDocument, rgb } = require(‘pdf-lib’);
+const fontkit          = require(’@pdf-lib/fontkit’);
+// @resvg/resvg-wasm carregado via require() - CJS nativo, sem ESM/dynamic import
 let Resvg = null;
 
-export const maxDuration = 30;
+const maxDuration = 30;
 
 // — WASM + Font singleton —————————————————–
 // DIAGNOSTICO: resvg-wasm em ambiente serverless NAO tem fontes do sistema.
@@ -21,16 +18,13 @@ let fontBuffer = null;
 async function ensureWasm() {
 if (wasmInitialized) return;
 
-// Usa CJS index.js via createRequire - evita dynamic import que o esbuild nao suporta
-const _req = createRequire(import.meta.url);
-const resvgCjs = _req(’@resvg/resvg-wasm’);
+const resvgCjs = require(’@resvg/resvg-wasm’);
 Resvg = resvgCjs.Resvg;
 
-const __dir = dirname(fileURLToPath(import.meta.url));
-const wasmPath = join(__dir, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
+const wasmPath = join(__dirname, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
 await resvgCjs.initWasm(await readFile(wasmPath));
 
-const fontPath = join(__dir, ‘..’, ‘fonts’, ‘DejaVuSans.ttf’);
+const fontPath = join(__dirname, ‘..’, ‘fonts’, ‘DejaVuSans.ttf’);
 fontBuffer = await readFile(fontPath);
 
 wasmInitialized = true;
@@ -609,7 +603,7 @@ return res.json();
 
 // — HANDLER —————————————————————––
 
-// Vercel nao parseia req.body automaticamente em funcoes ESM (export default).
+// Vercel nao parseia req.body automaticamente - necessario ler stream manualmente.
 // E necessario ler o stream e fazer JSON.parse manualmente.
 async function parseBody(req) {
 if (req.body && typeof req.body === ‘object’) return req.body; // j? parseado (dev local)
@@ -624,7 +618,7 @@ req.on(‘error’, reject);
 });
 }
 
-export default async function handler(req, res) {
+const handler = async function handler(req, res) {
 if (req.method !== ‘POST’) return res.status(405).json({ error: ‘Method not allowed’ });
 res.setHeader(‘Access-Control-Allow-Origin’, ‘*’);
 
@@ -670,3 +664,6 @@ console.error(’[Erro]’, err.message);
 return res.status(500).json({ error: err.message });
 }
 }
+
+module.exports = handler;
+module.exports.maxDuration = maxDuration;
