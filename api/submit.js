@@ -2,7 +2,7 @@
 const { join }         = require(‘path’);
 const { readFile }     = require(‘fs’).promises;
 const { PDFDocument, rgb } = require(‘pdf-lib’);
-const fontkit          = require(’@pdf-lib/fontkit’);
+const fontkit          = eval(‘require’)(’@pdf-lib/fontkit’);
 // @resvg/resvg-wasm carregado via require() - CJS nativo, sem ESM/dynamic import
 let Resvg = null;
 
@@ -18,7 +18,9 @@ let fontBuffer = null;
 async function ensureWasm() {
 if (wasmInitialized) return;
 
-const resvgCjs = require(’@resvg/resvg-wasm’);
+// eval(“require”) evita que o bundler do Fluid (esbuild) analise estaticamente este modulo WASM
+// O require ocorre apenas em runtime, quando o modulo ja esta disponivel em node_modules
+const resvgCjs = eval(‘require’)(’@resvg/resvg-wasm’);
 Resvg = resvgCjs.Resvg;
 
 const wasmPath = join(__dirname, ‘..’, ‘node_modules’, ‘@resvg’, ‘resvg-wasm’, ‘index_bg.wasm’);
