@@ -203,7 +203,10 @@ async function buildPdf(nome, hd, planetas, portoes, canais, sv) {
         : 'http://localhost:3000';
       const renderResp = await fetch(baseUrl + '/api/render', {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
+        headers: {
+          'Content-Type': 'text/plain',
+          'x-internal-secret': process.env.INTERNAL_SECRET || 'vida-autoral-render',
+        },
         body: hd.SVG,
       });
       if (renderResp.ok) {

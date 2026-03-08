@@ -24,6 +24,13 @@ export default async function handler(req) {
     return new Response('Method not allowed', { status: 405 });
   }
 
+  // Verifica secret interno para evitar chamadas externas
+  const secret = req.headers.get('x-internal-secret');
+  const expected = process.env.INTERNAL_SECRET || 'vida-autoral-render';
+  if (secret !== expected) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   try {
     await ensureResvg();
 
