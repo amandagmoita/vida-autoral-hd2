@@ -287,9 +287,10 @@ async function buildPdf(nome, hdData) {
   const COL_W      = 72;   // largura de cada coluna de planetas
   const CHART_X0   = COL_W;
   const CHART_W    = DIVIDER - COL_W * 2; // 346px
-  const AREA_TOP   = height - 36;
-  const AREA_BOT   = 20;
-  const AREA_H     = AREA_TOP - AREA_BOT; // 539px
+  const MARGIN_V   = 28;               // margem vertical topo/base da regiao esquerda
+  const AREA_TOP   = height - 36 - MARGIN_V;
+  const AREA_BOT   = 20 + MARGIN_V;
+  const AREA_H     = AREA_TOP - AREA_BOT;
 
   // Pill dimensions
   const PILL_H     = 22;
@@ -371,15 +372,15 @@ async function buildPdf(nome, hdData) {
   }
 
   // -- Quatro setas do Variable --
-  // Y: nivel da cabeca (~88% da altura do grafico) e da raiz (~8%)
+  // Y: nivel da cabeca (~88%) e da raiz (~8%) do grafico
   const headY   = imgY + imgH * 0.88;
   const rootY   = imgY + imgH * 0.08;
 
-  // X: centro de cada coluna de planetas
-  // Coluna DESIGN  : x = 0 ate COL_W -> centro = COL_W/2
-  // Coluna PERS    : x = DIVIDER-COL_W ate DIVIDER -> centro = DIVIDER - COL_W/2
-  const leftColCenter  = COL_W / 2;                // ~36
-  const rightColCenter = DIVIDER - COL_W / 2;      // ~454
+  // X: centro do espaco entre as pills e o grafico
+  // Gap esquerdo: entre fim das pills Design (COL_W) e inicio da imagem (imgX)
+  // Gap direito:  entre fim da imagem (imgX+imgW) e inicio das pills Pers (DIVIDER-COL_W)
+  const leftGapCenter  = (COL_W + imgX) / 2;
+  const rightGapCenter = (imgX + imgW + (DIVIDER - COL_W)) / 2;
 
   function desenharSeta(cx, cy, dir, cor) {
     const W = 12, H = 5;
@@ -396,10 +397,10 @@ async function buildPdf(nome, hdData) {
     }
   }
 
-  desenharSeta(leftColCenter,  headY, setas.topLeft,     designText);
-  desenharSeta(rightColCenter, headY, setas.topRight,    persText);
-  desenharSeta(leftColCenter,  rootY, setas.bottomLeft,  designText);
-  desenharSeta(rightColCenter, rootY, setas.bottomRight, persText);
+  desenharSeta(leftGapCenter,  headY, setas.topLeft,     designText);
+  desenharSeta(rightGapCenter, headY, setas.topRight,    persText);
+  desenharSeta(leftGapCenter,  rootY, setas.bottomLeft,  designText);
+  desenharSeta(rightGapCenter, rootY, setas.bottomRight, persText);
 
   // -- Divisoria vertical --
   page.drawLine({
