@@ -397,7 +397,7 @@ async function handler(req, res) {
     await sendEmail(
       email,
       nome + ', seu Mapa de Desenho Humano est\u00e1 pronto \u2605',
-      emailPdf(nome, data, hora, local, hdData && hdData.SVG),
+      emailPdf(nome, data, hora, local, hd && hd.SVG),
       [{ filename:'mapa-desenho-humano-'+primeiroNome+'.pdf', content:pdfBase64 }]
     );
     console.log('[6] PDF enviado com sucesso');
