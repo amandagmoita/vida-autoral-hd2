@@ -5,7 +5,7 @@
   "functions": {
     "api/submit.js": {
       "maxDuration": 30,
-      "includeFiles": "node_modules/@pdf-lib/fontkit/**,fonts/DejaVuSans.ttf"
+      "includeFiles": "fonts/DejaVuSans.ttf"
     }
   },
   "routes": [
