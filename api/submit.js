@@ -139,9 +139,26 @@ function getSetas(hd) {
 
 // --- SVG -> PNG ---------------------------------------------------------------
 function prepararSvg(svg) {
-  if (!svg.includes('xmlns=')) svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  // Garante namespace
+  if (!svg.includes('xmlns=')) {
+    svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  // Remove hrefs externos
   svg = svg.replace(/xlink:href="https?:\/\/[^"]*"/g, 'xlink:href=""');
   svg = svg.replace(/ href="https?:\/\/[^"]*"/g, '');
+  // Extrai viewBox para derivar dimensoes
+  const vb = svg.match(/viewBox=["']([^"']+)["']/);
+  const hasW = /\swidth=["'][^"']+["']/.test(svg);
+  const hasH = /\sheight=["'][^"']+["']/.test(svg);
+  if (vb && (!hasW || !hasH)) {
+    const parts = vb[1].trim().split(/[\s,]+/);
+    const vw = parseFloat(parts[2]) || 500;
+    const vh = parseFloat(parts[3]) || 600;
+    if (!hasW) svg = svg.replace('<svg', '<svg width="' + vw + '"');
+    if (!hasH) svg = svg.replace('<svg', '<svg height="' + vh + '"');
+  } else if (!hasW) {
+    svg = svg.replace('<svg', '<svg width="500" height="600"');
+  }
   return svg;
 }
 
