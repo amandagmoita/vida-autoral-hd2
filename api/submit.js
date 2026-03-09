@@ -162,11 +162,12 @@ const COL_W   = 72;
 const PILL_H  = 20;
 const PILL_W  = COL_W - 6;
 const HEADER_H = 36;
-const MARGIN_TOP = 30;
-const MARGIN_BOTTOM = 36;
-const CHART_Y0 = HEADER_H + MARGIN_TOP;
-const CHART_Y1 = H - MARGIN_BOTTOM;
-const AREA_H   = CHART_Y1 - CHART_Y0;
+const FOOTER_H = 20;
+const PAD_TOP  = 20;   // margem superior do conteudo
+const PAD_BOT  = 20;   // margem inferior do conteudo
+const CONTENT_Y0 = HEADER_H + PAD_TOP;
+const CONTENT_Y1 = H - FOOTER_H - PAD_BOT;
+const AREA_H     = CONTENT_Y1 - CONTENT_Y0;
 const CHART_X0 = COL_W;
 const CHART_W  = DIVIDER - COL_W * 2;
 
@@ -200,7 +201,7 @@ const pillStep = AREA_H / PLANET_ORDER.length;
 
 planetas.forEach((p, i) => {
   // Em pdfkit: y cresce para baixo, ent\xe3o i=0 = topo
-  const pillTop = CHART_Y0 + i * pillStep + (pillStep - PILL_H) / 2;
+  const pillTop = CONTENT_Y0 + i * pillStep + (pillStep - PILL_H) / 2;
 
   // Design (esquerda)
   const dActive = p.design !== '-';
@@ -232,7 +233,7 @@ planetas.forEach((p, i) => {
 
 // === GR\xc1FICO BODYGRAPH (SVG \u2192 PDF vetorial) ===
 const chartX = CHART_X0;
-const chartY = CHART_Y0;
+const chartY = CONTENT_Y0;
 if (hd.SVG) {
   try {
     // Garante dimensoes no SVG
@@ -246,7 +247,11 @@ if (hd.SVG) {
         svg = svg.replace('<svg', '<svg width="' + sw + '" height="' + sh + '"');
       }
     }
+    // Clip para evitar que o SVG extravase a area
+    doc.save();
+    doc.rect(chartX, chartY, CHART_W, AREA_H).clip();
     SVGtoPDF(doc, svg, chartX, chartY, { width: CHART_W, height: AREA_H, preserveAspectRatio: 'xMidYMid meet' });
+    doc.restore();
     console.log('[PDF] Bodygraph SVG inserido como vetor');
   } catch(e) {
     console.error('[PDF] SVGtoPDF erro:', e.message);
@@ -367,7 +372,7 @@ canais.forEach(c => {
 
 // Rodap\xe9
 doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
-   .text('\u00a9 2025 Vida Autoral . Todos os direitos reservados', 300, H - MARGIN_BOTTOM + 16, { lineBreak: false });
+   .text('\u00a9 2025 Vida Autoral . Todos os direitos reservados', 300, H - FOOTER_H + 4, { lineBreak: false });
 
 doc.end();
 
