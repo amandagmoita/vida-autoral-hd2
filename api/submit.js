@@ -128,7 +128,7 @@ const PDFDoc   = require('pdfkit');
 const SVGtoPDF = require('svg-to-pdfkit');
 const chunks   = [];
 
-const doc = new PDFDoc({ size: [841.89, 595.28], layout: 'landscape', margin: 0,
+const doc = new PDFDoc({ size: 'A4', layout: 'landscape', margin: 0,
   info: { Title: 'Mapa de Desenho Humano', Author: 'Vida Autoral' } });
 
 doc.on('data',  c => chunks.push(c));
