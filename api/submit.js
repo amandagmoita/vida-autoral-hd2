@@ -248,16 +248,17 @@ if (hd.SVG) {
     }
     const ratio = vbW / vbH;
 
-    // Calcular tamanho fit-contain na area disponivel
+    // Calcular tamanho fit-contain com padding interno
+    // O SVG do bodygraph tem numeros fora do viewBox, entao reduzimos 85% para folga
+    const TARGET_W = CHART_W * 0.85;
+    const TARGET_H = AREA_H * 0.85;
     let fitW, fitH;
-    if (ratio > (CHART_W / AREA_H)) {
-      // Limitado pela largura
-      fitW = CHART_W;
-      fitH = CHART_W / ratio;
+    if (ratio > (TARGET_W / TARGET_H)) {
+      fitW = TARGET_W;
+      fitH = TARGET_W / ratio;
     } else {
-      // Limitado pela altura
-      fitH = AREA_H;
-      fitW = AREA_H * ratio;
+      fitH = TARGET_H;
+      fitW = TARGET_H * ratio;
     }
 
     // Centralizar
