@@ -238,36 +238,43 @@ if (hd.SVG) {
   try {
     let svg = hd.SVG;
 
-    // Extrair viewBox para saber dimensoes reais do SVG
+    // Extrair viewBox ou width/height para saber dimensoes nativas do SVG
+    let svgW = 0, svgH = 0;
     const vb = svg.match(/viewBox=["']([^"']+)["']/);
-    let svgW = 500, svgH = 600;
     if (vb) {
       const parts = vb[1].trim().split(/[\s,]+/);
-      svgW = parseFloat(parts[2]) || 500;
-      svgH = parseFloat(parts[3]) || 600;
+      svgW = parseFloat(parts[2]) || 0;
+      svgH = parseFloat(parts[3]) || 0;
+    }
+    if (!svgW) {
+      const wm = svg.match(/width=["']([0-9.]+)/);
+      svgW = wm ? parseFloat(wm[1]) : 500;
+    }
+    if (!svgH) {
+      const hm = svg.match(/height=["']([0-9.]+)/);
+      svgH = hm ? parseFloat(hm[1]) : 700;
     }
 
-    // Calcular escala para caber na area sem cortar (fit contain)
+    // Escala para caber sem cortar (contain)
     const scaleX = CHART_W / svgW;
     const scaleY = AREA_H / svgH;
     const scale  = Math.min(scaleX, scaleY);
     const fitW   = svgW * scale;
     const fitH   = svgH * scale;
 
-    // Centralizar horizontalmente e verticalmente
+    // Centralizar na area disponivel
     const offsetX = chartX + (CHART_W - fitW) / 2;
     const offsetY = chartY + (AREA_H - fitH) / 2;
 
-    // Forcar dimensoes no SVG para que svg-to-pdfkit use o tamanho certo
-    svg = svg.replace(/<svg([^>]*)>/, function(match, attrs) {
-      // Remove width/height existentes
-      attrs = attrs.replace(/\s*width\s*=\s*["'][^"']*["']/g, '');
-      attrs = attrs.replace(/\s*height\s*=\s*["'][^"']*["']/g, '');
-      return '<svg' + attrs + ' width="' + fitW + '" height="' + fitH + '">';
-    });
+    // Usar transformacao do PDFKit (translate+scale) para forcar o tamanho
+    // Isso funciona independentemente do que svg-to-pdfkit faca internamente
+    doc.save();
+    doc.translate(offsetX, offsetY);
+    doc.scale(scale);
+    SVGtoPDF(doc, svg, 0, 0, { assumePt: true });
+    doc.restore();
 
-    SVGtoPDF(doc, svg, offsetX, offsetY, { width: fitW, height: fitH, assumePt: true });
-    console.log('[PDF] Bodygraph SVG inserido. viewBox:', svgW+'x'+svgH, 'scale:', scale.toFixed(3), 'fit:', fitW.toFixed(0)+'x'+fitH.toFixed(0));
+    console.log('[PDF] Bodygraph SVG: nativo=' + svgW+'x'+svgH + ' scale=' + scale.toFixed(3) + ' fit=' + fitW.toFixed(0)+'x'+fitH.toFixed(0));
   } catch(e) {
     console.error('[PDF] SVGtoPDF erro:', e.message);
   }
