@@ -238,50 +238,43 @@ if (hd.SVG) {
   try {
     let svg = hd.SVG;
 
-    // Extrair viewBox original
+    // Extrair viewBox para aspect ratio
     const vb = svg.match(/viewBox=["']([^"']+)["']/);
-    let vbX = 0, vbY = 0, vbW = 10, vbH = 14.54;
+    let vbW = 10, vbH = 14.54;
     if (vb) {
       const parts = vb[1].trim().split(/[\s,]+/);
-      vbX = parseFloat(parts[0]) || 0;
-      vbY = parseFloat(parts[1]) || 0;
       vbW = parseFloat(parts[2]) || 10;
       vbH = parseFloat(parts[3]) || 14.54;
     }
+    const ratio = vbW / vbH;
 
-    // EXPANDIR viewBox em 20% em cada lado para incluir numeros dos portoes
-    // que o bodygraph desenha FORA do viewBox original
-    const PAD_RATIO = 0.20;
-    const padX = vbW * PAD_RATIO;
-    const padY = vbH * PAD_RATIO;
-    const newVbX = vbX - padX;
-    const newVbY = vbY - padY;
-    const newVbW = vbW + padX * 2;
-    const newVbH = vbH + padY * 2;
+    // Renderizar a 75% da area disponivel.
+    // O SVG do bodygraph tem numeros de portoes desenhados FORA do viewBox
+    // que ocupam ~15% extra. A 75%, o overflow total fica em ~86%, cabendo.
+    const FIT_FACTOR = 0.75;
+    const targetW = CHART_W * FIT_FACTOR;
+    const targetH = AREA_H * FIT_FACTOR;
 
-    // Substituir viewBox expandido no SVG + remover width/height nativos
+    // Fit-contain
+    let fitW, fitH;
+    if (ratio > (targetW / targetH)) {
+      fitW = targetW;
+      fitH = targetW / ratio;
+    } else {
+      fitH = targetH;
+      fitW = targetH * ratio;
+    }
+
+    // Centralizar na area TOTAL (nao na area reduzida)
+    const cx = chartX + (CHART_W - fitW) / 2;
+    const cy = chartY + (AREA_H - fitH) / 2;
+
+    // Remover width/height nativos, manter viewBox original
     svg = svg.replace(/<svg([^>]*)>/, function(m, attrs) {
       attrs = attrs.replace(/\s*width\s*=\s*["'][^"']*["']/gi, '');
       attrs = attrs.replace(/\s*height\s*=\s*["'][^"']*["']/gi, '');
-      attrs = attrs.replace(/viewBox=["'][^"']*["']/i,
-        'viewBox="' + newVbX + ' ' + newVbY + ' ' + newVbW + ' ' + newVbH + '"');
       return '<svg' + attrs + '>';
     });
-
-    // Fit-contain na area total disponivel
-    const newRatio = newVbW / newVbH;
-    let fitW, fitH;
-    if (newRatio > (CHART_W / AREA_H)) {
-      fitW = CHART_W;
-      fitH = CHART_W / newRatio;
-    } else {
-      fitH = AREA_H;
-      fitW = AREA_H * newRatio;
-    }
-
-    // Centralizar
-    const cx = chartX + (CHART_W - fitW) / 2;
-    const cy = chartY + (AREA_H - fitH) / 2;
 
     SVGtoPDF(doc, svg, cx, cy, {
       width: fitW,
@@ -289,7 +282,7 @@ if (hd.SVG) {
       preserveAspectRatio: 'xMidYMid meet'
     });
 
-    console.log('[PDF] Bodygraph SVG: origVB=' + vbW + 'x' + vbH + ' expandedVB=' + newVbW.toFixed(1) + 'x' + newVbH.toFixed(1) + ' fit=' + fitW.toFixed(0) + 'x' + fitH.toFixed(0) + ' pos=' + cx.toFixed(0) + ',' + cy.toFixed(0));
+    console.log('[PDF] Bodygraph SVG: vb=' + vbW + 'x' + vbH + ' fit=' + fitW.toFixed(0) + 'x' + fitH.toFixed(0) + ' pos=' + cx.toFixed(0) + ',' + cy.toFixed(0));
   } catch(e) {
     console.error('[PDF] SVGtoPDF erro:', e.message);
   }
