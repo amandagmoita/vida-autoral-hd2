@@ -35,8 +35,25 @@ const T = {
 'Peace':'Paz','Surprise':'Surpresa',
 'Frustration':'Frustra\u00e7\u00e3o','Bitterness':'Amargura',
 'Anger':'Raiva','Disappointment':'Decep\u00e7\u00e3o',
+'Emotional - Solar Plexus':'Emocional','Sacral Authority':'Sacral',
+'Manifesting Generator':'Gerador Manifestante',
 };
 function tr(v) { return (v && T[v]) || v || '-'; }
+
+function traduzirCruz(v) {
+  if (!v) return '-';
+  return v
+    .replace('Right Angle Cross of', 'Cruz de \u00c2ngulo Reto de')
+    .replace('Left Angle Cross of', 'Cruz de \u00c2ngulo Esquerdo de')
+    .replace('Juxtaposition Cross of', 'Cruz de Justaposi\u00e7\u00e3o de')
+    .replace('Right Angle Cross', 'Cruz de \u00c2ngulo Reto')
+    .replace('Left Angle Cross', 'Cruz de \u00c2ngulo Esquerdo')
+    .replace('Juxtaposition Cross', 'Cruz de Justaposi\u00e7\u00e3o')
+    .replace(' The ', ' ')
+    .replace(' the ', ' ')
+    .replace(' of ', ' da ')
+    .replace(' Of ', ' da ');
+}
 
 // — BODYGRAPH API ———————————————————––
 async function resolveTimezone(city) {
@@ -144,10 +161,12 @@ const DIVIDER = 490;
 const COL_W   = 72;
 const PILL_H  = 20;
 const PILL_W  = COL_W - 6;
-const MARGIN_V= 28;
-const AREA_TOP = H - 36 - MARGIN_V;
-const AREA_BOT = 20 + MARGIN_V;
-const AREA_H   = AREA_TOP - AREA_BOT;
+const HEADER_H = 36;
+const MARGIN_TOP = 30;
+const MARGIN_BOTTOM = 36;
+const CHART_Y0 = HEADER_H + MARGIN_TOP;
+const CHART_Y1 = H - MARGIN_BOTTOM;
+const AREA_H   = CHART_Y1 - CHART_Y0;
 const CHART_X0 = COL_W;
 const CHART_W  = DIVIDER - COL_W * 2;
 
@@ -170,7 +189,7 @@ const TEXT_MED  = '#6B5A4B';
 doc.rect(0, 0, W, H).fill('#ffffff');
 
 // === CABE\xc7ALHO ESQUERDO ===
-doc.rect(0, 0, DIVIDER, 36).fill(WHEAT);
+doc.rect(0, 0, DIVIDER, HEADER_H).fill(WHEAT);
 doc.font('DejaVu').fontSize(6.5).fillColor(SALMON)
    .text('DESIGN', 3, 14);
 doc.font('DejaVu').fontSize(5.5).fillColor(MINT)
@@ -181,7 +200,7 @@ const pillStep = AREA_H / PLANET_ORDER.length;
 
 planetas.forEach((p, i) => {
   // Em pdfkit: y cresce para baixo, ent\xe3o i=0 = topo
-  const pillTop = 36 + MARGIN_V + i * pillStep + (pillStep - PILL_H) / 2;
+  const pillTop = CHART_Y0 + i * pillStep + (pillStep - PILL_H) / 2;
 
   // Design (esquerda)
   const dActive = p.design !== '-';
@@ -213,7 +232,7 @@ planetas.forEach((p, i) => {
 
 // === GR\xc1FICO BODYGRAPH (SVG \u2192 PDF vetorial) ===
 const chartX = CHART_X0;
-const chartY = 36 + MARGIN_V;
+const chartY = CHART_Y0;
 if (hd.SVG) {
   try {
     // Garante dimensoes no SVG
@@ -281,33 +300,43 @@ const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
 doc.font('DejaVu').fontSize(11).fillColor(TEXT_DARK)
    .text(nomeDisplay.toUpperCase(), DX, 62, { lineBreak: false });
 
-// Props
+// Props - grid 2 colunas (sem Cruz)
 const LABELS = [
   ['Tipo',         tr(props.Type && props.Type.id)],
   ['Estrat\u00e9gia', tr(props.Strategy && props.Strategy.id)],
   ['Autoridade',   tr(props.InnerAuthority && props.InnerAuthority.id)],
   ['Perfil',       (props.Profile && props.Profile.id) || '-'],
   ['Defini\u00e7\u00e3o', tr(props.Definition && props.Definition.id)],
-  ['Cruz',         (props.IncarnationCross && props.IncarnationCross.id) || '-'],
   ['Assinatura',   tr(props.Signature && props.Signature.id)],
   ['N\u00e3o-Self', tr(props.NotSelfTheme && props.NotSelfTheme.id)],
 ];
 const CW2 = (DW / 2) - 5;
+const ROW_H = 36;
 LABELS.forEach(([label, val], i) => {
   const col = i % 2;
   const row = Math.floor(i / 2);
   const lx = DX + col * (CW2 + 5);
-  const ly = 80 + row * 38;
-  doc.rect(lx, ly, CW2, 32).fill(GRAY_LT);
+  const ly = 80 + row * ROW_H;
+  doc.rect(lx, ly, CW2, 30).fill(GRAY_LT);
   doc.rect(lx, ly, CW2, 3).fill(PEACH);
   doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
      .text(label.toUpperCase(), lx+4, ly+5, { lineBreak: false });
   doc.font('DejaVu').fontSize(8).fillColor(TEXT_DARK)
-     .text((val||'-').slice(0,22), lx+4, ly+16, { lineBreak: false });
+     .text((val||'-').slice(0,24), lx+4, ly+15, { lineBreak: false });
 });
 
+// Cruz - largura total, traduzida
+const cruzY = 80 + Math.ceil(LABELS.length / 2) * ROW_H;
+const cruzVal = traduzirCruz((props.IncarnationCross && props.IncarnationCross.id) || '-');
+doc.rect(DX, cruzY, DW, 34).fill(GRAY_LT);
+doc.rect(DX, cruzY, DW, 3).fill(PEACH);
+doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
+   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+5, { lineBreak: false });
+doc.font('DejaVu').fontSize(7).fillColor(TEXT_DARK)
+   .text(cruzVal, DX+4, cruzY+16, { width: DW - 8, lineBreak: true, ellipsis: true, height: 14 });
+
 // Port\xf5es
-let secY = 242;
+let secY = cruzY + 44;
 doc.font('DejaVu').fontSize(6).fillColor(COFFEE)
    .text('PORT\u00d5ES ATIVADOS', DX, secY);
 let bx = DX, by2 = secY + 12;
@@ -338,7 +367,7 @@ canais.forEach(c => {
 
 // Rodap\xe9
 doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
-   .text('\u00a9 2025 Vida Autoral . Todos os direitos reservados', 300, H - 12, { lineBreak: false });
+   .text('\u00a9 2025 Vida Autoral . Todos os direitos reservados', 300, H - MARGIN_BOTTOM + 16, { lineBreak: false });
 
 doc.end();
 
