@@ -238,61 +238,41 @@ if (hd.SVG) {
   try {
     let svg = hd.SVG;
 
-    // Log da tag SVG original para debug
-    const origTag = svg.match(/<svg[^>]*>/);
-    console.log('[SVG] Tag original:', origTag ? origTag[0].slice(0,200) : 'N/A');
-
-    // Extrair viewBox para aspect ratio
-    const vb = svg.match(/viewBox=["']([^"']+)["']/);
-    let vbW = 10, vbH = 14.54;
+    // Extrair viewBox (case-insensitive! A API retorna "viewbox" minusculo)
+    const vb = svg.match(/viewbox=["']([^"']+)["']/i);
+    let vbW = 400, vbH = 694;
     if (vb) {
       const parts = vb[1].trim().split(/[\s,]+/);
-      vbW = parseFloat(parts[2]) || 10;
-      vbH = parseFloat(parts[3]) || 14.54;
-    }
-    const ratio = vbW / vbH;
-
-    // Area alvo: 65% da area disponivel para acomodar overflow
-    const TARGET_SCALE = 0.65;
-    const targetW = CHART_W * TARGET_SCALE;
-    const targetH = AREA_H * TARGET_SCALE;
-
-    // Fit-contain
-    let fitW, fitH;
-    if (ratio > (targetW / targetH)) {
-      fitW = targetW; fitH = targetW / ratio;
-    } else {
-      fitH = targetH; fitW = targetH * ratio;
+      vbW = parseFloat(parts[2]) || 400;
+      vbH = parseFloat(parts[3]) || 694;
     }
 
-    // Centralizar na area total
+    // Escala fit-contain: caber na area disponivel
+    const scaleX = CHART_W / vbW;
+    const scaleY = AREA_H / vbH;
+    // 0.90 = margem de seguranca para numeros de portoes fora do viewBox
+    const scale = Math.min(scaleX, scaleY) * 0.90;
+    const fitW = vbW * scale;
+    const fitH = vbH * scale;
+
+    // Centralizar na area
     const cx = chartX + (CHART_W - fitW) / 2;
     const cy = chartY + (AREA_H - fitH) / 2;
 
-    // REMOVER todo e qualquer dimensionamento do SVG:
-    // atributos width, height (com ou sem unidade), e styles inline
+    // Usar transformacao do PDF: com viewBox real (400x694), scale ~0.65
+    doc.save();
+    doc.translate(cx, cy);
+    doc.scale(scale);
+    // Remover width/height para que svg-to-pdfkit use viewBox puro
     svg = svg.replace(/<svg([^>]*)>/, function(m, attrs) {
-      // Remove width="..." height="..." em qualquer formato
       attrs = attrs.replace(/\s+width\s*=\s*["'][^"']*["']/gi, '');
       attrs = attrs.replace(/\s+height\s*=\s*["'][^"']*["']/gi, '');
-      // Remove width/height de style inline
-      attrs = attrs.replace(/style\s*=\s*["']([^"']*)["']/gi, function(sm, style) {
-        style = style.replace(/width\s*:[^;]+;?/gi, '');
-        style = style.replace(/height\s*:[^;]+;?/gi, '');
-        return style.trim() ? 'style="' + style.trim() + '"' : '';
-      });
-      // Injetar nossas dimensoes exatas
-      return '<svg' + attrs + ' width="' + fitW.toFixed(2) + '" height="' + fitH.toFixed(2) + '">';
+      return '<svg' + attrs + '>';
     });
+    SVGtoPDF(doc, svg, 0, 0);
+    doc.restore();
 
-    // Log da tag modificada
-    const modTag = svg.match(/<svg[^>]*>/);
-    console.log('[SVG] Tag modificada:', modTag ? modTag[0].slice(0,200) : 'N/A');
-
-    // Renderizar SEM opcoes de tamanho - usar apenas os atributos do SVG
-    SVGtoPDF(doc, svg, cx, cy);
-
-    console.log('[PDF] Bodygraph: vb=' + vbW + 'x' + vbH + ' target=' + fitW.toFixed(0) + 'x' + fitH.toFixed(0) + ' pos=(' + cx.toFixed(0) + ',' + cy.toFixed(0) + ')');
+    console.log('[PDF] Bodygraph: vb=' + vbW + 'x' + vbH + ' scale=' + scale.toFixed(3) + ' fit=' + fitW.toFixed(0) + 'x' + fitH.toFixed(0) + ' pos=(' + cx.toFixed(0) + ',' + cy.toFixed(0) + ')');
   } catch(e) {
     console.error('[PDF] SVGtoPDF erro:', e.message);
   }
