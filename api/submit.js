@@ -250,8 +250,8 @@ if (hd.SVG) {
     // Escala fit-contain: caber na area disponivel
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
-    // 1.4 = margem minima para numeros de portoes fora do viewBox
-    const scale = Math.min(scaleX, scaleY) * 1.4;
+    // 1.1 = margem minima para numeros de portoes fora do viewBox
+    const scale = Math.min(scaleX, scaleY) * 1.1;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
