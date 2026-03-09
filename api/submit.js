@@ -250,14 +250,17 @@ if (hd.SVG) {
     // Escala fit-contain: caber na area disponivel
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
-    // 1.1 = margem minima para numeros de portoes fora do viewBox
-    const scale = Math.min(scaleX, scaleY) * 1.1;
+    // 0.96 = margem minima para numeros de portoes fora do viewBox
+    const scale = Math.min(scaleX, scaleY) * 0.96;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
-    // Centralizar na area
-    const cx = chartX + (CHART_W - fitW) / 2;
-    const cy = chartY + (AREA_H - fitH) / 2;
+    // Centralizar: alinhar o CENTRO do grafico ao centro da area disponivel
+    // Funciona mesmo quando fitW > CHART_W ou fitH > AREA_H
+    const areaCenterX = chartX + CHART_W / 2;
+    const areaCenterY = chartY + AREA_H / 2;
+    const cx = areaCenterX - fitW / 2;
+    const cy = areaCenterY - fitH / 2;
 
     // Usar transformacao do PDF: com viewBox real (400x694), scale ~0.65
     doc.save();
