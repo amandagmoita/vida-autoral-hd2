@@ -595,8 +595,8 @@ const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
 const tipoObj = getTipoObj(rawTipo);
 
 const CW2        = (DW / 2) - 5;
-const TIPO_H     = 86;   // card full-width Tipo — descricao + fraseIdentidade
-const CARD_H     = 64;   // cards 2 colunas — cabe ~3 linhas completas
+const TIPO_H     = 75;   // card full-width Tipo — descricao + fraseIdentidade
+const CARD_H     = 60;   // cards 2 colunas — cabe ~3 linhas completas
 const ROW_H      = CARD_H + 5;
 const CARDS_START_Y = 78;
 
