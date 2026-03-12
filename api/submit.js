@@ -603,8 +603,6 @@ const CARDS_START_Y = 78;
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
 doc.roundedRect(DX, tipoY, DW, TIPO_H, 5).fill(GRAY_LT);
-doc.roundedRect(DX, tipoY, DW, 6, 5).fill(PEACH);
-doc.rect(DX, tipoY + 3, DW, 3).fill(PEACH);
 
 doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
    .text('TIPO', DX+4, tipoY+6, { lineBreak: false });
@@ -640,8 +638,6 @@ LABELS.forEach(([label, val, desc], i) => {
   const ly = GRID_START_Y + row * ROW_H;
 
   doc.roundedRect(lx, ly, CW2, CARD_H, 5).fill(GRAY_LT);
-  doc.roundedRect(lx, ly, CW2, 6, 5).fill(PEACH);
-  doc.rect(lx, ly + 3, CW2, 3).fill(PEACH);
 
   doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
      .text(label.toUpperCase(), lx+4, ly+6, { lineBreak: false });
@@ -662,8 +658,6 @@ const cruzVal  = traduzirCruz(cruzRaw);
 const CRUZ_H   = 36;
 
 doc.roundedRect(DX, cruzY, DW, CRUZ_H, 5).fill(GRAY_LT);
-doc.roundedRect(DX, cruzY, DW, 6, 5).fill(PEACH);
-doc.rect(DX, cruzY + 3, DW, 3).fill(PEACH);
 doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
    .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+6, { lineBreak: false });
 doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
