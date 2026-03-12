@@ -455,7 +455,7 @@ if (hd.SVG) {
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
     const baseScale = Math.min(scaleX, scaleY);
-    const scale = baseScale * 1.20;
+    const scale = baseScale * 1.25;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
@@ -467,7 +467,7 @@ if (hd.SVG) {
     // Positivo Y = move para baixo, negativo = move para cima
     // Ajustar empiricamente ate ficar visualmente centralizado
     const CHART_OFFSET_X = 38;
-    const CHART_OFFSET_Y = 80;
+    const CHART_OFFSET_Y = 90;
     const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
     const cy = areaCenterY - fitH / 2 + CHART_OFFSET_Y;
 
