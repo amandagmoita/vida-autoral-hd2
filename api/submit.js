@@ -386,10 +386,10 @@ const TEXT_MED  = '#6B5A4B';
 // === FUNDO ===
 doc.rect(0, 0, W, H).fill('#ffffff');
 
-// === CABEÇALHO ESQUERDO — labels das colunas sobre cada coluna ===
-doc.rect(0, 0, DIVIDER, HEADER_H).fill(WHEAT);
-// "DESIGN" e "PERSONALIDADE" ~10px acima do início das pills (CONTENT_Y0 = 56)
-const labelY = CONTENT_Y0 - 12;
+// === CABEÇALHO ESQUERDO — faixa alinhada com o header marrom (56px)
+doc.rect(0, 0, DIVIDER, 56).fill(WHEAT);
+// "DESIGN" e "PERSONALIDADE" 5px acima do início das pills
+const labelY = CONTENT_Y0 - 5;
 doc.font('DejaVu').fontSize(7).fillColor(SALMON)
    .text('DESIGN', 0, labelY, { width: COL_W, align: 'center', lineBreak: false });
 doc.font('DejaVu').fontSize(7).fillColor(MINT)
@@ -457,7 +457,7 @@ if (hd.SVG) {
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
     const baseScale = Math.min(scaleX, scaleY);
-    const scale = baseScale * 1.20;
+    const scale = baseScale * 1.25;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
@@ -582,11 +582,11 @@ doc.path('M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 
 doc.path('M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z').fill('#ffffff');
 doc.restore();
 
-// Textos cabeçalho
+// Textos cabeçalho — alinhados à margem esquerda DX, abaixo do logo
 doc.font('DejaVu').fontSize(10).fillColor('#ffffff')
-   .text('VIDA AUTORAL', DX + LOGO_SIZE + 8, 17, { lineBreak: false });
+   .text('VIDA AUTORAL', DX, 17, { lineBreak: false });
 doc.font('DejaVu').fontSize(6).fillColor(WHEAT)
-   .text('MAPA DO DESENHO HUMANO', DX + LOGO_SIZE + 8, 31, { lineBreak: false });
+   .text('MAPA DO DESENHO HUMANO', DX, 31, { lineBreak: false });
 
 // Nome da pessoa
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
@@ -610,10 +610,11 @@ const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
 
 const tipoObj = getTipoObj(rawTipo);
 
-const CW2        = (DW / 2) - 5;
-const TIPO_H     = 85;
+const COL_GAP     = 10;                      // espaço entre as duas colunas de cards
+const CW2        = (DW / 2) - (COL_GAP / 2);
+const TIPO_H     = 75;
 const CARD_H     = 60;
-const ROW_H      = CARD_H + 9;  // +9 = mais respiro entre os cards
+const ROW_H      = CARD_H + 9;
 const CARDS_START_Y = 92;   // espaço após nome + dados de nascimento
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
@@ -654,7 +655,7 @@ const GRID_START_Y = tipoY + TIPO_H + 9;
 LABELS.forEach(([label, val, desc], i) => {
   const col = i % 2;
   const row = Math.floor(i / 2);
-  const lx = DX + col * (CW2 + 5);
+  const lx = DX + col * (CW2 + COL_GAP);
   const ly = GRID_START_Y + row * ROW_H;
 
   doc.roundedRect(lx, ly, CW2, CARD_H, 5).fill(GRAY_LT);
