@@ -323,11 +323,9 @@ if (hd.SVG) {
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
-    // Centralizar: centro do grafico = centro exato entre as duas colunas planetarias
-    // Coluna Design termina em COL_W (72), coluna Personality comeca em DIVIDER - COL_W (418)
-    // Centro = (72 + 418) / 2 = 245
+    // Centralizar: centro do grafico = centro da PAGINA inteira
     const areaCenterX = (COL_W + (DIVIDER - COL_W)) / 2;
-    const areaCenterY = chartY + AREA_H / 2;
+    const areaCenterY = H / 2;  // centro vertical da pagina
     const cx = areaCenterX - fitW / 2;
     const cy = areaCenterY - fitH / 2;
 
@@ -470,7 +468,7 @@ canais.forEach(c => {
 
 // Rodap\xe9
 doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
-   .text('\u00a9 2025 Vida Autoral . Todos os direitos reservados', 300, H - FOOTER_H + 4, { lineBreak: false });
+   .text('\u00a9 2026 Vida Autoral . Todos os direitos reservados', 300, H - FOOTER_H + 4, { lineBreak: false });
 
 doc.end();
 
@@ -498,7 +496,7 @@ return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body
 + '<p>Recebemos seus dados. Seu mapa est\u00e1 sendo gerado e chegar\u00e1 em breve.</p>'
 + '<div class="info">\ud83d\udcc5 ' + data + ' \u00b7 \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
 + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
-+ '</div><div class="f">\u00a9 2025 Vida Autoral</div></div></body></html>';
++ '</div><div class="f">\u00a9 2026 Vida Autoral</div></div></body></html>';
 }
 
 function emailPdf(nome, data, hora, local, svgString) {
@@ -510,7 +508,7 @@ return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body
 + '<p>O PDF inclui: Tipo, Estrat\u00e9gia, Autoridade, Perfil, Defini\u00e7\u00e3o, planetas Design e Personalidade, setas do Variable, Port\u00f5es e Canais ativados.</p>'
 + (svgString ? '<div style="text-align:center;margin:16px 0;background:#fff;border-radius:8px;padding:10px"><p style="font-size:.75rem;color:#9b836f;margin:0 0 8px">Seu Bodygraph</p>' + svgString.replace('<svg', '<svg style="max-width:320px;height:auto;display:inline-block"') + '</div>' : '')
 + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
-+ '</div><div class="f">\u00a9 2025 Vida Autoral</div></div></body></html>';
++ '</div><div class="f">\u00a9 2026 Vida Autoral</div></div></body></html>';
 }
 
 // — RESEND —————————————————————––
