@@ -336,7 +336,7 @@ function escapeRegex(str) {
 }
 
 // — PDF ———————————————————————–
-function buildPdf(nome, hd, planetas, portoes, canais, sv) {
+function buildPdf(nome, data, hora, local, hd, planetas, portoes, canais, sv) {
 return new Promise((resolve, reject) => {
 const PDFDoc   = require('pdfkit');
 const SVGtoPDF = require('svg-to-pdfkit');
@@ -816,7 +816,7 @@ const planetas = extrairPlanetas(hd);
 const { portoes, canais } = extrairPortoesCanais(hd);
 const sv = getSetas(hd);
 
-const pdfBytes  = await buildPdf(nome, hd, planetas, portoes, canais, sv);
+const pdfBytes  = await buildPdf(nome, data, hora, local, hd, planetas, portoes, canais, sv);
 const pdfBase64 = Buffer.from(pdfBytes).toString('base64');
 console.log('[5] PDF gerado:', pdfBytes.length, 'bytes');
 
