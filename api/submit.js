@@ -330,7 +330,7 @@ if (hd.SVG) {
     // Positivo X = move para direita, negativo = move para esquerda
     // Positivo Y = move para baixo, negativo = move para cima
     // Ajustar empiricamente ate ficar visualmente centralizado
-    const CHART_OFFSET_X = 40;
+    const CHART_OFFSET_X = 38;
     const CHART_OFFSET_Y = 80;
     const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
     const cy = areaCenterY - fitH / 2 + CHART_OFFSET_Y;
