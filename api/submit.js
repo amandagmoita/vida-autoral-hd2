@@ -386,14 +386,37 @@ const TEXT_MED  = '#6B5A4B';
 // === FUNDO ===
 doc.rect(0, 0, W, H).fill('#ffffff');
 
-// === CABEÇALHO ESQUERDO — faixa alinhada com o header marrom (56px)
+// === CABEÇALHO ESQUERDO — faixa bege alinhada com o header marrom (56px)
 doc.rect(0, 0, DIVIDER, 56).fill(WHEAT);
-// "DESIGN" e "PERSONALIDADE" 5px acima do início das pills (+8px offset)
+
+// Logo Vida Autoral (SVG) — canto superior esquerdo, sobre a faixa bege
+// viewBox: 675x225 → escalar para altura 46px (5px margem topo/baixo)
+const LOGO_H   = 46;
+const LOGO_SCALE_FACTOR = LOGO_H / 225;           // ≈ 0.204
+const LOGO_W   = 675 * LOGO_SCALE_FACTOR;         // ≈ 138px
+try {
+  const fs = require('fs');
+  const logoPath = require('path').join(process.cwd(), 'public', 'logo.svg');
+  let logoSvg = fs.readFileSync(logoPath, 'utf8');
+  // Remover width/height para usar só o viewBox
+  logoSvg = logoSvg.replace(/\s+width\s*=\s*["'][^"']*["']/gi, '')
+                   .replace(/\s+height\s*=\s*["'][^"']*["']/gi, '');
+  doc.save();
+  doc.translate(4, 5);
+  doc.scale(LOGO_SCALE_FACTOR);
+  SVGtoPDF(doc, logoSvg, 0, 0);
+  doc.restore();
+} catch(e) {
+  console.warn('[PDF] Logo SVG não encontrada:', e.message);
+}
+
+// "DESIGN" e "PERSONALIDADE" com 10px de espaçamento extra nas colunas (+8px offset anterior)
+const LABEL_PAD = 10;
 const labelY = CONTENT_Y0 - 5 + 8;
 doc.font('DejaVu').fontSize(7).fillColor(SALMON)
-   .text('DESIGN', 0, labelY, { width: COL_W, align: 'center', lineBreak: false });
+   .text('DESIGN', LABEL_PAD, labelY, { width: COL_W, align: 'center', lineBreak: false });
 doc.font('DejaVu').fontSize(7).fillColor(MINT)
-   .text('PERSONALIDADE', DIVIDER - COL_W, labelY, { width: COL_W, align: 'center', lineBreak: false });
+   .text('PERSONALIDADE', DIVIDER - COL_W - LABEL_PAD, labelY, { width: COL_W, align: 'center', lineBreak: false });
 
 // === PILLS PLANETAS ===
 // Espaçamento entre células reduzido pela metade; colunas 8px abaixo
@@ -405,22 +428,22 @@ const PILLS_OFFSET_Y = 8;                         // 8px para baixo
 planetas.forEach((p, i) => {
   const pillTop = CONTENT_Y0 + i * pillStep + (pillStep - PILL_H) / 2 + PILLS_OFFSET_Y;
 
-  // Design (esquerda)
+  // Design (esquerda) — 10px de espaçamento lateral
   const dActive = p.design !== '-';
-  doc.roundedRect(3, pillTop, PILL_W, PILL_H, 4)
+  doc.roundedRect(3 + LABEL_PAD, pillTop, PILL_W, PILL_H, 4)
      .fill(dActive ? SALMON : GRAY_LT);
   if (p.sym) {
     doc.font('DejaVu').fontSize(11).fillColor('#ffffff')
-       .text(p.sym, 5, pillTop + 4, { lineBreak: false });
+       .text(p.sym, 5 + LABEL_PAD, pillTop + 4, { lineBreak: false });
   }
   if (dActive) {
     doc.font('DejaVu').fontSize(8).fillColor('#ffffff')
-       .text(p.design, 19, pillTop + 6, { lineBreak: false });
+       .text(p.design, 19 + LABEL_PAD, pillTop + 6, { lineBreak: false });
   }
 
-  // Personality (direita)
+  // Personality (direita) — 10px de espaçamento lateral
   const prActive = p.pers !== '-';
-  const px2 = DIVIDER - COL_W + 3;
+  const px2 = DIVIDER - COL_W + 3 - LABEL_PAD;
   doc.roundedRect(px2, pillTop, PILL_W, PILL_H, 4)
      .fill(prActive ? MINT : GRAY_LT);
   if (p.sym) {
