@@ -348,6 +348,11 @@ if (hd.SVG) {
     console.log('[PDF] SVG viewBox raw:', (hd.SVG.match(/viewbox=["']([^"']+)["']/i) || ['','none'])[1]);
     console.log('[PDF] Fit bounds: x=[' + cx.toFixed(1) + ' .. ' + (cx+fitW).toFixed(1) + '] y=[' + cy.toFixed(1) + ' .. ' + (cy+fitH).toFixed(1) + ']');
     console.log('[PDF] Page H=' + H + ' halfH=' + (H/2).toFixed(1));
+    // Debug: primeiros 600 chars do SVG para ver estrutura
+    console.log('[PDF] SVG start:', hd.SVG.substring(0, 600));
+    // Debug: procurar transforms e grupos principais
+    var gMatches = hd.SVG.match(/<g[^>]*transform[^>]*>/gi) || [];
+    console.log('[PDF] SVG <g transform>:', gMatches.slice(0, 5).join(' | '));
   } catch(e) {
     console.error('[PDF] SVGtoPDF erro:', e.message);
   }
