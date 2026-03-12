@@ -388,12 +388,12 @@ doc.rect(0, 0, W, H).fill('#ffffff');
 
 // === CABEÇALHO ESQUERDO — labels das colunas sobre cada coluna ===
 doc.rect(0, 0, DIVIDER, HEADER_H).fill(WHEAT);
-// "DESIGN" centralizado sobre a coluna esquerda (pills Design)
+// "DESIGN" e "PERSONALIDADE" ~10px acima do início das pills (CONTENT_Y0 = 56)
+const labelY = CONTENT_Y0 - 12;
 doc.font('DejaVu').fontSize(7).fillColor(SALMON)
-   .text('DESIGN', 0, 13, { width: COL_W, align: 'center', lineBreak: false });
-// "PERSONALIDADE" centralizado sobre a coluna direita (pills Personality)
+   .text('DESIGN', 0, labelY, { width: COL_W, align: 'center', lineBreak: false });
 doc.font('DejaVu').fontSize(7).fillColor(MINT)
-   .text('PERSONALIDADE', DIVIDER - COL_W, 13, { width: COL_W, align: 'center', lineBreak: false });
+   .text('PERSONALIDADE', DIVIDER - COL_W, labelY, { width: COL_W, align: 'center', lineBreak: false });
 
 // === PILLS PLANETAS ===
 const pillStep = AREA_H / PLANET_ORDER.length;
@@ -611,9 +611,9 @@ const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
 const tipoObj = getTipoObj(rawTipo);
 
 const CW2        = (DW / 2) - 5;
-const TIPO_H     = 86;
-const CARD_H     = 64;
-const ROW_H      = CARD_H + 5;
+const TIPO_H     = 85;
+const CARD_H     = 60;
+const ROW_H      = CARD_H + 9;  // +9 = mais respiro entre os cards
 const CARDS_START_Y = 92;   // espaço após nome + dados de nascimento
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
@@ -649,7 +649,7 @@ const LABELS = [
   ['N\u00e3o-Self / Frustra\u00e7\u00e3o', tr(rawNaoSelf), getDesc('naoself', rawNaoSelf)],
 ];
 
-const GRID_START_Y = tipoY + TIPO_H + 6;
+const GRID_START_Y = tipoY + TIPO_H + 9;
 
 LABELS.forEach(([label, val, desc], i) => {
   const col = i % 2;
