@@ -386,12 +386,14 @@ const TEXT_MED  = '#6B5A4B';
 // === FUNDO ===
 doc.rect(0, 0, W, H).fill('#ffffff');
 
-// === CABE\xc7ALHO ESQUERDO ===
+// === CABEÇALHO ESQUERDO — labels das colunas sobre cada coluna ===
 doc.rect(0, 0, DIVIDER, HEADER_H).fill(WHEAT);
-doc.font('DejaVu').fontSize(6.5).fillColor(SALMON)
-   .text('DESIGN', 3, 14);
-doc.font('DejaVu').fontSize(5.5).fillColor(MINT)
-   .text('PERSONALITY', DIVIDER - COL_W + 3, 14);
+// "DESIGN" centralizado sobre a coluna esquerda (pills Design)
+doc.font('DejaVu').fontSize(7).fillColor(SALMON)
+   .text('DESIGN', 0, 13, { width: COL_W, align: 'center', lineBreak: false });
+// "PERSONALIDADE" centralizado sobre a coluna direita (pills Personality)
+doc.font('DejaVu').fontSize(7).fillColor(MINT)
+   .text('PERSONALIDADE', DIVIDER - COL_W, 13, { width: COL_W, align: 'center', lineBreak: false });
 
 // === PILLS PLANETAS ===
 const pillStep = AREA_H / PLANET_ORDER.length;
@@ -564,22 +566,36 @@ seta(rgc, arrowY2, sv.br, MINT);
 const DX = DIVIDER + 14;
 const DW = W - DIVIDER - 20;
 
-// Cabe\xe7alho direito
+// Cabeçalho direito
 doc.rect(DIVIDER, 0, W - DIVIDER, 56).fill(COFFEE);
 
-// Logo tri\xe2ngulo
-doc.strokeColor('#ffffff').lineWidth(1.5)
-   .moveTo(DX, 46).lineTo(DX+20, 10).lineTo(DX+40, 46).closePath().stroke();
+// Logo SVG real (Vida Autoral — triângulo de linhas)
+// Escala o viewBox 2000x2000 para ~36x36px
+const LOGO_SIZE = 36;
+const LOGO_SCALE = LOGO_SIZE / 2000;
+doc.save();
+doc.translate(DX, 10);
+doc.scale(LOGO_SCALE);
+// Paths do logo (fill white)
+doc.path('M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z').fill('#ffffff');
+doc.path('M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z').fill('#ffffff');
+doc.path('M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z').fill('#ffffff');
+doc.restore();
 
-doc.font('DejaVu').fontSize(9).fillColor('#ffffff')
-   .text('VIDA AUTORAL', DX+48, 20, { lineBreak: false });
-doc.font('DejaVu').fontSize(6.5).fillColor(WHEAT)
-   .text('MAPA DO DESENHO HUMANO', DX+48, 33, { lineBreak: false });
+// Textos cabeçalho
+doc.font('DejaVu').fontSize(10).fillColor('#ffffff')
+   .text('VIDA AUTORAL', DX + LOGO_SIZE + 8, 17, { lineBreak: false });
+doc.font('DejaVu').fontSize(6).fillColor(WHEAT)
+   .text('MAPA DO DESENHO HUMANO', DX + LOGO_SIZE + 8, 31, { lineBreak: false });
 
-// Nome
+// Nome da pessoa
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
-doc.font('DejaVu').fontSize(11).fillColor(TEXT_DARK)
-   .text(nomeDisplay.toUpperCase(), DX, 62, { lineBreak: false });
+doc.font('DejaVu').fontSize(13).fillColor(TEXT_DARK)
+   .text(nomeDisplay.toUpperCase(), DX, 60, { lineBreak: false });
+
+// Dados de nascimento (local · hora)
+doc.font('DejaVu').fontSize(7).fillColor(TEXT_MED)
+   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 76, { lineBreak: false });
 
 // Props - grid 2 colunas com descrições
 const rawTipo       = props.Type && props.Type.id;
@@ -595,28 +611,32 @@ const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
 const tipoObj = getTipoObj(rawTipo);
 
 const CW2        = (DW / 2) - 5;
-const TIPO_H     = 86;   // card full-width Tipo — descricao + fraseIdentidade
-const CARD_H     = 64;   // cards 2 colunas — cabe ~3 linhas completas
+const TIPO_H     = 86;
+const CARD_H     = 64;
 const ROW_H      = CARD_H + 5;
-const CARDS_START_Y = 78;
+const CARDS_START_Y = 92;   // espaço após nome + dados de nascimento
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
 doc.roundedRect(DX, tipoY, DW, TIPO_H, 5).fill(GRAY_LT);
 
-doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
-   .text('TIPO', DX+4, tipoY+6, { lineBreak: false });
+// Label categoria — pequeno, leve, espaçado
+doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
+   .text('TIPO', DX+6, tipoY+7, { lineBreak: false, characterSpacing: 1 });
 
-doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
-   .text(tr(rawTipo) || '-', DX+4, tipoY+18, { lineBreak: false });
+// Valor principal — forte, destaque
+doc.font('DejaVu').fontSize(11).fillColor(TEXT_DARK)
+   .text(tr(rawTipo) || '-', DX+6, tipoY+17, { lineBreak: false });
 
 if (tipoObj) {
+  // Descrição — leve, com respiro acima
   doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
-     .text(tipoObj.descricao, DX+4, tipoY+31, { width: DW - 8, lineBreak: true, ellipsis: true });
+     .text(tipoObj.descricao, DX+6, tipoY+32, { width: DW - 12, lineBreak: true, ellipsis: true });
 
-  const afterDesc = doc.y + 4;
+  const afterDesc = doc.y + 5;
+  // Frase identidade — destaque sutil em COFFEE
   doc.font('DejaVu').fontSize(6.5).fillColor(COFFEE)
-     .text('\u201C' + tipoObj.fraseIdentidade + '\u201D', DX+4, afterDesc, { width: DW - 8, lineBreak: true, ellipsis: true });
+     .text('\u201C' + tipoObj.fraseIdentidade + '\u201D', DX+6, afterDesc, { width: DW - 12, lineBreak: true, ellipsis: true });
 }
 
 // ── Grid 2 colunas — demais campos ────────────────────────────────────────
@@ -639,15 +659,18 @@ LABELS.forEach(([label, val, desc], i) => {
 
   doc.roundedRect(lx, ly, CW2, CARD_H, 5).fill(GRAY_LT);
 
-  doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
-     .text(label.toUpperCase(), lx+4, ly+6, { lineBreak: false });
+  // Label — pequeno, leve, espaçado
+  doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
+     .text(label.toUpperCase(), lx+6, ly+7, { lineBreak: false, characterSpacing: 0.8 });
 
-  doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
-     .text((val||'-').slice(0, 28), lx+4, ly+18, { lineBreak: false });
+  // Valor — forte, destaque
+  doc.font('DejaVu').fontSize(10).fillColor(TEXT_DARK)
+     .text((val||'-').slice(0, 28), lx+6, ly+17, { lineBreak: false });
 
   if (desc) {
+    // Descrição — leve, com respiro acima
     doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
-       .text(desc, lx+4, ly+31, { width: CW2 - 8, height: CARD_H - 33, lineBreak: true, ellipsis: true });
+       .text(desc, lx+6, ly+31, { width: CW2 - 12, height: CARD_H - 33, lineBreak: true, ellipsis: true });
   }
 });
 
@@ -658,10 +681,10 @@ const cruzVal  = traduzirCruz(cruzRaw);
 const CRUZ_H   = 36;
 
 doc.roundedRect(DX, cruzY, DW, CRUZ_H, 5).fill(GRAY_LT);
-doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
-   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+6, { lineBreak: false });
-doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
-   .text(cruzVal, DX+4, cruzY+18, { width: DW - 8, lineBreak: false, ellipsis: true });
+doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
+   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+6, cruzY+7, { lineBreak: false, characterSpacing: 0.8 });
+doc.font('DejaVu').fontSize(10).fillColor(TEXT_DARK)
+   .text(cruzVal, DX+6, cruzY+17, { width: DW - 12, lineBreak: false, ellipsis: true });
 
 // Portões
 let secY = cruzY + CRUZ_H + 8;
