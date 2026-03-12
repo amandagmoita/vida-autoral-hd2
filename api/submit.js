@@ -327,11 +327,13 @@ if (hd.SVG) {
     const areaCenterX = (COL_W + (DIVIDER - COL_W)) / 2;
     const areaCenterY = H / 2;  // centro vertical da pagina
     // Offset manual para compensar conteudo visual nao-centrado dentro do viewBox
-    // Positivo = move para direita, negativo = move para esquerda
+    // Positivo X = move para direita, negativo = move para esquerda
+    // Positivo Y = move para baixo, negativo = move para cima
     // Ajustar empiricamente ate ficar visualmente centralizado
-    const CHART_OFFSET_X = +20;
+    const CHART_OFFSET_X = 0;
+    const CHART_OFFSET_Y = 0;
     const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
-    const cy = areaCenterY - fitH / 2;
+    const cy = areaCenterY - fitH / 2 + CHART_OFFSET_Y;
 
     // Usar transformacao do PDF
     doc.save();
@@ -352,11 +354,39 @@ if (hd.SVG) {
     console.log('[PDF] SVG viewBox raw:', (hd.SVG.match(/viewbox=["']([^"']+)["']/i) || ['','none'])[1]);
     console.log('[PDF] Fit bounds: x=[' + cx.toFixed(1) + ' .. ' + (cx+fitW).toFixed(1) + '] y=[' + cy.toFixed(1) + ' .. ' + (cy+fitH).toFixed(1) + ']');
     console.log('[PDF] Page H=' + H + ' halfH=' + (H/2).toFixed(1));
-    // Debug: primeiros 600 chars do SVG para ver estrutura
-    console.log('[PDF] SVG start:', hd.SVG.substring(0, 600));
-    // Debug: procurar transforms e grupos principais
-    var gMatches = hd.SVG.match(/<g[^>]*transform[^>]*>/gi) || [];
-    console.log('[PDF] SVG <g transform>:', gMatches.slice(0, 5).join(' | '));
+    // Analisar bounding box visual real do SVG
+    // Extrair todas coordenadas de cx, cy, x, y, x1, y1, x2, y2 de shapes
+    var allX = [], allY = [];
+    // circles: cx
+    (hd.SVG.match(/\bcx=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/cx=["']/i,''));
+      if (!isNaN(v)) allX.push(v);
+    });
+    // circles: cy
+    (hd.SVG.match(/\bcy=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/cy=["']/i,''));
+      if (!isNaN(v)) allY.push(v);
+    });
+    // rects and others: x, y
+    (hd.SVG.match(/\bx=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/x=["']/i,''));
+      if (!isNaN(v)) allX.push(v);
+    });
+    (hd.SVG.match(/\by=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/y=["']/i,''));
+      if (!isNaN(v)) allY.push(v);
+    });
+    if (allX.length && allY.length) {
+      var minX = Math.min.apply(null, allX), maxX = Math.max.apply(null, allX);
+      var minY = Math.min.apply(null, allY), maxY = Math.max.apply(null, allY);
+      var contentCenterX = (minX + maxX) / 2;
+      var contentCenterY = (minY + maxY) / 2;
+      var vbCenterX = vbW / 2;
+      var vbCenterY = vbH / 2;
+      console.log('[PDF] SVG content bbox: x=[' + minX.toFixed(1) + '..' + maxX.toFixed(1) + '] y=[' + minY.toFixed(1) + '..' + maxY.toFixed(1) + ']');
+      console.log('[PDF] SVG content center: (' + contentCenterX.toFixed(1) + ',' + contentCenterY.toFixed(1) + ') vs viewBox center: (' + vbCenterX.toFixed(1) + ',' + vbCenterY.toFixed(1) + ')');
+      console.log('[PDF] SVG offset needed: dx=' + (vbCenterX - contentCenterX).toFixed(1) + ' dy=' + (vbCenterY - contentCenterY).toFixed(1));
+    }
   } catch(e) {
     console.error('[PDF] SVGtoPDF erro:', e.message);
   }
