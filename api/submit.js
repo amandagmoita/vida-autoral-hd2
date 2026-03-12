@@ -48,11 +48,11 @@ const DESC = {
       fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Elevo a energia dos meus clientes quando sigo o sim do meu corpo.',
     },
     'Manifested Generator': {
-      descricao:       'Multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
+      descricao:       'Você é multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
       fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Tenho energia ágil e multipotencial para encontrar o caminho mais rápido ao resultado.',
     },
     'Manifesting Generator': {
-      descricao:       'Multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
+      descricao:       'Você é multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
       fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Tenho energia ágil e multipotencial para encontrar o caminho mais rápido ao resultado.',
     },
     'Manifestor': {
@@ -585,7 +585,9 @@ doc.font('DejaVu').fontSize(11).fillColor(TEXT_DARK)
 const rawTipo       = props.Type && props.Type.id;
 const rawEstrategia = props.Strategy && props.Strategy.id;
 const rawAutoridade = props.InnerAuthority && props.InnerAuthority.id;
-const rawPerfil     = (props.Profile && props.Profile.id) || null;
+// Profile: API may return "6 / 3" or "6/3" — normalize to "6/3"
+const rawPerfilRaw  = (props.Profile && props.Profile.id) || null;
+const rawPerfil     = rawPerfilRaw ? rawPerfilRaw.replace(/\s/g, '') : null;
 const rawDefinicao  = props.Definition && props.Definition.id;
 const rawAssinatura = props.Signature && props.Signature.id;
 const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
@@ -593,9 +595,9 @@ const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
 const tipoObj = getTipoObj(rawTipo);
 
 const CW2        = (DW / 2) - 5;
-const TIPO_H     = 92;   // card full-width para Tipo (mais alto para caber tudo)
-const CARD_H     = 68;
-const ROW_H      = CARD_H + 6;
+const TIPO_H     = 78;   // card full-width Tipo — descricao + fraseIdentidade
+const CARD_H     = 54;   // cards 2 colunas — label + valor + desc ~2-3 linhas
+const ROW_H      = CARD_H + 5;
 const CARDS_START_Y = 78;
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
@@ -622,7 +624,7 @@ if (tipoObj) {
 const LABELS = [
   ['Estrat\u00e9gia',  tr(rawEstrategia),  getDesc('estrategia', rawEstrategia)],
   ['Autoridade',        tr(rawAutoridade),  getDesc('autoridade', rawAutoridade)],
-  ['Perfil',            rawPerfil || '-',   getDesc('perfil',     rawPerfil)],
+  ['Perfil',            rawPerfilRaw || '-',   getDesc('perfil', rawPerfil)],
   ['Defini\u00e7\u00e3o', tr(rawDefinicao), getDesc('definicao',  rawDefinicao)],
   ['Assinatura',        tr(rawAssinatura),  getDesc('assinatura', rawAssinatura)],
   ['N\u00e3o-Self / Frustra\u00e7\u00e3o', tr(rawNaoSelf), getDesc('naoself', rawNaoSelf)],
@@ -655,7 +657,7 @@ LABELS.forEach(([label, val, desc], i) => {
 const cruzRaw  = (props.IncarnationCross && props.IncarnationCross.id) || '-';
 const cruzY    = GRID_START_Y + Math.ceil(LABELS.length / 2) * ROW_H;
 const cruzVal  = traduzirCruz(cruzRaw);
-const CRUZ_H   = 42;
+const CRUZ_H   = 36;
 
 doc.rect(DX, cruzY, DW, CRUZ_H).fill(GRAY_LT);
 doc.rect(DX, cruzY, DW, 3).fill(PEACH);
