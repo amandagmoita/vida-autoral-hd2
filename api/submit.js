@@ -388,19 +388,23 @@ doc.rect(0, 0, W, H).fill('#ffffff');
 
 // === CABEÇALHO ESQUERDO — faixa alinhada com o header marrom (56px)
 doc.rect(0, 0, DIVIDER, 56).fill(WHEAT);
-// "DESIGN" e "PERSONALIDADE" 5px acima do início das pills
-const labelY = CONTENT_Y0 - 5;
+
+// === PILLS PLANETAS ===
+// Espaçamento entre pills reduzido à metade: gap entre células = metade do original
+const pillStep = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
+// Centralizar o bloco total de pills no eixo vertical da página
+const pillsTotalH = PLANET_ORDER.length * pillStep;
+const pillsStartY = H / 2 - pillsTotalH / 2;
+
+// "DESIGN" e "PERSONALIDADE" 5px acima do início das pills centralizadas
+const labelY = pillsStartY - 5;
 doc.font('DejaVu').fontSize(7).fillColor(SALMON)
    .text('DESIGN', 0, labelY, { width: COL_W, align: 'center', lineBreak: false });
 doc.font('DejaVu').fontSize(7).fillColor(MINT)
    .text('PERSONALIDADE', DIVIDER - COL_W, labelY, { width: COL_W, align: 'center', lineBreak: false });
 
-// === PILLS PLANETAS ===
-// Espaçamento entre pills reduzido à metade: gap entre células = metade do original
-const pillStep = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
-
 planetas.forEach((p, i) => {
-  const pillTop = CONTENT_Y0 + i * pillStep + (pillStep - PILL_H) / 2;
+  const pillTop = pillsStartY + i * pillStep + (pillStep - PILL_H) / 2;
 
   // Design (esquerda)
   const dActive = p.design !== '-';
@@ -532,11 +536,8 @@ if (hd.SVG) {
 }
 
 // === SETAS ===
-// Eixo horizontal das setas alinhado com a linha central do documento (H/2)
-// Linha 1 (Digestion/Perspective) acima do centro, linha 2 (Environment/Awareness) abaixo
-const ARROW_GAP = 10;  // distância de cada linha ao centro
-const arrowY1 = H / 2 - ARROW_GAP;   // acima do centro
-const arrowY2 = H / 2 + ARROW_GAP;   // abaixo do centro
+const arrowY1 = chartY + AREA_H * 0.06;   // primeira linha de setas
+const arrowY2 = chartY + AREA_H * 0.12;   // segunda linha de setas
 const chartCenterX = (COL_W + (DIVIDER - COL_W)) / 2;  // 245
 const lgc   = COL_W + 30;              // 30px dentro da borda da coluna Design
 const rgc   = (DIVIDER - COL_W) - 30;  // 30px dentro da borda da coluna Personality
