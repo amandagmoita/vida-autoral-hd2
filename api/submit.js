@@ -455,7 +455,7 @@ if (hd.SVG) {
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
     const baseScale = Math.min(scaleX, scaleY);
-    const scale = baseScale * 1.25;
+    const scale = baseScale * 1.20;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
@@ -466,8 +466,8 @@ if (hd.SVG) {
     // Positivo X = move para direita, negativo = move para esquerda
     // Positivo Y = move para baixo, negativo = move para cima
     // Ajustar empiricamente ate ficar visualmente centralizado
-    const CHART_OFFSET_X = 45;
-    const CHART_OFFSET_Y = 90;
+    const CHART_OFFSET_X = 38;
+    const CHART_OFFSET_Y = 80;
     const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
     const cy = areaCenterY - fitH / 2 + CHART_OFFSET_Y;
 
@@ -595,15 +595,16 @@ const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
 const tipoObj = getTipoObj(rawTipo);
 
 const CW2        = (DW / 2) - 5;
-const TIPO_H     = 75;   // card full-width Tipo — descricao + fraseIdentidade
-const CARD_H     = 60;   // cards 2 colunas — cabe ~3 linhas completas
+const TIPO_H     = 86;   // card full-width Tipo — descricao + fraseIdentidade
+const CARD_H     = 64;   // cards 2 colunas — cabe ~3 linhas completas
 const ROW_H      = CARD_H + 5;
 const CARDS_START_Y = 78;
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
-doc.rect(DX, tipoY, DW, TIPO_H).fill(GRAY_LT);
-doc.rect(DX, tipoY, DW, 3).fill(PEACH);
+doc.roundedRect(DX, tipoY, DW, TIPO_H, 5).fill(GRAY_LT);
+doc.roundedRect(DX, tipoY, DW, 6, 5).fill(PEACH);
+doc.rect(DX, tipoY + 3, DW, 3).fill(PEACH);
 
 doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
    .text('TIPO', DX+4, tipoY+6, { lineBreak: false });
@@ -638,8 +639,9 @@ LABELS.forEach(([label, val, desc], i) => {
   const lx = DX + col * (CW2 + 5);
   const ly = GRID_START_Y + row * ROW_H;
 
-  doc.rect(lx, ly, CW2, CARD_H).fill(GRAY_LT);
-  doc.rect(lx, ly, CW2, 3).fill(PEACH);
+  doc.roundedRect(lx, ly, CW2, CARD_H, 5).fill(GRAY_LT);
+  doc.roundedRect(lx, ly, CW2, 6, 5).fill(PEACH);
+  doc.rect(lx, ly + 3, CW2, 3).fill(PEACH);
 
   doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
      .text(label.toUpperCase(), lx+4, ly+6, { lineBreak: false });
@@ -659,8 +661,9 @@ const cruzY    = GRID_START_Y + Math.ceil(LABELS.length / 2) * ROW_H;
 const cruzVal  = traduzirCruz(cruzRaw);
 const CRUZ_H   = 36;
 
-doc.rect(DX, cruzY, DW, CRUZ_H).fill(GRAY_LT);
-doc.rect(DX, cruzY, DW, 3).fill(PEACH);
+doc.roundedRect(DX, cruzY, DW, CRUZ_H, 5).fill(GRAY_LT);
+doc.roundedRect(DX, cruzY, DW, 6, 5).fill(PEACH);
+doc.rect(DX, cruzY + 3, DW, 3).fill(PEACH);
 doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
    .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+6, { lineBreak: false });
 doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
