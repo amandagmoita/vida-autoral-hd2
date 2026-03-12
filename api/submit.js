@@ -329,7 +329,7 @@ if (hd.SVG) {
     // Offset manual para compensar conteudo visual nao-centrado dentro do viewBox
     // Positivo = move para direita, negativo = move para esquerda
     // Ajustar empiricamente ate ficar visualmente centralizado
-    const CHART_OFFSET_X = 0;
+    const CHART_OFFSET_X = +20;
     const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
     const cy = areaCenterY - fitH / 2;
 
