@@ -43,65 +43,65 @@ function tr(v) { return (v && T[v]) || v || '-'; }
 // — DESCRIÇÕES DOS TÓPICOS ————————————————————————
 const DESC = {
   tipo: {
-    'Generator':            'Você tem energia vital constante e se realiza ao responder ao que a vida apresenta. Sua maior potência está em esperar o que ressoa antes de agir.',
-    'Manifested Generator': 'Você é rápida, multifacetada e tem energia de sobra. Responda antes de iniciar — isso evita retrabalho e mantém seu fluxo.',
-    'Manifesting Generator':'Você é rápida, multifacetada e tem energia de sobra. Responda antes de iniciar — isso evita retrabalho e mantém seu fluxo.',
-    'Manifestor':           'Você tem o dom de iniciar e impactar. Informar quem será afetado antes de agir elimina resistência e abre caminho para sua força.',
-    'Projector':            'Você nasceu para guiar e enxergar o todo. Sua magia surge quando é reconhecida e convidada — esperar o convite certo muda tudo.',
-    'Reflector':            'Você é rara: um espelho da saúde coletiva. Decisões pedem um ciclo lunar para revelar clareza real. Seu ambiente importa muito.',
+    'Generator':            'Você é energia vital em movimento. Seu segredo: confiar no Sacral e investir tempo só no que traz satisfação. Frustração é seu sinal de rota.',
+    'Manifested Generator': 'Você é rápida, multipotencial e magnética. Responda antes de iniciar para evitar retrabalho. Frustração avisa quando saiu do seu caminho.',
+    'Manifesting Generator':'Você é rápida, multipotencial e magnética. Responda antes de iniciar para evitar retrabalho. Frustração avisa quando saiu do seu caminho.',
+    'Manifestor':           'Você veio para iniciar e criar magia. Informe quem será impactado antes de agir — isso elimina resistência e libera seu verdadeiro poder.',
+    'Projector':            'Você nasceu para guiar com visão única. Seu magnetismo cresce quando você se reconhece. Aguarde o convite — ele amplifica tudo.',
+    'Reflector':            'Você é rara e preciosa: um espelho da saúde coletiva. Seu ambiente molda tudo. Decisões importantes pedem um ciclo lunar completo.',
   },
   estrategia: {
-    'To Respond':                  'Espere algo do mundo exterior despertar seu Sacral antes de agir. Reagir ao que já está diante de você traz satisfação e fluxo.',
-    'To Inform':                   'Antes de iniciar, informe as pessoas envolvidas. Não pedir permissão — apenas comunicar. Isso reduz resistência e abre espaço.',
-    'To Initiate':                 'Você tem o poder de começar. Informe quem será impactado antes de agir e veja a resistência diminuir naturalmente.',
-    'Wait for the Invitation':     'Aguarde ser reconhecida e convidada para áreas-chave como amor, trabalho e amizade. O convite certo amplifica seu talento.',
-    'Wait for a Lunar Cycle':      'Observe um ciclo lunar completo (28 dias) antes de decidir algo importante. O tempo revela o que é correto para você.',
-    'Wait a Lunar Cycle':          'Observe um ciclo lunar completo (28 dias) antes de decidir algo importante. O tempo revela o que é correto para você.',
+    'To Respond':              'Espere algo exterior despertar seu Sacral antes de agir. Reagir ao que já está diante de você traz satisfação e fluxo real.',
+    'To Inform':               'Informe antes de iniciar — não para pedir permissão, mas para abrir caminho. Comunicar sua visão elimina resistência e gera apoio.',
+    'To Initiate':             'Você tem o poder de começar. Informe quem será impactado antes de agir e veja os obstáculos desaparecerem naturalmente.',
+    'Wait for the Invitation': 'Seja reconhecida antes de entrar. O convite certo — em amor, trabalho e amizade — ativa o melhor de você. Vale esperar.',
+    'Wait for a Lunar Cycle':  'Observe 28 dias antes de decidir algo importante. O tempo e as pessoas ao redor revelam o que é realmente correto para você.',
+    'Wait a Lunar Cycle':      'Observe 28 dias antes de decidir algo importante. O tempo e as pessoas ao redor revelam o que é realmente correto para você.',
   },
   autoridade: {
-    'Sacral':              'Ouça os sons do seu Sacral — "uh-huh" (sim) ou "uhn-uhn" (não). Essa resposta instintiva do corpo nunca mente.',
-    'Emotional':           'Você decide melhor com o tempo. Espere a onda emocional passar antes de concluir. Clareza vem — nunca na hora da emoção.',
-    'Emotional - Solar Plexus': 'Você decide melhor com o tempo. Espere a onda emocional passar antes de concluir. Clareza vem — nunca na hora da emoção.',
-    'Splenic':             'Confie nos flashes instantâneos do corpo — um sussurro, uma sensação. Sua autoridade esplênica fala uma vez e nunca repete.',
-    'Ego':                 'Seu coração e vontade guiam suas decisões. Se não vem do desejo genuíno, não é correto para você. Confie no que quer.',
-    'Ego Manifestor':      'Seu coração e vontade guiam suas decisões. Se não vem do desejo genuíno, não é correto para você. Confie no que quer.',
-    'Self-Projected':      'Ouça a si mesma falar em voz alta com pessoas neutras. É na fala que sua verdade emerge — não na análise mental.',
-    'Mental':              'Você precisa de um espaço confiável para pensar em voz alta. Converse com pessoas sábias e deixe o ambiente certo te guiar.',
-    'No Authority':        'Sua autoridade é o coletivo e o tempo. Observe e espere o ciclo lunar revelar o que é correto para você.',
-    'Lunar':               'Sua autoridade é o coletivo e o tempo. Observe e espere o ciclo lunar revelar o que é correto para você.',
+    'Sacral':                   'Ouça os sons do seu Sacral — "uh-huh" (sim) ou "uhn-uhn" (não). Essa resposta instintiva e imediata do corpo nunca mente.',
+    'Emotional':                'Clareza nunca vem na hora da emoção. Espere a onda emocional passar. Dormir sobre a decisão revela o que é correto para você.',
+    'Emotional - Solar Plexus': 'Clareza nunca vem na hora da emoção. Espere a onda emocional passar. Dormir sobre a decisão revela o que é correto para você.',
+    'Splenic':                  'Confie nos flashes instantâneos do corpo — um sussurro, um arrepio. Sua autoridade esplênica fala uma única vez. Ouça.',
+    'Ego':                      'Seu coração e sua vontade guiam as decisões. Se não vem de um desejo genuíno, não é correto para você. Confie no que quer.',
+    'Ego Manifestor':           'Seu coração e sua vontade guiam as decisões. Se não vem de um desejo genuíno, não é correto para você. Confie no que quer.',
+    'Self-Projected':           'Fale em voz alta com pessoas neutras. É na fala que sua verdade emerge — não na análise mental. Ouça a si mesma.',
+    'Mental':                   'Pense em voz alta em ambientes e com pessoas que confie. O espaço certo ao redor te revela o que é correto.',
+    'No Authority':             'Sua autoridade é o tempo e o coletivo. Observe um ciclo lunar completo. O mundo ao redor te espelha o caminho certo.',
+    'Lunar':                    'Sua autoridade é o tempo e o coletivo. Observe um ciclo lunar completo. O mundo ao redor te espelha o caminho certo.',
   },
   perfil: {
-    '1/3': 'Investigadora/Mártir. Você precisa de base sólida e aprende com a experiência — inclusive os erros. Sua jornada é de descoberta prática.',
-    '1/4': 'Investigadora/Oportunista. Segurança vem do estudo profundo; seu impacto chega pela rede de relacionamentos de confiança.',
-    '2/4': 'Eremita/Oportunista. Você alterna entre recolhimento e conexão. Seu dom emerge naturalmente — mesmo que você não perceba.',
-    '2/5': 'Eremita/Herética. Você é vista como salvadora pelo mundo. Precisa de solidão para recarregar e clareza sobre o que projeta.',
-    '3/5': 'Mártir/Herética. Você aprende na prática, com tentativa e erro. Sua experiência real torna-se a solução que outros precisam.',
-    '3/6': 'Mártir/Role Model. Primeira metade da vida é de experimentação; depois dos 40, você vira modelo de vida para o mundo.',
-    '4/6': 'Oportunista/Role Model. Sua rede é seu tesouro. Com o tempo, você se torna referência para quem observou sua jornada.',
-    '4/1': 'Oportunista/Investigadora. Segurança nas relações e base sólida de conhecimento são o alicerce do seu propósito.',
-    '5/1': 'Herética/Investigadora. Você é vista como solucionadora universal. Precisa de base real para sustentar as expectativas do mundo.',
-    '5/2': 'Herética/Eremita. O mundo projeta salvação em você. Recolhimento genuíno é essencial para manter sua essência intacta.',
-    '6/2': 'Role Model/Eremita. Você observa, aprende e se torna sabedoria viva. Solidão é necessária para integrar quem você realmente é.',
-    '6/3': 'Role Model/Mártir. Sua vida tem três fases: experimentação, observação e ser exemplo. Você aprende para depois iluminar.',
+    '1/3': 'Investigadora/Mártir: você precisa de base sólida e aprende com a experiência — inclusive os erros. Sua jornada é de descoberta prática.',
+    '1/4': 'Investigadora/Oportunista: segurança vem do conhecimento profundo; seu impacto chega pelas relações de confiança que você cultiva.',
+    '2/4': 'Eremita/Oportunista: você alterna entre recolhimento e conexão. Seu dom emerge naturalmente — mesmo quando você não percebe.',
+    '2/5': 'Eremita/Herética: você é vista como salvadora. Solidão é sagrada para você. Tenha clareza sobre o que projeta ao mundo.',
+    '3/5': 'Mártir/Herética: você aprende fazendo e errando. Sua experiência real se torna a solução prática que o mundo precisava.',
+    '3/6': 'Mártir/Role Model: vida em três fases — experimentação, observação e exemplo. Você aprende pela prática para depois iluminar.',
+    '4/6': 'Oportunista/Role Model: sua rede de relações é seu tesouro. Com o tempo, você se torna referência para quem acompanhou sua jornada.',
+    '4/1': 'Oportunista/Investigadora: segurança nas relações e base sólida de conhecimento são o alicerce de tudo o que você constrói.',
+    '5/1': 'Herética/Investigadora: o mundo projeta soluções em você. Construa base real de conhecimento para sustentar esse papel.',
+    '5/2': 'Herética/Eremita: sua presença magnetiza expectativas. Recolhimento genuíno é essencial para manter sua essência intacta.',
+    '6/2': 'Role Model/Eremita: você observa, integra e se torna sabedoria viva. Solidão é necessária para revelar quem você realmente é.',
+    '6/3': 'Role Model/Mártir: você experimenta, observa e vira exemplo. Cada erro foi necessário para a luz que você carrega hoje.',
   },
   definicao: {
-    'Single Definition':      'Seu campo de energia é consistente e autossuficiente. Você não precisa de ninguém para se "completar" — sua aura é estável.',
-    'Split Definition':        'Você tem dois circuitos que se conectam por pontes. Certas pessoas ou ambientes ativam sua completude naturalmente.',
-    'Triple Split Definition': 'Três circuitos independentes. Você precisa de diversidade de conexões e ambientes para ativar todo o seu potencial.',
-    'Quadruple Split':         'Quatro circuitos distintos. Você floresce com tempo, paciência e múltiplas conexões que ativam diferentes partes suas.',
-    'No Definition':           'Você é um espelho puro do coletivo. Sua energia é fluida e reflete o ambiente — por isso, escolher bem seu entorno é vital.',
+    'Single Definition':      'Energia consistente e autossuficiente. Você não precisa de ninguém para se "completar" — sua aura é estável e independente.',
+    'Split Definition':       'Você tem dois circuitos conectados por pontes. Certas pessoas e ambientes ativam sua completude de forma natural e poderosa.',
+    'Triple Split Definition':'Três circuitos independentes. Diversidade de conexões e ambientes ativa diferentes partes do seu potencial.',
+    'Quadruple Split':        'Quatro circuitos distintos. Você floresce com paciência e múltiplas conexões que ativam diferentes dimensões de si mesma.',
+    'No Definition':          'Você é um espelho puro do coletivo. Sua energia é fluida — por isso, escolher conscientemente seu entorno é essencial.',
   },
   assinatura: {
-    'Satisfaction': 'Satisfação é seu sinal de que está no caminho certo. Quando a vida ressoa, seu corpo sabe — e essa é sua bússola.',
-    'Success':      'Sucesso é seu sinal de alinhamento. Quando você age no momento certo e é reconhecida, o fluxo chega naturalmente.',
-    'Peace':        'Paz interior é seu termômetro. Quando está em paz com suas escolhas, você sabe que está vivendo seu design correto.',
-    'Surprise':     'Surpresa e admiração são seus sinais de alinhamento. A vida traz o inesperado e encantador quando você está no fluxo.',
+    'Satisfaction': 'Satisfação é o sinal de que você está no caminho certo. Quando a vida ressoa no seu corpo, essa é sua bússola sagrada.',
+    'Success':      'Sucesso é seu sinal de alinhamento. Quando você age no momento certo e é reconhecida, o fluxo chega sem esforço.',
+    'Peace':        'Paz interior é o termômetro do seu design. Quando está em paz com suas escolhas, você sabe que está vivendo corretamente.',
+    'Surprise':     'Surpresa e encantamento são seus sinais de alinhamento. A vida traz o inesperado e maravilhoso quando você está no fluxo.',
   },
   naoself: {
-    'Frustration':    'Frustração aparece quando você age antes de responder ou força coisas que não ressoam. É o aviso do seu design.',
-    'Anger':          'Raiva é o sinal de que você iniciou sem informar ou agiu contra sua natureza. Pare, respire e realinhe.',
-    'Bitterness':     'Amargura surge quando você busca reconhecimento nos lugares errados ou age sem convite. Confie no timing certo.',
-    'Disappointment': 'Decepção aparece quando você decide rápido demais ou ignora seu ciclo emocional. O tempo é seu maior aliado.',
+    'Frustration':    'Frustração é seu sinal de alerta. Aparece quando você age antes de responder ou investe energia no que não ressoa.',
+    'Anger':          'Raiva sinaliza que você iniciou sem informar ou agiu contra sua natureza. Ela avisa: hora de parar e se realinhar.',
+    'Bitterness':     'Amargura surge quando você age sem convite ou busca reconhecimento nos lugares errados. Confie no timing do seu design.',
+    'Disappointment': 'Decepção aparece quando você decide rápido demais. O tempo e o ciclo lunar são seus maiores aliados na clareza.',
   },
   cruz: {
     // Cruzamentos de Ângulo Reto
@@ -576,8 +576,8 @@ const LABELS = [
 ];
 
 const CW2        = (DW / 2) - 5;
-const CARD_H     = 56;
-const ROW_H      = CARD_H + 5;
+const CARD_H     = 68;
+const ROW_H      = CARD_H + 6;
 const CARDS_START_Y = 78;
 
 LABELS.forEach(([label, val, desc], i) => {
@@ -589,15 +589,15 @@ LABELS.forEach(([label, val, desc], i) => {
   doc.rect(lx, ly, CW2, CARD_H).fill(GRAY_LT);
   doc.rect(lx, ly, CW2, 3).fill(PEACH);
 
-  doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
+  doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
      .text(label.toUpperCase(), lx+4, ly+6, { lineBreak: false });
 
-  doc.font('DejaVu').fontSize(8).fillColor(TEXT_DARK)
-     .text((val||'-').slice(0, 28), lx+4, ly+17, { lineBreak: false });
+  doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
+     .text((val||'-').slice(0, 28), lx+4, ly+18, { lineBreak: false });
 
   if (desc) {
-    doc.font('DejaVu').fontSize(5.8).fillColor(TEXT_MED)
-       .text(desc, lx+4, ly+29, { width: CW2 - 8, height: CARD_H - 31, lineBreak: true, ellipsis: true });
+    doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
+       .text(desc, lx+4, ly+31, { width: CW2 - 8, height: CARD_H - 33, lineBreak: true, ellipsis: true });
   }
 });
 
@@ -606,17 +606,17 @@ const cruzRaw  = (props.IncarnationCross && props.IncarnationCross.id) || '-';
 const cruzY    = CARDS_START_Y + Math.ceil(LABELS.length / 2) * ROW_H;
 const cruzVal  = traduzirCruz(cruzRaw);
 const cruzDesc = getDesc('cruz', cruzRaw);
-const CRUZ_H   = cruzDesc ? 56 : 36;
+const CRUZ_H   = cruzDesc ? 68 : 42;
 
 doc.rect(DX, cruzY, DW, CRUZ_H).fill(GRAY_LT);
 doc.rect(DX, cruzY, DW, 3).fill(PEACH);
-doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
+doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
    .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+6, { lineBreak: false });
-doc.font('DejaVu').fontSize(7).fillColor(TEXT_DARK)
-   .text(cruzVal, DX+4, cruzY+17, { width: DW - 8, lineBreak: false, ellipsis: true });
+doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
+   .text(cruzVal, DX+4, cruzY+18, { width: DW - 8, lineBreak: false, ellipsis: true });
 if (cruzDesc) {
-  doc.font('DejaVu').fontSize(5.8).fillColor(TEXT_MED)
-     .text(cruzDesc, DX+4, cruzY+29, { width: DW - 8, height: CRUZ_H - 31, lineBreak: true, ellipsis: true });
+  doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
+     .text(cruzDesc, DX+4, cruzY+31, { width: DW - 8, height: CRUZ_H - 33, lineBreak: true, ellipsis: true });
 }
 
 // Portões
