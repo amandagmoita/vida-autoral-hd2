@@ -40,6 +40,117 @@ const T = {
 };
 function tr(v) { return (v && T[v]) || v || '-'; }
 
+// — DESCRIÇÕES DOS TÓPICOS ————————————————————————
+const DESC = {
+  tipo: {
+    'Generator':            'Você tem energia vital constante e se realiza ao responder ao que a vida apresenta. Sua maior potência está em esperar o que ressoa antes de agir.',
+    'Manifested Generator': 'Você é rápida, multifacetada e tem energia de sobra. Responda antes de iniciar — isso evita retrabalho e mantém seu fluxo.',
+    'Manifesting Generator':'Você é rápida, multifacetada e tem energia de sobra. Responda antes de iniciar — isso evita retrabalho e mantém seu fluxo.',
+    'Manifestor':           'Você tem o dom de iniciar e impactar. Informar quem será afetado antes de agir elimina resistência e abre caminho para sua força.',
+    'Projector':            'Você nasceu para guiar e enxergar o todo. Sua magia surge quando é reconhecida e convidada — esperar o convite certo muda tudo.',
+    'Reflector':            'Você é rara: um espelho da saúde coletiva. Decisões pedem um ciclo lunar para revelar clareza real. Seu ambiente importa muito.',
+  },
+  estrategia: {
+    'To Respond':                  'Espere algo do mundo exterior despertar seu Sacral antes de agir. Reagir ao que já está diante de você traz satisfação e fluxo.',
+    'To Inform':                   'Antes de iniciar, informe as pessoas envolvidas. Não pedir permissão — apenas comunicar. Isso reduz resistência e abre espaço.',
+    'To Initiate':                 'Você tem o poder de começar. Informe quem será impactado antes de agir e veja a resistência diminuir naturalmente.',
+    'Wait for the Invitation':     'Aguarde ser reconhecida e convidada para áreas-chave como amor, trabalho e amizade. O convite certo amplifica seu talento.',
+    'Wait for a Lunar Cycle':      'Observe um ciclo lunar completo (28 dias) antes de decidir algo importante. O tempo revela o que é correto para você.',
+    'Wait a Lunar Cycle':          'Observe um ciclo lunar completo (28 dias) antes de decidir algo importante. O tempo revela o que é correto para você.',
+  },
+  autoridade: {
+    'Sacral':              'Ouça os sons do seu Sacral — "uh-huh" (sim) ou "uhn-uhn" (não). Essa resposta instintiva do corpo nunca mente.',
+    'Emotional':           'Você decide melhor com o tempo. Espere a onda emocional passar antes de concluir. Clareza vem — nunca na hora da emoção.',
+    'Emotional - Solar Plexus': 'Você decide melhor com o tempo. Espere a onda emocional passar antes de concluir. Clareza vem — nunca na hora da emoção.',
+    'Splenic':             'Confie nos flashes instantâneos do corpo — um sussurro, uma sensação. Sua autoridade esplênica fala uma vez e nunca repete.',
+    'Ego':                 'Seu coração e vontade guiam suas decisões. Se não vem do desejo genuíno, não é correto para você. Confie no que quer.',
+    'Ego Manifestor':      'Seu coração e vontade guiam suas decisões. Se não vem do desejo genuíno, não é correto para você. Confie no que quer.',
+    'Self-Projected':      'Ouça a si mesma falar em voz alta com pessoas neutras. É na fala que sua verdade emerge — não na análise mental.',
+    'Mental':              'Você precisa de um espaço confiável para pensar em voz alta. Converse com pessoas sábias e deixe o ambiente certo te guiar.',
+    'No Authority':        'Sua autoridade é o coletivo e o tempo. Observe e espere o ciclo lunar revelar o que é correto para você.',
+    'Lunar':               'Sua autoridade é o coletivo e o tempo. Observe e espere o ciclo lunar revelar o que é correto para você.',
+  },
+  perfil: {
+    '1/3': 'Investigadora/Mártir. Você precisa de base sólida e aprende com a experiência — inclusive os erros. Sua jornada é de descoberta prática.',
+    '1/4': 'Investigadora/Oportunista. Segurança vem do estudo profundo; seu impacto chega pela rede de relacionamentos de confiança.',
+    '2/4': 'Eremita/Oportunista. Você alterna entre recolhimento e conexão. Seu dom emerge naturalmente — mesmo que você não perceba.',
+    '2/5': 'Eremita/Herética. Você é vista como salvadora pelo mundo. Precisa de solidão para recarregar e clareza sobre o que projeta.',
+    '3/5': 'Mártir/Herética. Você aprende na prática, com tentativa e erro. Sua experiência real torna-se a solução que outros precisam.',
+    '3/6': 'Mártir/Role Model. Primeira metade da vida é de experimentação; depois dos 40, você vira modelo de vida para o mundo.',
+    '4/6': 'Oportunista/Role Model. Sua rede é seu tesouro. Com o tempo, você se torna referência para quem observou sua jornada.',
+    '4/1': 'Oportunista/Investigadora. Segurança nas relações e base sólida de conhecimento são o alicerce do seu propósito.',
+    '5/1': 'Herética/Investigadora. Você é vista como solucionadora universal. Precisa de base real para sustentar as expectativas do mundo.',
+    '5/2': 'Herética/Eremita. O mundo projeta salvação em você. Recolhimento genuíno é essencial para manter sua essência intacta.',
+    '6/2': 'Role Model/Eremita. Você observa, aprende e se torna sabedoria viva. Solidão é necessária para integrar quem você realmente é.',
+    '6/3': 'Role Model/Mártir. Sua vida tem três fases: experimentação, observação e ser exemplo. Você aprende para depois iluminar.',
+  },
+  definicao: {
+    'Single Definition':      'Seu campo de energia é consistente e autossuficiente. Você não precisa de ninguém para se "completar" — sua aura é estável.',
+    'Split Definition':        'Você tem dois circuitos que se conectam por pontes. Certas pessoas ou ambientes ativam sua completude naturalmente.',
+    'Triple Split Definition': 'Três circuitos independentes. Você precisa de diversidade de conexões e ambientes para ativar todo o seu potencial.',
+    'Quadruple Split':         'Quatro circuitos distintos. Você floresce com tempo, paciência e múltiplas conexões que ativam diferentes partes suas.',
+    'No Definition':           'Você é um espelho puro do coletivo. Sua energia é fluida e reflete o ambiente — por isso, escolher bem seu entorno é vital.',
+  },
+  assinatura: {
+    'Satisfaction': 'Satisfação é seu sinal de que está no caminho certo. Quando a vida ressoa, seu corpo sabe — e essa é sua bússola.',
+    'Success':      'Sucesso é seu sinal de alinhamento. Quando você age no momento certo e é reconhecida, o fluxo chega naturalmente.',
+    'Peace':        'Paz interior é seu termômetro. Quando está em paz com suas escolhas, você sabe que está vivendo seu design correto.',
+    'Surprise':     'Surpresa e admiração são seus sinais de alinhamento. A vida traz o inesperado e encantador quando você está no fluxo.',
+  },
+  naoself: {
+    'Frustration':    'Frustração aparece quando você age antes de responder ou força coisas que não ressoam. É o aviso do seu design.',
+    'Anger':          'Raiva é o sinal de que você iniciou sem informar ou agiu contra sua natureza. Pare, respire e realinhe.',
+    'Bitterness':     'Amargura surge quando você busca reconhecimento nos lugares errados ou age sem convite. Confie no timing certo.',
+    'Disappointment': 'Decepção aparece quando você decide rápido demais ou ignora seu ciclo emocional. O tempo é seu maior aliado.',
+  },
+  cruz: {
+    // Cruzamentos de Ângulo Reto
+    'Right Angle Cross of the Sphinx':     'Sua cruz traz o dom de questionar, provocar e revelar verdades ocultas. Você transforma pela profundidade das perguntas que faz.',
+    'Right Angle Cross of Planning':       'Você veio para organizar, planejar e criar estruturas que sustentam comunidades. Seu propósito é dar forma ao futuro coletivo.',
+    'Right Angle Cross of the Vessel of Love': 'Amor incondicional é sua essência e missão. Você irradia e desperta amor onde quer que esteja.',
+    'Right Angle Cross of Eden':           'Você busca e cria experiências de prazer, beleza e abundância. Seu propósito é mostrar que a vida pode ser plena.',
+    'Right Angle Cross of the Sleeping Phoenix': 'Transformação silenciosa é sua marca. Você renova tudo ao redor sem fazer barulho — a mudança acontece por você.',
+    'Right Angle Cross of the Unexpected': 'Mudanças súbitas e reviravoltas são parte do seu design. Você traz o novo e o inusitado onde vai.',
+    'Right Angle Cross of Penetration':    'Você tem poder de ir fundo, investigar e revelar o que está escondido. Sua presença desperta profundidade nos outros.',
+    'Right Angle Cross of Consciousness':  'Despertar a consciência coletiva é sua missão. Você ilumina verdades que mudam a forma como as pessoas enxergam o mundo.',
+    'Right Angle Cross of Explanation':    'Você tem o dom de explicar, traduzir e tornar o complexo acessível. Seu propósito é a ponte entre o saber e o entender.',
+    'Right Angle Cross of the Four Ways':  'Você está aqui para explorar e integrar múltiplos caminhos. Sua jornada é de experiência rica e multidimensional.',
+    'Right Angle Cross of Laws':           'Princípios, regras e estrutura são o seu território. Você ajuda a criar a ordem que permite a liberdade coletiva.',
+    'Right Angle Cross of Service':        'Servir com excelência e integridade é sua missão. Você encontra propósito no cuidado genuíno com o outro.',
+    'Right Angle Cross of the Rulebook':   'Você carrega o dom de sistematizar e codificar. Seu propósito é criar ou guardar as regras que organizam o mundo.',
+    'Right Angle Cross of Revolution':     'Você veio para desafiar o status quo e catalisar mudanças necessárias. Sua presença questiona o que precisa evoluir.',
+    'Right Angle Cross of the Vessel':     'Amor e receptividade são sua força. Você cria espaço para que o outro se sinta verdadeiramente acolhido.',
+    // Cruzamentos de Ângulo Esquerdo
+    'Left Angle Cross of Separation':      'Sua jornada envolve separação e individuação. Você aprende e ensina pela diferença e pela singularidade do caminho.',
+    'Left Angle Cross of Demands':         'Você veio para fazer exigências que elevam o padrão coletivo. Sua presença inspira comprometimento e excelência.',
+    'Left Angle Cross of Masks':           'Você transita por múltiplos papéis e identidades. Sua missão é revelar a autenticidade por trás das máscaras.',
+    'Left Angle Cross of Incarnation':     'Você carrega um propósito de encarnar plenamente — estar presente, no corpo, na vida, com toda a sua essência.',
+    'Left Angle Cross of Alignment':       'Alinhamento entre interior e exterior é sua busca e ensinamento. Você mostra que integridade cria resultados reais.',
+    'Left Angle Cross of Education':       'Transmitir conhecimento e elevar a consciência coletiva é seu chamado. Você é uma educadora nata.',
+    'Left Angle Cross of the Alpha':       'Liderança e influência são seu território. Você inspira pelo exemplo e pela força de sua presença autêntica.',
+    'Left Angle Cross of Healing':         'Você tem o dom de curar — pelo toque, pela palavra ou pela presença. Sua energia restaura e reequilibra.',
+    'Left Angle Cross of Prevention':      'Antecipar, proteger e prevenir são seus talentos naturais. Você vê o que pode dar errado antes que aconteça.',
+    'Left Angle Cross of the Clarion':     'Você é mensageira. Seu chamado é anunciar, alertar e despertar — sua voz tem o poder de mover multidões.',
+    'Left Angle Cross of Defiance':        'Você desafia normas para libertar. Sua rebeldia tem propósito: abrir espaço para o novo e o autêntico.',
+    'Left Angle Cross of Migration':       'Movimento, mudança e adaptação são sua essência. Você floresce em transições e ajuda outros a fazerem o mesmo.',
+    // Cruzamento de Justaposição
+    'Juxtaposition Cross of the Sphinx':   'Questionar e provocar reflexão profunda é sua essência fixa. Você desperta consciência por onde passa.',
+    'Juxtaposition Cross of Planning':     'Planejar e estruturar é sua natureza constante. Você encontra propósito ao criar sistemas que funcionam.',
+    'Juxtaposition Cross of Penetration':  'Investigar fundo e revelar verdades é sua missão singular. Você não aceita a superfície — quer a essência.',
+    'Juxtaposition Cross of Consciousness':'Despertar consciência é sua tarefa fixa nessa vida. Sua simples presença eleva o nível de percepção ao redor.',
+  },
+};
+
+function getDesc(categoria, valor) {
+  if (!valor || valor === '-') return '';
+  const mapa = DESC[categoria] || {};
+  // Busca direta
+  if (mapa[valor]) return mapa[valor];
+  // Busca por correspondência parcial (útil para Cruz)
+  const key = Object.keys(mapa).find(k => valor.includes(k) || k.includes(valor));
+  return key ? mapa[key] : '';
+}
+
 function traduzirCruz(v) {
   if (!v) return '-';
   return v
@@ -445,43 +556,71 @@ const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
 doc.font('DejaVu').fontSize(11).fillColor(TEXT_DARK)
    .text(nomeDisplay.toUpperCase(), DX, 62, { lineBreak: false });
 
-// Props - grid 2 colunas (sem Cruz)
+// Props - grid 2 colunas com descrições
+const rawTipo       = props.Type && props.Type.id;
+const rawEstrategia = props.Strategy && props.Strategy.id;
+const rawAutoridade = props.InnerAuthority && props.InnerAuthority.id;
+const rawPerfil     = (props.Profile && props.Profile.id) || null;
+const rawDefinicao  = props.Definition && props.Definition.id;
+const rawAssinatura = props.Signature && props.Signature.id;
+const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
+
 const LABELS = [
-  ['Tipo',         tr(props.Type && props.Type.id)],
-  ['Estrat\u00e9gia', tr(props.Strategy && props.Strategy.id)],
-  ['Autoridade',   tr(props.InnerAuthority && props.InnerAuthority.id)],
-  ['Perfil',       (props.Profile && props.Profile.id) || '-'],
-  ['Defini\u00e7\u00e3o', tr(props.Definition && props.Definition.id)],
-  ['Assinatura',   tr(props.Signature && props.Signature.id)],
-  ['N\u00e3o-Self', tr(props.NotSelfTheme && props.NotSelfTheme.id)],
+  ['Tipo',              tr(rawTipo),        getDesc('tipo',       rawTipo)],
+  ['Estrat\u00e9gia',  tr(rawEstrategia),  getDesc('estrategia', rawEstrategia)],
+  ['Autoridade',        tr(rawAutoridade),  getDesc('autoridade', rawAutoridade)],
+  ['Perfil',            rawPerfil || '-',   getDesc('perfil',     rawPerfil)],
+  ['Defini\u00e7\u00e3o', tr(rawDefinicao), getDesc('definicao',  rawDefinicao)],
+  ['Assinatura',        tr(rawAssinatura),  getDesc('assinatura', rawAssinatura)],
+  ['N\u00e3o-Self / Frustra\u00e7\u00e3o', tr(rawNaoSelf), getDesc('naoself', rawNaoSelf)],
 ];
-const CW2 = (DW / 2) - 5;
-const ROW_H = 36;
-LABELS.forEach(([label, val], i) => {
+
+const CW2        = (DW / 2) - 5;
+const CARD_H     = 56;
+const ROW_H      = CARD_H + 5;
+const CARDS_START_Y = 78;
+
+LABELS.forEach(([label, val, desc], i) => {
   const col = i % 2;
   const row = Math.floor(i / 2);
   const lx = DX + col * (CW2 + 5);
-  const ly = 80 + row * ROW_H;
-  doc.rect(lx, ly, CW2, 30).fill(GRAY_LT);
+  const ly = CARDS_START_Y + row * ROW_H;
+
+  doc.rect(lx, ly, CW2, CARD_H).fill(GRAY_LT);
   doc.rect(lx, ly, CW2, 3).fill(PEACH);
+
   doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
-     .text(label.toUpperCase(), lx+4, ly+5, { lineBreak: false });
+     .text(label.toUpperCase(), lx+4, ly+6, { lineBreak: false });
+
   doc.font('DejaVu').fontSize(8).fillColor(TEXT_DARK)
-     .text((val||'-').slice(0,24), lx+4, ly+15, { lineBreak: false });
+     .text((val||'-').slice(0, 28), lx+4, ly+17, { lineBreak: false });
+
+  if (desc) {
+    doc.font('DejaVu').fontSize(5.8).fillColor(TEXT_MED)
+       .text(desc, lx+4, ly+29, { width: CW2 - 8, height: CARD_H - 31, lineBreak: true, ellipsis: true });
+  }
 });
 
-// Cruz - largura total, traduzida
-const cruzY = 80 + Math.ceil(LABELS.length / 2) * ROW_H;
-const cruzVal = traduzirCruz((props.IncarnationCross && props.IncarnationCross.id) || '-');
-doc.rect(DX, cruzY, DW, 34).fill(GRAY_LT);
+// Cruz - largura total, traduzida, com descrição
+const cruzRaw  = (props.IncarnationCross && props.IncarnationCross.id) || '-';
+const cruzY    = CARDS_START_Y + Math.ceil(LABELS.length / 2) * ROW_H;
+const cruzVal  = traduzirCruz(cruzRaw);
+const cruzDesc = getDesc('cruz', cruzRaw);
+const CRUZ_H   = cruzDesc ? 56 : 36;
+
+doc.rect(DX, cruzY, DW, CRUZ_H).fill(GRAY_LT);
 doc.rect(DX, cruzY, DW, 3).fill(PEACH);
 doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
-   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+5, { lineBreak: false });
+   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+6, { lineBreak: false });
 doc.font('DejaVu').fontSize(7).fillColor(TEXT_DARK)
-   .text(cruzVal, DX+4, cruzY+16, { width: DW - 8, lineBreak: true, ellipsis: true, height: 14 });
+   .text(cruzVal, DX+4, cruzY+17, { width: DW - 8, lineBreak: false, ellipsis: true });
+if (cruzDesc) {
+  doc.font('DejaVu').fontSize(5.8).fillColor(TEXT_MED)
+     .text(cruzDesc, DX+4, cruzY+29, { width: DW - 8, height: CRUZ_H - 31, lineBreak: true, ellipsis: true });
+}
 
-// Port\xf5es
-let secY = cruzY + 44;
+// Portões
+let secY = cruzY + CRUZ_H + 8;
 doc.font('DejaVu').fontSize(6).fillColor(COFFEE)
    .text('PORT\u00d5ES ATIVADOS', DX, secY);
 let bx = DX, by2 = secY + 12;
