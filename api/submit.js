@@ -43,12 +43,30 @@ function tr(v) { return (v && T[v]) || v || '-'; }
 // — DESCRIÇÕES DOS TÓPICOS ————————————————————————
 const DESC = {
   tipo: {
-    'Generator':            'Você tem energia vital para construir. Seu superpoder é responder — quando o coração diz sim, nada te para.',
-    'Manifested Generator': 'Multi-potencial com energia de sobra. Você responde, informa e age rápido — mas funciona melhor em movimento.',
-    'Manifesting Generator':'Multi-potencial com energia de sobra. Você responde, informa e age rápido — mas funciona melhor em movimento.',
-    'Manifestor':           'Você nasceu para iniciar. Tem o poder de colocar coisas em movimento — e tudo flui quando você avisa antes de agir.',
-    'Projector':            'Você enxerga o que os outros não veem. Seu dom é guiar — e brilha quando é reconhecida e convidada.',
-    'Reflector':            'Você é o espelho da comunidade. Rara e sensível, reflete a saúde do ambiente e decide melhor com tempo.',
+    'Generator': {
+      descricao:       'Você é a força vital do mundo. Sua energia constrói, sustenta e inspira — mas só quando seu corpo diz sim de verdade.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Elevo a energia dos meus clientes quando sigo o sim do meu corpo.',
+    },
+    'Manifested Generator': {
+      descricao:       'Multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Tenho energia ágil e multipotencial para encontrar o caminho mais rápido ao resultado.',
+    },
+    'Manifesting Generator': {
+      descricao:       'Multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Tenho energia ágil e multipotencial para encontrar o caminho mais rápido ao resultado.',
+    },
+    'Manifestor': {
+      descricao:       'Você nasceu para iniciar movimentos. Seu poder é colocar coisas no mundo — e tudo flui quando você age com coragem e informa antes.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem movidas a agir. Inicio movimentos na vida dos meus clientes quando sigo minhas próprias inspirações.',
+    },
+    'Projector': {
+      descricao:       'Você veio para guiar, não para correr. Sua visão de águia enxerga o que ninguém mais vê — e brilha quando é reconhecida e convidada.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem profundamente vistas e ouvidas. Sou uma guia poderosa que lê a energia das pessoas e dos ambientes.',
+    },
+    'Reflector': {
+      descricao:       'Você é o espelho do ambiente. Rara e sensível, revela verdades que ninguém mais percebe — e decide melhor com tempo e espaço.',
+      fraseIdentidade: 'Na minha presença as pessoas se veem como nunca antes. Reflito a energia dos meus clientes quando mantenho minha própria energia limpa.',
+    },
   },
   estrategia: {
     'To Respond':              'Não inicie — reaja. Quando algo de fora acende seu sacral, esse é o sinal. Forçar sem resposta esgota.',
@@ -104,29 +122,27 @@ const DESC = {
     'Disappointment': 'Decepção indica que você decidiu rápido demais ou está num ambiente errado. Dê mais tempo a si.',
   },
   cruz: {
-    // Ângulo Reto — fallback genérico + entradas específicas mantidas
-    'Right Angle Cross of the Sphinx':          'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Planning':            'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of the Vessel of Love':  'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Eden':                'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of the Sleeping Phoenix':'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of the Unexpected':      'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Penetration':         'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Consciousness':       'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Explanation':         'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of the Four Ways':       'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Laws':                'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Service':             'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of the Rulebook':        'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of Revolution':          'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross of the Vessel':          'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    'Right Angle Cross':                        'Seu propósito é pessoal. Ao viver plenamente sua própria jornada, você inspira e transforma sem querer.',
-    // Justaposição — caminho fixo e específico
-    'Juxtaposition Cross of the Sphinx':        'Você tem um caminho fixo e específico. Não há muita escolha — mas há muita potência nessa direção.',
-    'Juxtaposition Cross of Planning':          'Você tem um caminho fixo e específico. Não há muita escolha — mas há muita potência nessa direção.',
-    'Juxtaposition Cross of Penetration':       'Você tem um caminho fixo e específico. Não há muita escolha — mas há muita potência nessa direção.',
-    'Juxtaposition Cross of Consciousness':     'Você tem um caminho fixo e específico. Não há muita escolha — mas há muita potência nessa direção.',
-    'Juxtaposition Cross':                      'Você tem um caminho fixo e específico. Não há muita escolha — mas há muita potência nessa direção.',
+    'Right Angle Cross of the Sphinx':          '',
+    'Right Angle Cross of Planning':            '',
+    'Right Angle Cross of the Vessel of Love':  '',
+    'Right Angle Cross of Eden':                '',
+    'Right Angle Cross of the Sleeping Phoenix':'',
+    'Right Angle Cross of the Unexpected':      '',
+    'Right Angle Cross of Penetration':         '',
+    'Right Angle Cross of Consciousness':       '',
+    'Right Angle Cross of Explanation':         '',
+    'Right Angle Cross of the Four Ways':       '',
+    'Right Angle Cross of Laws':                '',
+    'Right Angle Cross of Service':             '',
+    'Right Angle Cross of the Rulebook':        '',
+    'Right Angle Cross of Revolution':          '',
+    'Right Angle Cross of the Vessel':          '',
+    'Right Angle Cross':                        '',
+    'Juxtaposition Cross of the Sphinx':        '',
+    'Juxtaposition Cross of Planning':          '',
+    'Juxtaposition Cross of Penetration':       '',
+    'Juxtaposition Cross of Consciousness':     '',
+    'Juxtaposition Cross':                      '',
     // Ângulo Esquerdo — propósito transpessoal
     'Left Angle Cross of Separation':           'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
     'Left Angle Cross of Demands':              'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
@@ -134,13 +150,13 @@ const DESC = {
     'Left Angle Cross of Incarnation':          'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
     'Left Angle Cross of Alignment':            'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
     'Left Angle Cross of Education':            'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
-    'Left Angle Cross of the Alpha':            'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
-    'Left Angle Cross of Healing':              'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
-    'Left Angle Cross of Prevention':           'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
-    'Left Angle Cross of the Clarion':          'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
-    'Left Angle Cross of Defiance':             'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
-    'Left Angle Cross of Migration':            'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
-    'Left Angle Cross':                         'Seu propósito é transpessoal. Você está aqui para impactar os outros — sua vida afeta mais do que imagina.',
+    'Left Angle Cross of the Alpha':            '',
+    'Left Angle Cross of Healing':              '',
+    'Left Angle Cross of Prevention':           '',
+    'Left Angle Cross of the Clarion':          '',
+    'Left Angle Cross of Defiance':             '',
+    'Left Angle Cross of Migration':            '',
+    'Left Angle Cross':                         '',
   },
 };
 
@@ -148,10 +164,16 @@ function getDesc(categoria, valor) {
   if (!valor || valor === '-') return '';
   const mapa = DESC[categoria] || {};
   // Busca direta
-  if (mapa[valor]) return mapa[valor];
+  if (mapa[valor] !== undefined) return mapa[valor];
   // Busca por correspondência parcial (útil para Cruz)
   const key = Object.keys(mapa).find(k => valor.includes(k) || k.includes(valor));
-  return key ? mapa[key] : '';
+  return key !== undefined ? mapa[key] : '';
+}
+
+function getTipoObj(valor) {
+  if (!valor) return null;
+  const mapa = DESC.tipo || {};
+  return mapa[valor] || null;
 }
 
 function traduzirCruz(v) {
@@ -568,8 +590,36 @@ const rawDefinicao  = props.Definition && props.Definition.id;
 const rawAssinatura = props.Signature && props.Signature.id;
 const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
 
+const tipoObj = getTipoObj(rawTipo);
+
+const CW2        = (DW / 2) - 5;
+const TIPO_H     = 92;   // card full-width para Tipo (mais alto para caber tudo)
+const CARD_H     = 68;
+const ROW_H      = CARD_H + 6;
+const CARDS_START_Y = 78;
+
+// ── Card TIPO — largura total ──────────────────────────────────────────────
+const tipoY = CARDS_START_Y;
+doc.rect(DX, tipoY, DW, TIPO_H).fill(GRAY_LT);
+doc.rect(DX, tipoY, DW, 3).fill(PEACH);
+
+doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
+   .text('TIPO', DX+4, tipoY+6, { lineBreak: false });
+
+doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
+   .text(tr(rawTipo) || '-', DX+4, tipoY+18, { lineBreak: false });
+
+if (tipoObj) {
+  doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
+     .text(tipoObj.descricao, DX+4, tipoY+31, { width: DW - 8, lineBreak: true, ellipsis: true });
+
+  const afterDesc = doc.y + 4;
+  doc.font('DejaVu').fontSize(6.5).fillColor(COFFEE)
+     .text('\u201C' + tipoObj.fraseIdentidade + '\u201D', DX+4, afterDesc, { width: DW - 8, lineBreak: true, ellipsis: true });
+}
+
+// ── Grid 2 colunas — demais campos ────────────────────────────────────────
 const LABELS = [
-  ['Tipo',              tr(rawTipo),        getDesc('tipo',       rawTipo)],
   ['Estrat\u00e9gia',  tr(rawEstrategia),  getDesc('estrategia', rawEstrategia)],
   ['Autoridade',        tr(rawAutoridade),  getDesc('autoridade', rawAutoridade)],
   ['Perfil',            rawPerfil || '-',   getDesc('perfil',     rawPerfil)],
@@ -578,16 +628,13 @@ const LABELS = [
   ['N\u00e3o-Self / Frustra\u00e7\u00e3o', tr(rawNaoSelf), getDesc('naoself', rawNaoSelf)],
 ];
 
-const CW2        = (DW / 2) - 5;
-const CARD_H     = 68;
-const ROW_H      = CARD_H + 6;
-const CARDS_START_Y = 78;
+const GRID_START_Y = tipoY + TIPO_H + 6;
 
 LABELS.forEach(([label, val, desc], i) => {
   const col = i % 2;
   const row = Math.floor(i / 2);
   const lx = DX + col * (CW2 + 5);
-  const ly = CARDS_START_Y + row * ROW_H;
+  const ly = GRID_START_Y + row * ROW_H;
 
   doc.rect(lx, ly, CW2, CARD_H).fill(GRAY_LT);
   doc.rect(lx, ly, CW2, 3).fill(PEACH);
@@ -606,10 +653,9 @@ LABELS.forEach(([label, val, desc], i) => {
 
 // Cruz - largura total, traduzida, com descrição
 const cruzRaw  = (props.IncarnationCross && props.IncarnationCross.id) || '-';
-const cruzY    = CARDS_START_Y + Math.ceil(LABELS.length / 2) * ROW_H;
+const cruzY    = GRID_START_Y + Math.ceil(LABELS.length / 2) * ROW_H;
 const cruzVal  = traduzirCruz(cruzRaw);
-const cruzDesc = getDesc('cruz', cruzRaw);
-const CRUZ_H   = cruzDesc ? 68 : 42;
+const CRUZ_H   = 42;
 
 doc.rect(DX, cruzY, DW, CRUZ_H).fill(GRAY_LT);
 doc.rect(DX, cruzY, DW, 3).fill(PEACH);
@@ -617,10 +663,6 @@ doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
    .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+4, cruzY+6, { lineBreak: false });
 doc.font('DejaVu').fontSize(9).fillColor(TEXT_DARK)
    .text(cruzVal, DX+4, cruzY+18, { width: DW - 8, lineBreak: false, ellipsis: true });
-if (cruzDesc) {
-  doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
-     .text(cruzDesc, DX+4, cruzY+31, { width: DW - 8, height: CRUZ_H - 33, lineBreak: true, ellipsis: true });
-}
 
 // Portões
 let secY = cruzY + CRUZ_H + 8;
