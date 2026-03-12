@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seu Mapa de Human Design — Vida Autoral</title>
+  <title>Seu Mapa de Desenho Humano — Vida Autoral</title>
+  <link rel="canonical" href="https://vidaautoral.com.br/mapa" />
   <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Work+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
   <script src="https://app.bodygraph.com/integrate-chart/js" defer></script>
 
@@ -64,13 +65,13 @@
 
     /* geometric triangle — brand logo hint */
     .hero-triangle {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
       margin-bottom: 2rem;
-      opacity: 0.9;
+      opacity: 0.92;
       animation: fadeDown 1s ease both;
     }
-    .hero-triangle svg { width: 100%; height: 100%; }
+    .hero-triangle svg { width: 100%; height: 100%; display: block; }
 
     .hero-eyebrow {
       font-family: 'Work Sans', sans-serif;
@@ -413,6 +414,92 @@
       margin: 0 auto;
     }
 
+    /* ── DEPOIMENTOS ─────────────────────────────────── */
+    .testimonials {
+      padding: 6rem 2rem;
+      background: linear-gradient(160deg, var(--dark) 0%, #2e1f14 100%);
+    }
+    .testimonials .section-label { color: var(--roasted-peach); }
+    .testimonials .section-title { color: var(--whole-wheat); margin-bottom: 3.5rem; }
+
+    .testimonials-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .testimonial-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(155,125,97,0.22);
+      padding: 2.2rem 2rem 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .testimonial-card::before {
+      content: '\201C';
+      font-family: 'Aboreto', cursive;
+      font-size: 4rem;
+      color: var(--roasted-peach);
+      opacity: 0.35;
+      position: absolute;
+      top: 0.6rem;
+      left: 1.4rem;
+      line-height: 1;
+    }
+
+    .testimonial-stars {
+      color: var(--roasted-peach);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      opacity: 0.85;
+      margin-bottom: 1.1rem;
+      padding-top: 1.2rem; /* empurra abaixo da aspa mas bem no topo */
+    }
+
+    .testimonial-text {
+      font-size: 0.93rem;
+      line-height: 1.85;
+      color: rgba(233,215,192,0.82);
+      margin-bottom: 1.8rem;
+      font-style: italic;
+      flex: 1;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    .testimonial-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--milky-coffee), var(--roasted-peach));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Aboreto', cursive;
+      font-size: 0.8rem;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .testimonial-name {
+      font-family: 'Aboreto', cursive;
+      font-size: 0.85rem;
+      color: var(--whole-wheat);
+      letter-spacing: 0.06em;
+    }
+    .testimonial-role {
+      font-size: 0.72rem;
+      color: var(--roasted-peach);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+    }
+
     /* ── FOOTER ──────────────────────────────────────── */
     footer {
       background: var(--dark);
@@ -470,12 +557,10 @@
 <section class="hero" id="top">
 
   <div class="hero-triangle">
-    <svg viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="35,62 4,8 66,8" stroke="#9B7D61" stroke-width="1.6" fill="none"/>
-    </svg>
+    <?xml version="1.0" encoding="utf-8" ?><svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2000" height="2000" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
   </div>
 
-  <p class="hero-eyebrow">Vida Autoral · Human Design</p>
+  <p class="hero-eyebrow">Vida Autoral · Desenho Humano</p>
 
   <h1 class="hero-title">
     Descubra o seu<br/>
@@ -484,7 +569,7 @@
   </h1>
 
   <p class="hero-sub">
-    Seu Human Design revela como você foi desenhada para tomar decisões, usar sua energia e viver com autenticidade. Receba seu gráfico personalizado — gratuitamente.
+    Seu Desenho Humano revela como você foi desenhada para tomar decisões, usar sua energia e viver com autenticidade. Receba seu gráfico personalizado — gratuitamente.
   </p>
 
   <a href="#formulario" class="hero-cta">Quero meu mapa</a>
@@ -500,14 +585,13 @@
   <div class="strip-item">Gratuito</div>
   <div class="strip-item">Personalizado</div>
   <div class="strip-item">Entregue por e-mail</div>
-  <div class="strip-item">Sem compromisso</div>
 </div>
 
 <!-- ═══ FORMULÁRIO ═══════════════════════════════════ -->
 <section class="form-section" id="formulario">
   <div class="form-inner">
     <p class="section-label reveal">Seu gráfico personalizado</p>
-    <h2 class="section-title reveal reveal-delay-1">Receba seu mapa<br/>de Human Design</h2>
+    <h2 class="section-title reveal reveal-delay-1">Receba seu mapa<br/>de Desenho Humano</h2>
     <p class="form-intro reveal reveal-delay-2">
       Preencha os dados abaixo com atenção — especialmente o horário de nascimento, pois ele define sua Autoridade e centros de energia.
     </p>
@@ -545,7 +629,7 @@
       </button>
 
       <p class="form-privacy reveal">
-        Seus dados são usados exclusivamente para gerar seu gráfico de Human Design.<br/>
+        Seus dados são usados exclusivamente para gerar seu gráfico de Desenho Humano.<br/>
         Não compartilhamos com terceiros.
       </p>
     </form>
@@ -553,7 +637,7 @@
     <!-- success message -->
     <div id="form-success" style="display:none; margin-top:2rem; padding:1.5rem 2rem; background:var(--white); border-left:3px solid var(--eucalyptus);">
       <p style="font-family:'Aboreto',cursive; color:var(--milky-coffee); margin-bottom:0.5rem;">Mapa enviado ✦</p>
-      <p style="font-size:0.9rem; color:#5a4535; line-height:1.7;">Seu gráfico de Human Design foi enviado para o seu e-mail. Verifique também a caixa de spam.</p>
+      <p style="font-size:0.9rem; color:#5a4535; line-height:1.7;">Seu gráfico de Desenho Humano foi enviado para o seu e-mail. Verifique também a caixa de spam.</p>
     </div>
   </div>
 </section>
@@ -562,9 +646,9 @@
 <section class="what">
   <div>
     <p class="what-label reveal">O que é</p>
-    <h2 class="what-title reveal reveal-delay-1">Human Design é o mapa da sua essência</h2>
+    <h2 class="what-title reveal reveal-delay-1">Desenho Humano é o mapa da sua essência</h2>
     <div class="what-body reveal reveal-delay-2">
-      <p>Human Design é um sistema que combina Astrologia, I Ching, Kabbalah e Física Quântica para revelar como você foi desenhada para operar no mundo.</p>
+      <p>Desenho Humano é um sistema que combina Astrologia, I Ching, Kabbalah e Física Quântica para revelar como você foi desenhada para operar no mundo.</p>
       <p>Com base na sua data, horário e local de nascimento, o gráfico mostra seus centros de energia, tipo, autoridade e estratégia de vida — um guia profundo para decisões mais alinhadas e menos desgastantes.</p>
       <p>Para mulheres que querem viver com mais propósito e clareza, é um ponto de partida transformador.</p>
     </div>
@@ -629,12 +713,72 @@
   </div>
 </section>
 
+<!-- ═══ DEPOIMENTOS ══════════════════════════════════ -->
+<section class="testimonials">
+  <div style="max-width:900px; margin:0 auto; text-align:center;">
+    <p class="section-label reveal">O que dizem as mulheres</p>
+    <h2 class="section-title reveal reveal-delay-1">Transformações reais</h2>
+  </div>
+
+  <div class="testimonials-grid">
+
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+      <p class="testimonial-text">Recebi meu mapa e fiquei impressionada com a precisão. Finalmente entendi por que me sinto tão diferente das pessoas ao meu redor — e aprendi a parar de me forçar a agir como elas.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">CM</div>
+        <div>
+          <div class="testimonial-name">Camila M.</div>
+          <div class="testimonial-role">São Paulo, SP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+      <p class="testimonial-text">O gráfico chegou lindo e super detalhado. Entender minha Autoridade Sacral mudou completamente a forma como tomo decisões no meu negócio. Recomendo de olhos fechados!</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">RF</div>
+        <div>
+          <div class="testimonial-name">Rafaela F.</div>
+          <div class="testimonial-role">Belo Horizonte, MG</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card reveal reveal-delay-3">
+      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+      <p class="testimonial-text">Sempre tive dificuldade de me posicionar profissionalmente. Depois de entender meu Perfil e meu Tipo, tudo fez sentido. Parece que me deram um manual de instrução da minha própria vida.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">JL</div>
+        <div>
+          <div class="testimonial-name">Juliana L.</div>
+          <div class="testimonial-role">Curitiba, PR</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card reveal reveal-delay-4">
+      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+      <p class="testimonial-text">Nunca tinha ouvido falar em Desenho Humano antes. Recebi o mapa com o coração aberto e saí completamente diferente — com clareza sobre minha energia, meus limites e meu propósito. Foi um presente.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">TA</div>
+        <div>
+          <div class="testimonial-name">Tatiana A.</div>
+          <div class="testimonial-role">Fortaleza, CE</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ═══ FOOTER ═══════════════════════════════════════ -->
 <footer>
-  <div class="footer-logo">
-    <svg width="22" height="22" viewBox="0 0 70 70" fill="none">
-      <polygon points="35,62 4,8 66,8" stroke="#9B7D61" stroke-width="2" fill="none"/>
-    </svg>
+    <div class="footer-logo">
+    <div style="width:44px;height:38px;display:flex;align-items:center;justify-content:center;">
+      <?xml version="1.0" encoding="utf-8" ?><svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2000" height="2000" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
+    </div>
     <span class="footer-logo-text">Vida Autoral</span>
   </div>
   <p>© 2026 Vida Autoral · Todos os direitos reservados</p>
