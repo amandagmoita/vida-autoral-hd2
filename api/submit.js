@@ -323,10 +323,14 @@ if (hd.SVG) {
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
-    // Centralizar: centro do grafico = centro da PAGINA inteira
+    // Centralizar: centro do grafico = centro entre as colunas
     const areaCenterX = (COL_W + (DIVIDER - COL_W)) / 2;
     const areaCenterY = H / 2;  // centro vertical da pagina
-    const cx = areaCenterX - fitW / 2;
+    // Offset manual para compensar conteudo visual nao-centrado dentro do viewBox
+    // Positivo = move para direita, negativo = move para esquerda
+    // Ajustar empiricamente ate ficar visualmente centralizado
+    const CHART_OFFSET_X = 0;
+    const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
     const cy = areaCenterY - fitH / 2;
 
     // Usar transformacao do PDF
