@@ -396,7 +396,8 @@ doc.font('DejaVu').fontSize(7).fillColor(MINT)
    .text('PERSONALIDADE', DIVIDER - COL_W, labelY, { width: COL_W, align: 'center', lineBreak: false });
 
 // === PILLS PLANETAS ===
-const pillStep = AREA_H / PLANET_ORDER.length;
+// Espaçamento entre pills reduzido à metade: gap entre células = metade do original
+const pillStep = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
 
 planetas.forEach((p, i) => {
   const pillTop = CONTENT_Y0 + i * pillStep + (pillStep - PILL_H) / 2;
@@ -531,11 +532,11 @@ if (hd.SVG) {
 }
 
 // === SETAS ===
-// FIX 3: Todas as 4 setas no quadrante superior do grafico
-// Duas linhas: tl/tr na primeira, bl/br na segunda (ambas no topo)
-// Posicao X: entre a coluna planetaria e o centro do chart, mais proximo do centro
-const arrowY1 = chartY + AREA_H * 0.06;   // primeira linha de setas
-const arrowY2 = chartY + AREA_H * 0.12;   // segunda linha de setas
+// Eixo horizontal das setas alinhado com a linha central do documento (H/2)
+// Linha 1 (Digestion/Perspective) acima do centro, linha 2 (Environment/Awareness) abaixo
+const ARROW_GAP = 10;  // distância de cada linha ao centro
+const arrowY1 = H / 2 - ARROW_GAP;   // acima do centro
+const arrowY2 = H / 2 + ARROW_GAP;   // abaixo do centro
 const chartCenterX = (COL_W + (DIVIDER - COL_W)) / 2;  // 245
 const lgc   = COL_W + 30;              // 30px dentro da borda da coluna Design
 const rgc   = (DIVIDER - COL_W) - 30;  // 30px dentro da borda da coluna Personality
@@ -569,12 +570,17 @@ const DW = W - DIVIDER - 20;
 // Cabeçalho direito
 doc.rect(DIVIDER, 0, W - DIVIDER, 56).fill(COFFEE);
 
-// Logo SVG real (Vida Autoral — triângulo de linhas)
-// Escala o viewBox 2000x2000 para ~36x36px
+// Logo SVG real (Vida Autoral — triângulo de linhas) + textos lado a lado
+// Logo à esquerda, textos "VIDA AUTORAL" e "MAPA DO DESENHO HUMANO" à direita
+// Bloco posicionado na margem esquerda do painel direito (DX), alinhado ao topo
 const LOGO_SIZE = 36;
 const LOGO_SCALE = LOGO_SIZE / 2000;
+const LOGO_X = DX;         // margem esquerda do painel
+const LOGO_Y = 10;
+const TEXT_X = LOGO_X + LOGO_SIZE + 6;  // textos logo à direita do logo
+
 doc.save();
-doc.translate(DX, 10);
+doc.translate(LOGO_X, LOGO_Y);
 doc.scale(LOGO_SCALE);
 // Paths do logo (fill white)
 doc.path('M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z').fill('#ffffff');
@@ -582,11 +588,11 @@ doc.path('M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 
 doc.path('M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z').fill('#ffffff');
 doc.restore();
 
-// Textos cabeçalho — alinhados à margem esquerda DX, abaixo do logo
+// Textos à direita do logo, verticalmente centralizados no header de 36px
 doc.font('DejaVu').fontSize(10).fillColor('#ffffff')
-   .text('VIDA AUTORAL', DX, 17, { lineBreak: false });
+   .text('VIDA AUTORAL', TEXT_X, 17, { lineBreak: false });
 doc.font('DejaVu').fontSize(6).fillColor(WHEAT)
-   .text('MAPA DO DESENHO HUMANO', DX, 31, { lineBreak: false });
+   .text('MAPA DO DESENHO HUMANO', TEXT_X, 31, { lineBreak: false });
 
 // Nome da pessoa
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
