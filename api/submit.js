@@ -394,7 +394,7 @@ const LOGO_SIZE = 28;
 const LOGO_SCALE = LOGO_SIZE / 2000;
 const LOGO_X = 10;
 const LOGO_Y = 14;
-const TEXT_X_HDR = LOGO_X + LOGO_SIZE + 6;
+const TEXT_X_HDR = LOGO_X + LOGO_SIZE + 3;
 
 doc.save();
 doc.translate(LOGO_X, LOGO_Y);
@@ -411,8 +411,9 @@ doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
 
 // === PILLS PLANETAS ===
 // Espaçamento entre pills reduzido à metade: gap entre células = metade do original
-const pillStep = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
-// Centralizar o bloco total de pills no eixo vertical da página
+const pillStepBase = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
+const pillStep = pillStepBase * 1.3;
+// Centralizar o bloco total de pills no eixo vertical da página (+30% spacing)
 const pillsTotalH = PLANET_ORDER.length * pillStep;
 const pillsStartY = H / 2 - pillsTotalH / 2;
 
@@ -588,18 +589,17 @@ seta(rgc, arrowY2, sv.br, MINT);
 const DX = DIVIDER + 14;
 const DW = W - DIVIDER - 20;
 
-// Cabeçalho direito — fundo COFFEE apenas
-doc.rect(DIVIDER, 0, W - DIVIDER, 56).fill(COFFEE);
+// Cabeçalho direito — altura expandida para incluir nome + nascimento
+doc.rect(DIVIDER, 0, W - DIVIDER, 80).fill(COFFEE);
 
-
-// Nome da pessoa
+// Nome da pessoa — dentro da faixa COFFEE
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
-doc.font('DejaVu').fontSize(13).fillColor(TEXT_DARK)
-   .text(nomeDisplay.toUpperCase(), DX, 60, { lineBreak: false });
+doc.font('DejaVu').fontSize(13).fillColor('#ffffff')
+   .text(nomeDisplay.toUpperCase(), DX, 58, { lineBreak: false });
 
-// Dados de nascimento (local · hora)
-doc.font('DejaVu').fontSize(7).fillColor(TEXT_MED)
-   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 76, { lineBreak: false });
+// Dados de nascimento — dentro da faixa COFFEE
+doc.font('DejaVu').fontSize(7).fillColor(WHEAT)
+   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 72, { lineBreak: false });
 
 // Props - grid 2 colunas com descrições
 const rawTipo       = props.Type && props.Type.id;
@@ -619,7 +619,7 @@ const CW2        = (DW / 2) - (COL_GAP / 2);
 const TIPO_H     = 75;
 const CARD_H     = 60;
 const ROW_H      = CARD_H + 9;
-const CARDS_START_Y = 92;   // espaço após nome + dados de nascimento
+const CARDS_START_Y = 92;   // espaço após faixa COFFEE expandida (80px)
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
