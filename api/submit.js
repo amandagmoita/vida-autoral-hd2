@@ -319,7 +319,7 @@ if (hd.SVG) {
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
     const baseScale = Math.min(scaleX, scaleY);
-    const scale = baseScale * 1.08;
+    const scale = baseScale * 1.20;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
