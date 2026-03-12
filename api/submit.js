@@ -319,7 +319,7 @@ if (hd.SVG) {
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
     const baseScale = Math.min(scaleX, scaleY);
-    const scale = baseScale * 1.44;
+    const scale = baseScale * 1.08;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
@@ -353,10 +353,12 @@ if (hd.SVG) {
 // === SETAS ===
 // FIX 3: Todas as 4 setas no quadrante superior do grafico
 // Duas linhas: tl/tr na primeira, bl/br na segunda (ambas no topo)
+// Posicao X: entre a coluna planetaria e o centro do chart, mais proximo do centro
 const arrowY1 = chartY + AREA_H * 0.06;   // primeira linha de setas
 const arrowY2 = chartY + AREA_H * 0.12;   // segunda linha de setas
-const lgc   = (COL_W + chartX) / 2;
-const rgc   = (chartX + CHART_W + (DIVIDER - COL_W)) / 2;
+const chartCenterX = (COL_W + (DIVIDER - COL_W)) / 2;  // 245
+const lgc   = COL_W + 30;              // 30px dentro da borda da coluna Design
+const rgc   = (DIVIDER - COL_W) - 30;  // 30px dentro da borda da coluna Personality
 
 function seta(cx, cy, dir, cor) {
   const W2=12, H2=5;
