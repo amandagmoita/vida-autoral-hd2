@@ -22,7 +22,7 @@ const T = {
 'Wait for the Invitation':'Aguardar o Convite',
 'Wait for a Lunar Cycle':'Aguardar Ciclo Lunar',
 'Wait a Lunar Cycle':'Aguardar Ciclo Lunar',
-'Sacral':'Sacral','Emotional':'Emocional','Splenic':'Esplen\u00e9tica',
+'Sacral':'Sacral','Emotional':'Emocional','Splenic':'Espl\u00e9nica',
 'Ego':'Ego','Self-Projected':'Proje\u00e7\u00e3o do Eu','Mental':'Mental',
 'No Authority':'Sem Autoridade Interna','Lunar':'Lunar',
 'Ego Manifestor':'Ego (Manifestador)',
@@ -81,7 +81,7 @@ const PLANET_ORDER = ['Sun','Earth','North Node','South Node','Moon','Mercury',
 'Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
 const PLANET_PT  = {
 'Sun':'Sol','Earth':'Terra','North Node':'N\u00f3 Norte','South Node':'N\u00f3 Sul',
-'Moon':'Lua','Mercury':'Merc\u00faio','Venus':'V\u00eanus','Mars':'Marte',
+'Moon':'Lua','Mercury':'Merc\u00fario','Venus':'V\u00eanus','Mars':'Marte',
 'Jupiter':'J\u00fapiter','Saturn':'Saturno','Uranus':'Urano',
 'Neptune':'Netuno','Pluto':'Plut\u00e3o',
 };
@@ -133,12 +133,73 @@ const v = hd.Variables || {};
 return { tl:v.Digestion||'left', tr:v.Perspective||'left', bl:v.Environment||'left', br:v.Awareness||'left' };
 }
 
-// — SVG -> PNG —————————————————————
+// — CENTROS: manipular SVG para colorir definidos (cinza) e abertos (branco) —
+// A API retorna hd.DefinedCenters e hd.OpenCenters com nomes como "throat center", "ajna center" etc.
+// O SVG do bodygraph usa IDs ou classes para os centros. Vamos mapear nomes da API para
+// possiveis identificadores no SVG e trocar o fill.
+
+// Mapeamento: nome da API -> possiveis IDs/textos no SVG
+const CENTER_SVG_MAP = {
+  'head center':        ['head', 'Head'],
+  'ajna center':        ['ajna', 'Ajna', 'mind'],
+  'throat center':      ['throat', 'Throat'],
+  'g center':           ['g-center', 'gcenter', 'g_center', 'identity', 'Identity', 'self', 'Self', 'G Center', 'G-Center'],
+  'heart center':       ['heart', 'Heart', 'ego', 'Ego', 'will', 'Will'],
+  'sacral center':      ['sacral', 'Sacral'],
+  'solar plexus center':['solar', 'Solar', 'solarplexus', 'solar-plexus', 'Solar Plexus', 'emotional', 'Emotional'],
+  'splenic center':     ['spleen', 'Spleen', 'splenic', 'Splenic'],
+  'root center':        ['root', 'Root'],
+};
+
+function colorirCentrosSVG(svg, definedCenters, openCenters) {
+  if (!svg) return svg;
+
+  const DEFINED_COLOR = '#C8C8C8';  // cinza para centros definidos (ativados)
+  const OPEN_COLOR    = '#FFFFFF';  // branco para centros abertos (nao ativados)
+
+  // Normaliza nomes para lowercase
+  const definedSet = new Set((definedCenters || []).map(c => c.toLowerCase()));
+  const openSet    = new Set((openCenters    || []).map(c => c.toLowerCase()));
+
+  // Para cada centro, procurar no SVG elementos com id contendo o nome do centro
+  // e trocar fill/style para a cor correta
+  Object.entries(CENTER_SVG_MAP).forEach(([apiName, svgIds]) => {
+    const isDefined = definedSet.has(apiName);
+    const isOpen    = openSet.has(apiName);
+    const targetColor = isDefined ? DEFINED_COLOR : (isOpen ? OPEN_COLOR : null);
+
+    if (!targetColor) return; // Centro nao mencionado, nao mexer
+
+    svgIds.forEach(svgId => {
+      // Procurar por id="..." que contenha o svgId (case insensitive)
+      // Regex para encontrar elementos com id contendo o nome do centro
+      const idRegex = new RegExp(
+        '(<[^>]*\\bid\\s*=\\s*["\'][^"\']*' + escapeRegex(svgId) + '[^"\']*["\'][^>]*)(fill\\s*=\\s*["\'][^"\']*["\'])',
+        'gi'
+      );
+      svg = svg.replace(idRegex, function(match, before, fillAttr) {
+        return before + 'fill="' + targetColor + '"';
+      });
+
+      // Tambem procurar por class contendo o nome
+      const classRegex = new RegExp(
+        '(<[^>]*\\bclass\\s*=\\s*["\'][^"\']*' + escapeRegex(svgId) + '[^"\']*["\'][^>]*)(fill\\s*=\\s*["\'][^"\']*["\'])',
+        'gi'
+      );
+      svg = svg.replace(classRegex, function(match, before, fillAttr) {
+        return before + 'fill="' + targetColor + '"';
+      });
+    });
+  });
+
+  return svg;
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 // — PDF ———————————————————————–
-// Substitui a fun\xe7\xe3o buildPdf: pdfkit + svg-to-pdfkit
-// SVG do bodygraph inserido como vetor puro - sem convers\xe3o PNG, sem WASM, sem HTTP
-
 function buildPdf(nome, hd, planetas, portoes, canais, sv) {
 return new Promise((resolve, reject) => {
 const PDFDoc   = require('pdfkit');
@@ -200,7 +261,6 @@ doc.font('DejaVu').fontSize(5.5).fillColor(MINT)
 const pillStep = AREA_H / PLANET_ORDER.length;
 
 planetas.forEach((p, i) => {
-  // Em pdfkit: y cresce para baixo, ent\xe3o i=0 = topo
   const pillTop = CONTENT_Y0 + i * pillStep + (pillStep - PILL_H) / 2;
 
   // Design (esquerda)
@@ -232,11 +292,16 @@ planetas.forEach((p, i) => {
 });
 
 // === GR\xc1FICO BODYGRAPH (SVG \u2192 PDF vetorial) ===
+// FIX 1: Grafico 1.5x maior e centralizado entre as colunas planetarias
+// FIX 2: Centros definidos = cinza, abertos = branco
 const chartX = CHART_X0;
 const chartY = CONTENT_Y0;
 if (hd.SVG) {
   try {
     let svg = hd.SVG;
+
+    // FIX 2: Colorir centros ANTES de inserir no PDF
+    svg = colorirCentrosSVG(svg, hd.DefinedCenters || [], hd.OpenCenters || []);
 
     // Extrair viewBox (case-insensitive! A API retorna "viewbox" minusculo)
     const vb = svg.match(/viewbox=["']([^"']+)["']/i);
@@ -247,22 +312,26 @@ if (hd.SVG) {
       vbH = parseFloat(parts[3]) || 694;
     }
 
-    // Escala fit-contain: caber na area disponivel
+    // FIX 1: Escala 1.5x maior que antes
+    // Antes: Math.min(scaleX, scaleY) * 0.96 — agora: * 1.44 (= 0.96 * 1.5)
+    // O grafico pode ultrapassar ligeiramente as colunas, mas fica
+    // centralizado visualmente entre Design e Personality
     const scaleX = CHART_W / vbW;
     const scaleY = AREA_H / vbH;
-    // 0.96 = margem minima para numeros de portoes fora do viewBox
-    const scale = Math.min(scaleX, scaleY) * 0.96;
+    const baseScale = Math.min(scaleX, scaleY);
+    const scale = baseScale * 1.44;
     const fitW = vbW * scale;
     const fitH = vbH * scale;
 
-    // Centralizar: alinhar o CENTRO do grafico ao centro da area disponivel
-    // Funciona mesmo quando fitW > CHART_W ou fitH > AREA_H
-    const areaCenterX = chartX + CHART_W / 2;
+    // Centralizar: centro do grafico = centro exato entre as duas colunas planetarias
+    // Coluna Design termina em COL_W (72), coluna Personality comeca em DIVIDER - COL_W (418)
+    // Centro = (72 + 418) / 2 = 245
+    const areaCenterX = (COL_W + (DIVIDER - COL_W)) / 2;
     const areaCenterY = chartY + AREA_H / 2;
     const cx = areaCenterX - fitW / 2;
     const cy = areaCenterY - fitH / 2;
 
-    // Usar transformacao do PDF: com viewBox real (400x694), scale ~0.65
+    // Usar transformacao do PDF
     doc.save();
     doc.translate(cx, cy);
     doc.scale(scale);
@@ -282,8 +351,10 @@ if (hd.SVG) {
 }
 
 // === SETAS ===
-const headY = chartY + AREA_H * 0.10;
-const rootY = chartY + AREA_H * 0.88;
+// FIX 3: Todas as 4 setas no quadrante superior do grafico
+// Duas linhas: tl/tr na primeira, bl/br na segunda (ambas no topo)
+const arrowY1 = chartY + AREA_H * 0.06;   // primeira linha de setas
+const arrowY2 = chartY + AREA_H * 0.12;   // segunda linha de setas
 const lgc   = (COL_W + chartX) / 2;
 const rgc   = (chartX + CHART_W + (DIVIDER - COL_W)) / 2;
 
@@ -302,10 +373,12 @@ function seta(cx, cy, dir, cor) {
     doc.moveTo(tip, cy).lineTo(tip+6, cy+H2).stroke();
   }
 }
-seta(lgc, headY, sv.tl, SALMON);
-seta(rgc, headY, sv.tr, MINT);
-seta(lgc, rootY, sv.bl, SALMON);
-seta(rgc, rootY, sv.br, MINT);
+// Linha 1: Digestion (tl) e Perspective (tr)
+seta(lgc, arrowY1, sv.tl, SALMON);
+seta(rgc, arrowY1, sv.tr, MINT);
+// Linha 2: Environment (bl) e Awareness (br)
+seta(lgc, arrowY2, sv.bl, SALMON);
+seta(rgc, arrowY2, sv.br, MINT);
 
 // === COLUNA DIREITA ===
 const DX = DIVIDER + 14;
@@ -421,9 +494,9 @@ return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body
 + '<div class="w"><div class="h">' + LOGO + '<h1>VIDA AUTORAL</h1></div>'
 + '<div class="b"><p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
 + '<p>Recebemos seus dados. Seu mapa est\u00e1 sendo gerado e chegar\u00e1 em breve.</p>'
-+ '<div class="info">\ud83d\udcc5 ' + data + ' · \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
++ '<div class="info">\ud83d\udcc5 ' + data + ' \u00b7 \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
 + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
-+ '</div><div class="f">© 2025 Vida Autoral</div></div></body></html>';
++ '</div><div class="f">\u00a9 2025 Vida Autoral</div></div></body></html>';
 }
 
 function emailPdf(nome, data, hora, local, svgString) {
@@ -431,11 +504,11 @@ return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body
 + '<div class="w"><div class="h">' + LOGO + '<h1>VIDA AUTORAL</h1></div>'
 + '<div class="b"><p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
 + '<p>Seu Mapa de Desenho Humano est\u00e1 pronto \ud83c\udf81 O PDF completo com seu gr\u00e1fico Bodygraph est\u00e1 em anexo.</p>'
-+ '<div class="info">\ud83d\udcc5 ' + data + ' · \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
++ '<div class="info">\ud83d\udcc5 ' + data + ' \u00b7 \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
 + '<p>O PDF inclui: Tipo, Estrat\u00e9gia, Autoridade, Perfil, Defini\u00e7\u00e3o, planetas Design e Personalidade, setas do Variable, Port\u00f5es e Canais ativados.</p>'
 + (svgString ? '<div style="text-align:center;margin:16px 0;background:#fff;border-radius:8px;padding:10px"><p style="font-size:.75rem;color:#9b836f;margin:0 0 8px">Seu Bodygraph</p>' + svgString.replace('<svg', '<svg style="max-width:320px;height:auto;display:inline-block"') + '</div>' : '')
 + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
-+ '</div><div class="f">© 2025 Vida Autoral</div></div></body></html>';
++ '</div><div class="f">\u00a9 2025 Vida Autoral</div></div></body></html>';
 }
 
 // — RESEND —————————————————————––
@@ -486,6 +559,8 @@ console.log('[3] Timezone:', timezone);
 const hd = await fetchHDData(data, hora, timezone);
 const tipo = hd.Properties && hd.Properties.Type && hd.Properties.Type.id;
 console.log('[4] HD ok. Tipo:', tipo, '| SVG:', (hd.SVG||'').length, 'chars');
+console.log('[4b] DefinedCenters:', JSON.stringify(hd.DefinedCenters));
+console.log('[4c] OpenCenters:', JSON.stringify(hd.OpenCenters));
 
 const planetas = extrairPlanetas(hd);
 const { portoes, canais } = extrairPortoesCanais(hd);
