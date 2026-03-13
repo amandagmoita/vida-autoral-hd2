@@ -422,14 +422,14 @@ doc.restore();
 
 // Hierarquia tipográfica: VIDA AUTORAL grande, subtítulo menor e espaçado
 doc.font('DejaVu').fontSize(11).fillColor(COFFEE)
-   .text('VIDA AUTORAL', TEXT_X_HDR, 16, { lineBreak: false, characterSpacing: 1.5 });
+   .text('VIDA AUTORAL', TEXT_X_HDR, 16, { lineBreak: false, characterSpacing: 1 });
 doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
-   .text('MAPA DO DESENHO HUMANO', TEXT_X_HDR, 31, { lineBreak: false, characterSpacing: 1.2 });
+   .text('MAPA DO DESENHO HUMANO', TEXT_X_HDR, 31, { lineBreak: false, characterSpacing: 1 });
 
 // === PILLS PLANETAS ===
 // Espaçamento entre pills reduzido à metade: gap entre células = metade do original
 const pillStepBase = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
-const pillStep = pillStepBase * 1.04;
+const pillStep = pillStepBase * 1.144;
 // Centralizar o bloco total de pills no eixo vertical da página (+30% spacing)
 const pillsTotalH = PLANET_ORDER.length * pillStep;
 const pillsStartY = H / 2 - pillsTotalH / 2;
@@ -612,11 +612,11 @@ doc.rect(DIVIDER, 0, W - DIVIDER, 56).fill(COFFEE);
 // Nome da pessoa — destaque máximo, alinhado com "VIDA AUTORAL" (y=16)
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
 doc.font('DejaVu').fontSize(13).fillColor('#ffffff')
-   .text(nomeDisplay.toUpperCase(), DX, 14, { lineBreak: false, characterSpacing: 0.8 });
+   .text(nomeDisplay.toUpperCase(), DX, 14, { lineBreak: false, characterSpacing: 1 });
 
 // Dados de nascimento — alinhado com subtítulo (y=31), mais espaçado
 doc.font('DejaVu').fontSize(6).fillColor(WHEAT)
-   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 31, { lineBreak: false, characterSpacing: 0.5 });
+   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 31, { lineBreak: false, characterSpacing: 1 });
 
 // Props - grid 2 colunas com descrições
 const rawTipo       = props.Type && props.Type.id;
@@ -636,7 +636,7 @@ const CW2        = (DW / 2) - (COL_GAP / 2);
 const TIPO_H     = 75;
 const CARD_H     = 60;
 const ROW_H      = CARD_H + 9;
-const CARDS_START_Y = 68;   // espaço após faixa COFFEE de 56px + margem 12px
+const CARDS_START_Y = 76;   // espaço após faixa COFFEE de 56px + margem 20px
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
@@ -683,7 +683,7 @@ LABELS.forEach(([label, val, desc], i) => {
 
   // Label — pequeno, leve, espaçado
   doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
-     .text(label.toUpperCase(), lx+6, ly+7, { lineBreak: false, characterSpacing: 0.8 });
+     .text(label.toUpperCase(), lx+6, ly+7, { lineBreak: false, characterSpacing: 1 });
 
   // Valor — forte, destaque
   doc.font('DejaVu').fontSize(10).fillColor(TEXT_DARK)
@@ -704,7 +704,7 @@ const CRUZ_H   = 36;
 
 doc.roundedRect(DX, cruzY, DW, CRUZ_H, 5).fill(GRAY_LT);
 doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
-   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+6, cruzY+7, { lineBreak: false, characterSpacing: 0.8 });
+   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+6, cruzY+7, { lineBreak: false, characterSpacing: 1 });
 doc.font('DejaVu').fontSize(10).fillColor(TEXT_DARK)
    .text(cruzVal, DX+6, cruzY+17, { width: DW - 12, lineBreak: false, ellipsis: true });
 
