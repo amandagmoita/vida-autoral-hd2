@@ -360,7 +360,7 @@ const PILL_H  = 20;
 const PILL_W  = COL_W - 6;
 const HEADER_H = 41.4;  // 36 * 1.15
 const FOOTER_H = 20;
-const PAD_TOP  = 20;   // margem superior do conteudo
+const PAD_TOP  = 30;   // 20 original + 10px de espaçamento após faixa
 const PAD_BOT  = 20;   // margem inferior do conteudo
 const CONTENT_Y0 = HEADER_H + PAD_TOP;
 const CONTENT_Y1 = H - FOOTER_H - PAD_BOT;
@@ -391,14 +391,14 @@ doc.rect(0, 0, DIVIDER, 64.4).fill(WHEAT);
 
 // Logo + textos no cabeçalho esquerdo (faixa WHEAT), canto esquerdo
 // Novo logo: SVG oficial Vida Autoral (3 paths, viewBox 500x500)
-const LOGO_SIZE = 60;  // 2x
+const LOGO_SIZE = 81;  // 2x × 1.35
 const LOGO_VB_W = 500;
 const LOGO_VB_H = 500;
 const LOGO_X = 10;
-const LOGO_Y = 2.2;  // (64.4 - 60) / 2 — centralizado no eixo da faixa
+const LOGO_Y = -8.5;  // centralizado no eixo do bloco de texto
 const LOGO_SCALE = LOGO_SIZE / LOGO_VB_H;
 const LOGO_RENDER_W = LOGO_VB_W * LOGO_SCALE;
-const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 5;
+const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 2.5;  // espaço logo→texto reduzido pela metade
 
 // Inserir logo SVG via svg-to-pdfkit
 const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500">'
@@ -634,7 +634,7 @@ const CW2        = (DW / 2) - (COL_GAP / 2);
 const TIPO_H     = 75;
 const CARD_H     = 60;
 const ROW_H      = CARD_H + 9;
-const CARDS_START_Y = 85;   // espaço após faixa COFFEE de 64.4px + margem 20px
+const CARDS_START_Y = 95;   // 64.4px faixa + 20px margem + 10px espaçamento extra
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
