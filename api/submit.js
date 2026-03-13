@@ -773,14 +773,14 @@ return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body
 + '</div><div class="f">\u00a9 2026 Vida Autoral</div></div></body></html>';
 }
 
-function emailPdf(nome, data, hora, local, svgString) {
+function emailPdf(nome, data, hora, local) {
 return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body>'
 + '<div class="w"><div class="h">' + LOGO + '<h1>VIDA AUTORAL</h1></div>'
 + '<div class="b"><p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
 + '<p>Seu Mapa de Desenho Humano est\u00e1 pronto \ud83c\udf81 O PDF completo com seu gr\u00e1fico Bodygraph est\u00e1 em anexo.</p>'
 + '<div class="info">\ud83d\udcc5 ' + data + ' \u00b7 \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + '</div>'
 + '<p>O PDF inclui: Tipo, Estrat\u00e9gia, Autoridade, Perfil, Defini\u00e7\u00e3o, planetas Design e Personalidade, setas do Variable, Port\u00f5es e Canais ativados.</p>'
-+ (svgString ? '<div style="text-align:center;margin:16px 0;background:#fff;border-radius:8px;padding:10px"><p style="font-size:.75rem;color:#9b836f;margin:0 0 8px">Seu Bodygraph</p>' + svgString.replace('<svg', '<svg style="max-width:320px;height:auto;display:inline-block"') + '</div>' : '')
+
 + '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
 + '</div><div class="f">\u00a9 2026 Vida Autoral</div></div></body></html>';
 }
@@ -848,7 +848,7 @@ const primeiroNome = nome.split(' ')[0].toLowerCase();
 await sendEmail(
   email,
   nome + ', seu Mapa de Desenho Humano est\u00e1 pronto \u2605',
-  emailPdf(nome, data, hora, local, hd && hd.SVG ? colorirCentrosSVG(hd.SVG, hd.DefinedCenters || [], hd.OpenCenters || []) : null),
+  emailPdf(nome, data, hora, local),
   [{ filename:'mapa-desenho-humano-'+primeiroNome+'.pdf', content:pdfBase64 }]
 );
 console.log('[6] PDF enviado com sucesso');
