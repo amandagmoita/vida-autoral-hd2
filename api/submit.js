@@ -391,16 +391,18 @@ doc.rect(0, 0, DIVIDER, 64.4).fill(WHEAT);
 
 // Logo + textos no cabeçalho esquerdo (faixa WHEAT), canto esquerdo
 // Novo logo: SVG oficial Vida Autoral (3 paths, viewBox 500x500)
-const LOGO_SIZE = 81;  // altura visual real (conteúdo sem espaço vazio)
+// Logo = 110% da altura do bloco de texto
+// Bloco: topo "VIDA AUTORAL"=20.7, fundo "MAPA..."=43.325 → altura=22.625px
+// Logo = 22.625 * 1.1 = 24.89px; centro bloco = 32.01px
+const LOGO_SIZE = 24.89;  // 110% da altura do bloco de texto
 // viewBox recortado ao bbox real do conteúdo: x=[130.9..368.6] y=[152.0..356.8]
-const LOGO_VB_W = 237.7;  // largura real do conteúdo no viewBox
-const LOGO_VB_H = 204.8;  // altura real do conteúdo no viewBox
+const LOGO_VB_W = 237.7;
+const LOGO_VB_H = 204.8;
 const LOGO_X = 10;
 const LOGO_SCALE = LOGO_SIZE / LOGO_VB_H;
-const LOGO_RENDER_W = LOGO_VB_W * LOGO_SCALE;  // ≈ 94px de largura visual
-// Centro do bloco de texto: topo "VIDA AUTORAL"=20.7, fundo "MAPA..."=43.3 → centro=32.0
-// LOGO_Y = centro_texto - LOGO_SIZE/2
-const LOGO_Y = 32.0 - LOGO_SIZE / 2;  // ≈ -8.5 → centro visual do logo alinhado ao texto
+const LOGO_RENDER_W = LOGO_VB_W * LOGO_SCALE;  // ≈ 28.9px de largura
+// LOGO_Y: centralizar logo no centro do bloco de texto
+const LOGO_Y = 32.01 - LOGO_SIZE / 2;  // ≈ 19.57px
 const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 1.25;  // espaço logo→texto
 
 // Inserir logo SVG via svg-to-pdfkit
