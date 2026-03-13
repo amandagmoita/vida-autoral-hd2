@@ -412,7 +412,7 @@ doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
 // === PILLS PLANETAS ===
 // Espaçamento entre pills reduzido à metade: gap entre células = metade do original
 const pillStepBase = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
-const pillStep = pillStepBase * 1.3;
+const pillStep = pillStepBase * 1.04;
 // Centralizar o bloco total de pills no eixo vertical da página (+30% spacing)
 const pillsTotalH = PLANET_ORDER.length * pillStep;
 const pillsStartY = H / 2 - pillsTotalH / 2;
@@ -589,17 +589,17 @@ seta(rgc, arrowY2, sv.br, MINT);
 const DX = DIVIDER + 14;
 const DW = W - DIVIDER - 20;
 
-// Cabeçalho direito — altura expandida para incluir nome + nascimento
-doc.rect(DIVIDER, 0, W - DIVIDER, 80).fill(COFFEE);
+// Cabeçalho direito — mesma altura da faixa WHEAT (56px)
+doc.rect(DIVIDER, 0, W - DIVIDER, 56).fill(COFFEE);
 
-// Nome da pessoa — dentro da faixa COFFEE
+// Nome da pessoa — alinhado verticalmente com "VIDA AUTORAL" (y=18)
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
-doc.font('DejaVu').fontSize(13).fillColor('#ffffff')
-   .text(nomeDisplay.toUpperCase(), DX, 58, { lineBreak: false });
+doc.font('DejaVu').fontSize(10).fillColor('#ffffff')
+   .text(nomeDisplay.toUpperCase(), DX, 18, { lineBreak: false });
 
-// Dados de nascimento — dentro da faixa COFFEE
-doc.font('DejaVu').fontSize(7).fillColor(WHEAT)
-   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 72, { lineBreak: false });
+// Dados de nascimento — alinhado com "MAPA DO DESENHO HUMANO" (y=32)
+doc.font('DejaVu').fontSize(6).fillColor(WHEAT)
+   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 32, { lineBreak: false });
 
 // Props - grid 2 colunas com descrições
 const rawTipo       = props.Type && props.Type.id;
@@ -619,7 +619,7 @@ const CW2        = (DW / 2) - (COL_GAP / 2);
 const TIPO_H     = 75;
 const CARD_H     = 60;
 const ROW_H      = CARD_H + 9;
-const CARDS_START_Y = 92;   // espaço após faixa COFFEE expandida (80px)
+const CARDS_START_Y = 68;   // espaço após faixa COFFEE de 56px + margem 12px
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
