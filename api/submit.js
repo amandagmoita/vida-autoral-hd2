@@ -394,7 +394,7 @@ doc.rect(0, 0, DIVIDER, 64.4).fill(WHEAT);
 // Logo = 110% da altura do bloco de texto
 // Bloco: topo "VIDA AUTORAL"=20.7, fundo "MAPA..."=43.325 → altura=22.625px
 // Logo = 22.625 * 1.1 = 24.89px; centro bloco = 32.01px
-const LOGO_SIZE = 24.89;  // 110% da altura do bloco de texto
+const LOGO_SIZE = 12.45;  // 55% da altura do bloco de texto
 // viewBox recortado ao bbox real do conteúdo: x=[130.9..368.6] y=[152.0..356.8]
 const LOGO_VB_W = 237.7;
 const LOGO_VB_H = 204.8;
