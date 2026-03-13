@@ -358,7 +358,7 @@ const DIVIDER = 490;
 const COL_W   = 72;
 const PILL_H  = 20;
 const PILL_W  = COL_W - 6;
-const HEADER_H = 36;
+const HEADER_H = 41.4;  // 36 * 1.15
 const FOOTER_H = 20;
 const PAD_TOP  = 20;   // margem superior do conteudo
 const PAD_BOT  = 20;   // margem inferior do conteudo
@@ -387,15 +387,15 @@ const TEXT_MED  = '#6B5A4B';
 doc.rect(0, 0, W, H).fill('#ffffff');
 
 // === CABEÇALHO ESQUERDO — faixa alinhada com o header marrom (56px)
-doc.rect(0, 0, DIVIDER, 56).fill(WHEAT);
+doc.rect(0, 0, DIVIDER, 64.4).fill(WHEAT);
 
 // Logo + textos no cabeçalho esquerdo (faixa WHEAT), canto esquerdo
 // Novo logo: SVG oficial Vida Autoral (3 paths, viewBox 500x500)
-const LOGO_SIZE = 30;
+const LOGO_SIZE = 60;  // 2x
 const LOGO_VB_W = 500;
 const LOGO_VB_H = 500;
 const LOGO_X = 10;
-const LOGO_Y = 13;
+const LOGO_Y = 2.2;  // (64.4 - 60) / 2 — centralizado no eixo da faixa
 const LOGO_SCALE = LOGO_SIZE / LOGO_VB_H;
 const LOGO_RENDER_W = LOGO_VB_W * LOGO_SCALE;
 const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 5;
@@ -414,10 +414,13 @@ SVGtoPDF(doc, LOGO_SVG, 0, 0);
 doc.restore();
 
 // Hierarquia tipográfica: VIDA AUTORAL grande, subtítulo menor e espaçado
-doc.font('DejaVu').fontSize(11).fillColor(COFFEE)
-   .text('VIDA AUTORAL', TEXT_X_HDR, 16, { lineBreak: false, characterSpacing: 1 });
-doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
-   .text('MAPA DO DESENHO HUMANO', TEXT_X_HDR, 31, { lineBreak: false, characterSpacing: 1 });
+// Textos centralizados no eixo vertical da faixa WHEAT (64.4px)
+// Bloco: "VIDA AUTORAL" (12.65px) + gap 4 + "MAPA..." (6.325px) ≈ 23px total
+// Centro faixa = 32.2; início do bloco = 32.2 - 23/2 = 20.7
+doc.font('DejaVu').fontSize(12.65).fillColor(COFFEE)
+   .text('VIDA AUTORAL', TEXT_X_HDR, 20.7, { lineBreak: false, characterSpacing: 1 });
+doc.font('DejaVu').fontSize(6.325).fillColor(TEXT_MED)
+   .text('MAPA DO DESENHO HUMANO', TEXT_X_HDR, 37, { lineBreak: false, characterSpacing: 1 });
 
 // === PILLS PLANETAS ===
 // Espaçamento entre pills reduzido à metade: gap entre células = metade do original
@@ -600,16 +603,18 @@ const DX = DIVIDER + 14;
 const DW = W - DIVIDER - 20;
 
 // Cabeçalho direito — mesma altura da faixa WHEAT (56px)
-doc.rect(DIVIDER, 0, W - DIVIDER, 56).fill(COFFEE);
+doc.rect(DIVIDER, 0, W - DIVIDER, 64.4).fill(COFFEE);
 
 // Nome da pessoa — destaque máximo, alinhado com "VIDA AUTORAL" (y=16)
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
-doc.font('DejaVu').fontSize(13).fillColor('#ffffff')
-   .text(nomeDisplay.toUpperCase(), DX, 14, { lineBreak: false, characterSpacing: 1 });
+// Nome e dados centralizados no eixo vertical da faixa COFFEE (64.4px)
+// Bloco: nome (14.95px) + gap 4 + dados (6.9px) ≈ 25.85px; centro = 32.2; início = 32.2 - 25.85/2 = 19.3
+doc.font('DejaVu').fontSize(14.95).fillColor('#ffffff')
+   .text(nomeDisplay.toUpperCase(), DX, 19.3, { lineBreak: false, characterSpacing: 1 });
 
-// Dados de nascimento — alinhado com subtítulo (y=31), mais espaçado
-doc.font('DejaVu').fontSize(6).fillColor(WHEAT)
-   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 31, { lineBreak: false, characterSpacing: 1 });
+// Dados de nascimento — centralizado no eixo
+doc.font('DejaVu').fontSize(6.9).fillColor(WHEAT)
+   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 38, { lineBreak: false, characterSpacing: 1 });
 
 // Props - grid 2 colunas com descrições
 const rawTipo       = props.Type && props.Type.id;
@@ -629,7 +634,7 @@ const CW2        = (DW / 2) - (COL_GAP / 2);
 const TIPO_H     = 75;
 const CARD_H     = 60;
 const ROW_H      = CARD_H + 9;
-const CARDS_START_Y = 76;   // espaço após faixa COFFEE de 56px + margem 20px
+const CARDS_START_Y = 85;   // espaço após faixa COFFEE de 64.4px + margem 20px
 
 // ── Card TIPO — largura total ──────────────────────────────────────────────
 const tipoY = CARDS_START_Y;
