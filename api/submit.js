@@ -390,24 +390,41 @@ doc.rect(0, 0, W, H).fill('#ffffff');
 doc.rect(0, 0, DIVIDER, 56).fill(WHEAT);
 
 // Logo + textos no cabeçalho esquerdo (faixa WHEAT), canto esquerdo
-const LOGO_SIZE = 28;
-const LOGO_SCALE = LOGO_SIZE / 2000;
+// Novo logo: dois triângulos sobrepostos (stroke, sem fill) — viewBox 1500x1500
+// BBox real: x=[306.6..1193.4] y=[362..1350], w=886.9, h=988
+const LOGO_SIZE = 30;          // altura desejada em px
+const LOGO_VB_W = 886.9;       // largura do conteúdo no viewBox
+const LOGO_VB_H = 988.0;       // altura do conteúdo no viewBox
+const LOGO_SCALE = LOGO_SIZE / LOGO_VB_H;
+const LOGO_RENDER_W = LOGO_VB_W * LOGO_SCALE;  // largura renderizada
 const LOGO_X = 10;
-const LOGO_Y = 14;
-const TEXT_X_HDR = LOGO_X + LOGO_SIZE + 3;
+const LOGO_Y = 13;
+const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 5;
+
+// Coordenadas dos triângulos já em espaço do viewBox (offset para origem 0,0)
+// T1: apex(443.4,776.0) base_left(0,0) base_right(886.9,0) → y invertido: topo=0
+// Vamos usar as coords calculadas, subtraindo o min para origem
+// T1 original: (750,1138),(306.6,362),(1193.4,362) → subtract (306.6,362)
+// T1 normalizado: (443.4,776),(0,0),(886.8,0)
+// T2 original: (750,1350),(306.6,574),(1193.4,574) → subtract (306.6,362)
+// T2 normalizado: (443.4,988),(0,212),(886.8,212)
 
 doc.save();
 doc.translate(LOGO_X, LOGO_Y);
 doc.scale(LOGO_SCALE);
-doc.path('M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z').fill(COFFEE);
-doc.path('M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z').fill(COFFEE);
-doc.path('M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z').fill(COFFEE);
+// Triângulo 1 (superior)
+doc.polygon([443.4, 776], [0, 0], [886.8, 0])
+   .lineWidth(28).strokeColor(COFFEE).stroke();
+// Triângulo 2 (inferior, deslocado 212 unidades para baixo)
+doc.polygon([443.4, 988], [0, 212], [886.8, 212])
+   .lineWidth(28).strokeColor(COFFEE).stroke();
 doc.restore();
 
-doc.font('DejaVu').fontSize(10).fillColor(COFFEE)
-   .text('VIDA AUTORAL', TEXT_X_HDR, 18, { lineBreak: false });
-doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
-   .text('MAPA DO DESENHO HUMANO', TEXT_X_HDR, 32, { lineBreak: false });
+// Hierarquia tipográfica: VIDA AUTORAL grande, subtítulo menor e espaçado
+doc.font('DejaVu').fontSize(11).fillColor(COFFEE)
+   .text('VIDA AUTORAL', TEXT_X_HDR, 16, { lineBreak: false, characterSpacing: 1.5 });
+doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
+   .text('MAPA DO DESENHO HUMANO', TEXT_X_HDR, 31, { lineBreak: false, characterSpacing: 1.2 });
 
 // === PILLS PLANETAS ===
 // Espaçamento entre pills reduzido à metade: gap entre células = metade do original
@@ -592,14 +609,14 @@ const DW = W - DIVIDER - 20;
 // Cabeçalho direito — mesma altura da faixa WHEAT (56px)
 doc.rect(DIVIDER, 0, W - DIVIDER, 56).fill(COFFEE);
 
-// Nome da pessoa — alinhado verticalmente com "VIDA AUTORAL" (y=18)
+// Nome da pessoa — destaque máximo, alinhado com "VIDA AUTORAL" (y=16)
 const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
-doc.font('DejaVu').fontSize(10).fillColor('#ffffff')
-   .text(nomeDisplay.toUpperCase(), DX, 18, { lineBreak: false });
+doc.font('DejaVu').fontSize(13).fillColor('#ffffff')
+   .text(nomeDisplay.toUpperCase(), DX, 14, { lineBreak: false, characterSpacing: 0.8 });
 
-// Dados de nascimento — alinhado com "MAPA DO DESENHO HUMANO" (y=32)
+// Dados de nascimento — alinhado com subtítulo (y=31), mais espaçado
 doc.font('DejaVu').fontSize(6).fillColor(WHEAT)
-   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 32, { lineBreak: false });
+   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 31, { lineBreak: false, characterSpacing: 0.5 });
 
 // Props - grid 2 colunas com descrições
 const rawTipo       = props.Type && props.Type.id;
