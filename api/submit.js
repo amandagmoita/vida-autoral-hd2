@@ -395,10 +395,10 @@ const LOGO_SIZE = 81;  // 2x × 1.35
 const LOGO_VB_W = 500;
 const LOGO_VB_H = 500;
 const LOGO_X = 10;
-const LOGO_Y = -8.5;  // centralizado no eixo do bloco de texto
+const LOGO_Y = -8.5;  // centro logo = centro bloco "VIDA AUTORAL + MAPA..." (32.0px)
 const LOGO_SCALE = LOGO_SIZE / LOGO_VB_H;
 const LOGO_RENDER_W = LOGO_VB_W * LOGO_SCALE;
-const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 2.5;  // espaço logo→texto reduzido pela metade
+const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 1.25;  // espaço logo→texto
 
 // Inserir logo SVG via svg-to-pdfkit
 const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500">'
@@ -428,7 +428,8 @@ const pillStepBase = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
 const pillStep = pillStepBase * 1.144;
 // Centralizar o bloco total de pills no eixo vertical da página (+30% spacing)
 const pillsTotalH = PLANET_ORDER.length * pillStep;
-const pillsStartY = H / 2 - pillsTotalH / 2;
+// +10px de espaçamento extra após a faixa WHEAT (labels + pills descem 10px)
+const pillsStartY = H / 2 - pillsTotalH / 2 + 10;
 
 // "DESIGN" e "PERSONALIDADE" 5px acima do início das pills centralizadas
 const labelY = pillsStartY - 5;
@@ -508,7 +509,7 @@ if (hd.SVG) {
     // Positivo Y = move para baixo, negativo = move para cima
     // Ajustar empiricamente ate ficar visualmente centralizado
     const CHART_OFFSET_X = 38;
-    const CHART_OFFSET_Y = 80;
+    const CHART_OFFSET_Y = 90;  // +10px de espaçamento após a faixa WHEAT
     const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
     const cy = areaCenterY - fitH / 2 + CHART_OFFSET_Y;
 
