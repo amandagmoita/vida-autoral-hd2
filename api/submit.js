@@ -45,7 +45,7 @@ const DESC = {
   tipo: {
     'Generator': {
       descricao:       'Você é a força vital do mundo. Sua energia constrói, sustenta e inspira — mas só quando seu corpo diz sim de verdade.',
-      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Elevo a energia dos meus clientes quando sigo o sim do meu corpo.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Elevo a energia das pessoas ao meu redor quando sigo o sim do meu corpo.',
     },
     'Manifested Generator': {
       descricao:       'Você é multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
@@ -57,7 +57,7 @@ const DESC = {
     },
     'Manifestor': {
       descricao:       'Você nasceu para iniciar movimentos. Seu poder é colocar coisas no mundo — e tudo flui quando você age com coragem e informa antes.',
-      fraseIdentidade: 'Na minha presença as pessoas se sentem movidas a agir. Inicio movimentos na vida dos meus clientes quando sigo minhas próprias inspirações.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem movidas a agir. Inicio movimentos na vida das pessoas ao meu redor quando sigo minhas próprias inspirações.',
     },
     'Projector': {
       descricao:       'Você veio para guiar, não para correr. Sua visão de águia enxerga o que ninguém mais vê — e brilha quando é reconhecida e convidada.',
@@ -65,7 +65,7 @@ const DESC = {
     },
     'Reflector': {
       descricao:       'Você é o espelho do ambiente. Rara e sensível, revela verdades que ninguém mais percebe — e decide melhor com tempo e espaço.',
-      fraseIdentidade: 'Na minha presença as pessoas se veem como nunca antes. Reflito a energia dos meus clientes quando mantenho minha própria energia limpa.',
+      fraseIdentidade: 'Na minha presença as pessoas se veem como nunca antes. Reflito a energia das pessoas ao meu redor quando mantenho minha própria energia limpa.',
     },
   },
   estrategia: {
