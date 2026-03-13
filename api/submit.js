@@ -848,7 +848,7 @@ const primeiroNome = nome.split(' ')[0].toLowerCase();
 await sendEmail(
   email,
   nome + ', seu Mapa de Desenho Humano est\u00e1 pronto \u2605',
-  emailPdf(nome, data, hora, local, hd && hd.SVG),
+  emailPdf(nome, data, hora, local, hd && hd.SVG ? colorirCentrosSVG(hd.SVG, hd.DefinedCenters || [], hd.OpenCenters || []) : null),
   [{ filename:'mapa-desenho-humano-'+primeiroNome+'.pdf', content:pdfBase64 }]
 );
 console.log('[6] PDF enviado com sucesso');
