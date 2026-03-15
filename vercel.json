@@ -1,15 +1,15 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "fluid": false,
-  "version": 2,
-  "functions": {
-    "api/submit.js": {
-      "maxDuration": 30,
-      "includeFiles": "fonts/DejaVuSans.ttf"
+  "redirects": [
+    {
+      "source": "/mapa",
+      "destination": "/",
+      "permanent": true
     }
-  },
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)",     "dest": "/public/$1" }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/mapa/index.html"
+    }
   ]
 }
