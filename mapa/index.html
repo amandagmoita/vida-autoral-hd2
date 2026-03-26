@@ -526,6 +526,45 @@
       letter-spacing: 0.1em;
     }
 
+    /* ── CITY AUTOCOMPLETE ───────────────────────────── */
+    .city-dropdown {
+      list-style: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border: 1px solid rgba(155,125,97,0.3);
+      border-top: none;
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 50;
+      display: none;
+    }
+    .city-dropdown.open { display: block; }
+    .city-dropdown li {
+      padding: 0.75rem 1.1rem;
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.9rem;
+      color: var(--dark);
+      cursor: pointer;
+      border-bottom: 1px solid rgba(155,125,97,0.08);
+      transition: background 0.15s;
+    }
+    .city-dropdown li:hover,
+    .city-dropdown li.active {
+      background: var(--cream);
+    }
+    .city-dropdown li .city-country {
+      font-size: 0.75rem;
+      color: var(--milky-coffee);
+      margin-left: 0.4rem;
+    }
+    #local-input.city-selected {
+      border-color: var(--eucalyptus);
+    }
+
     /* ── ANIMATIONS ──────────────────────────────────── */
     @keyframes fadeDown {
       from { opacity: 0; transform: translateY(-18px); }
@@ -620,9 +659,11 @@
         </div>
       </div>
 
-      <div class="form-group reveal reveal-delay-3">
-        <label for="local">Cidade de nascimento</label>
-        <input type="text" id="local" name="local" placeholder="Ex: São Paulo" required />
+      <div class="form-group reveal reveal-delay-3" style="position:relative;">
+        <label for="local-input">Cidade de nascimento</label>
+        <input type="text" id="local-input" autocomplete="off" placeholder="Comece a digitar sua cidade…" required />
+        <input type="hidden" id="local" name="local" />
+        <ul id="city-dropdown" class="city-dropdown"></ul>
       </div>
 
       <button type="submit" class="form-submit reveal reveal-delay-4" id="submit-btn">
@@ -870,6 +911,127 @@
       btn.disabled = false;
     }
   });
+
+  // ── City autocomplete via GeoNames ──
+  (function() {
+    const input    = document.getElementById('local-input');
+    const hidden   = document.getElementById('local');
+    const dropdown = document.getElementById('city-dropdown');
+    let debounceTimer = null;
+    let selectedIndex = -1;
+
+    input.addEventListener('input', function() {
+      const q = this.value.trim();
+      hidden.value = '';
+      input.classList.remove('city-selected');
+
+      if (q.length < 3) {
+        closeDropdown();
+        return;
+      }
+
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function() { fetchCities(q); }, 350);
+    });
+
+    async function fetchCities(query) {
+      try {
+        const url = 'https://secure.geonames.org/searchJSON?name_startsWith='
+          + encodeURIComponent(query)
+          + '&featureClass=P&maxRows=8&orderby=population&lang=pt&username=vidaautoral';
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.geonames || data.geonames.length === 0) {
+          closeDropdown();
+          return;
+        }
+
+        renderDropdown(data.geonames);
+      } catch (err) {
+        console.error('Erro ao buscar cidades:', err);
+        closeDropdown();
+      }
+    }
+
+    function renderDropdown(cities) {
+      dropdown.innerHTML = '';
+      selectedIndex = -1;
+
+      cities.forEach(function(city, i) {
+        const li = document.createElement('li');
+        const region = city.adminName1 ? ', ' + city.adminName1 : '';
+        const display = city.name + region + ' \u2014 ' + city.countryName;
+
+        li.innerHTML = city.name + '<span class="city-country">' + region + ' \u2014 ' + city.countryName + '</span>';
+        li.dataset.value = display;
+        li.dataset.index = i;
+
+        li.addEventListener('click', function() { selectCity(display); });
+        dropdown.appendChild(li);
+      });
+
+      dropdown.classList.add('open');
+    }
+
+    function selectCity(value) {
+      input.value = value;
+      hidden.value = value;
+      input.classList.add('city-selected');
+      closeDropdown();
+    }
+
+    function closeDropdown() {
+      dropdown.classList.remove('open');
+      dropdown.innerHTML = '';
+      selectedIndex = -1;
+    }
+
+    input.addEventListener('keydown', function(e) {
+      var items = dropdown.querySelectorAll('li');
+      if (!items.length) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+        updateActive(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+        updateActive(items);
+      } else if (e.key === 'Enter' && selectedIndex >= 0) {
+        e.preventDefault();
+        selectCity(items[selectedIndex].dataset.value);
+      }
+    });
+
+    function updateActive(items) {
+      items.forEach(function(li) { li.classList.remove('active'); });
+      if (items[selectedIndex]) {
+        items[selectedIndex].classList.add('active');
+        items[selectedIndex].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.form-group')) closeDropdown();
+    });
+
+    // Validação: impede envio sem cidade selecionada do dropdown
+    document.getElementById('hd-form').addEventListener('submit', function(e) {
+      if (!hidden.value) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        input.focus();
+        input.style.borderColor = '#c0392b';
+        input.setAttribute('placeholder', 'Selecione uma cidade da lista');
+        setTimeout(function() {
+          input.style.borderColor = '';
+          input.setAttribute('placeholder', 'Comece a digitar sua cidade\u2026');
+        }, 3000);
+      }
+    }, true);
+  })();
 </script>
 </body>
 </html>
