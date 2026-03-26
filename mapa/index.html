@@ -292,6 +292,72 @@
       color: #5a4535;
     }
 
+    /* ── FORM STEPS ─────────────────────────────────── */
+    .form-steps-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 2rem;
+    }
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid var(--milky-coffee);
+      background: transparent;
+      transition: all 0.3s;
+    }
+    .step-dot.active {
+      background: var(--milky-coffee);
+      box-shadow: 0 0 0 3px rgba(155,125,97,0.2);
+    }
+    .step-dot.done {
+      background: var(--eucalyptus);
+      border-color: var(--eucalyptus);
+    }
+    .step-line {
+      width: 60px;
+      height: 1.5px;
+      background: rgba(155,125,97,0.25);
+      transition: background 0.3s;
+    }
+    .step-line.filled {
+      background: var(--eucalyptus);
+    }
+    .step-2-greeting {
+      font-family: 'Aboreto', cursive;
+      font-size: 1.1rem;
+      color: var(--milky-coffee);
+      margin-bottom: 1.8rem;
+      line-height: 1.5;
+    }
+    .step-2-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      align-items: stretch;
+    }
+    .form-back {
+      background: transparent;
+      border: 1px solid rgba(155,125,97,0.3);
+      color: var(--milky-coffee);
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.82rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 1.1rem 1.4rem;
+      cursor: pointer;
+      transition: border-color 0.3s, color 0.3s;
+      white-space: nowrap;
+    }
+    .form-back:hover {
+      border-color: var(--milky-coffee);
+      color: var(--dark);
+    }
+    #step-2 .form-submit { margin-top: 0; }
+
     /* ── FORM SECTION ────────────────────────────────── */
     .form-section {
       padding: 6rem 2rem;
@@ -633,37 +699,69 @@
 
     <form id="hd-form" novalidate>
 
-      <div class="form-group reveal">
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" name="nome" placeholder="Como você prefere ser chamada" required />
-      </div>
-
-      <div class="form-group reveal reveal-delay-1">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="seu@email.com" required />
-      </div>
-
-      <div class="form-row reveal reveal-delay-2">
-        <div class="form-group">
-          <label for="data">Data de nascimento</label>
-          <input type="date" id="data" name="data" required />
+      <!-- ── ETAPA 1: Dados pessoais ── -->
+      <div id="step-1">
+        <div class="form-steps-indicator">
+          <div class="step-dot active"></div>
+          <div class="step-line"></div>
+          <div class="step-dot"></div>
         </div>
-        <div class="form-group">
-          <label for="hora">Horário de nascimento</label>
-          <input type="time" id="hora" name="hora" required />
+
+        <div class="form-group reveal">
+          <label for="nome">Nome completo</label>
+          <input type="text" id="nome" name="nome" placeholder="Como você prefere ser chamada" required />
+        </div>
+
+        <div class="form-group reveal reveal-delay-1">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required />
+        </div>
+
+        <div class="form-group reveal reveal-delay-2">
+          <label for="telefone">WhatsApp</label>
+          <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" required />
+        </div>
+
+        <button type="button" class="form-submit reveal reveal-delay-3" id="next-btn">
+          <span>Continuar →</span>
+        </button>
+      </div>
+
+      <!-- ── ETAPA 2: Dados de nascimento ── -->
+      <div id="step-2" style="display:none;">
+        <div class="form-steps-indicator">
+          <div class="step-dot done"></div>
+          <div class="step-line filled"></div>
+          <div class="step-dot active"></div>
+        </div>
+
+        <p class="step-2-greeting" id="step-2-greeting"></p>
+
+        <div class="form-row reveal">
+          <div class="form-group">
+            <label for="data">Data de nascimento</label>
+            <input type="date" id="data" name="data" required />
+          </div>
+          <div class="form-group">
+            <label for="hora">Horário de nascimento</label>
+            <input type="time" id="hora" name="hora" required />
+          </div>
+        </div>
+
+        <div class="form-group city-autocomplete-wrapper reveal reveal-delay-1">
+          <label for="local-input">Cidade de nascimento</label>
+          <input type="text" id="local-input" autocomplete="off" placeholder="Comece a digitar sua cidade…" required />
+          <input type="hidden" id="local" name="local" />
+          <ul id="city-dropdown" class="city-dropdown"></ul>
+        </div>
+
+        <div class="step-2-buttons reveal reveal-delay-2">
+          <button type="button" class="form-back" id="back-btn">← Voltar</button>
+          <button type="submit" class="form-submit" id="submit-btn" style="flex:1;">
+            <span id="submit-label">Gerar meu mapa →</span>
+          </button>
         </div>
       </div>
-
-      <div class="form-group city-autocomplete-wrapper reveal reveal-delay-3">
-        <label for="local-input">Cidade de nascimento</label>
-        <input type="text" id="local-input" autocomplete="off" placeholder="Comece a digitar sua cidade…" required />
-        <input type="hidden" id="local" name="local" />
-        <ul id="city-dropdown" class="city-dropdown"></ul>
-      </div>
-
-      <button type="submit" class="form-submit reveal reveal-delay-4" id="submit-btn">
-        <span id="submit-label">Gerar meu mapa →</span>
-      </button>
 
       <p class="form-privacy reveal">
         Seus dados são usados exclusivamente para gerar seu gráfico de Desenho Humano.<br/>
@@ -693,7 +791,7 @@
 
   <div class="what-visual reveal reveal-delay-3">
     <div class="what-photo">
-      <img src="/images/what-hd.jpg" alt="Mulher em conexão com sua essência" loading="lazy" />
+      <img src="/what-hd.jpg" alt="Mulher em conexão com sua essência" loading="lazy" />
     </div>
   </div>
 </section>
@@ -844,17 +942,78 @@
   }, { threshold: 0.12 });
   revealEls.forEach(el => observer.observe(el));
 
+  // ── Máscara de telefone ──
+  document.getElementById('telefone').addEventListener('input', function(e) {
+    var v = this.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 6) {
+      this.value = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+    } else if (v.length > 2) {
+      this.value = '(' + v.slice(0,2) + ') ' + v.slice(2);
+    } else if (v.length > 0) {
+      this.value = '(' + v;
+    }
+  });
+
+  // ── Navegação entre etapas ──
+  document.getElementById('next-btn').addEventListener('click', function() {
+    var nome     = document.getElementById('nome').value.trim();
+    var email    = document.getElementById('email').value.trim();
+    var telefone = document.getElementById('telefone').value.trim();
+
+    if (!nome || !email || !telefone) {
+      alert('Por favor, preencha todos os campos para continuar.');
+      return;
+    }
+
+    // Validação simples de email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('Por favor, insira um e-mail válido.');
+      document.getElementById('email').focus();
+      return;
+    }
+
+    // Validação telefone (mínimo 10 dígitos)
+    if (telefone.replace(/\D/g, '').length < 10) {
+      alert('Por favor, insira um número de WhatsApp válido.');
+      document.getElementById('telefone').focus();
+      return;
+    }
+
+    // Mostrar etapa 2
+    document.getElementById('step-1').style.display = 'none';
+    document.getElementById('step-2').style.display = 'block';
+
+    // Saudação personalizada
+    var primeiroNome = nome.split(' ')[0];
+    document.getElementById('step-2-greeting').textContent = primeiroNome + ', agora precisamos dos seus dados de nascimento \u2728';
+
+    // Ativar reveal nos novos elementos
+    document.querySelectorAll('#step-2 .reveal').forEach(function(el) {
+      setTimeout(function() { el.classList.add('visible'); }, 100);
+    });
+
+    // Scroll suave para o topo do formulário
+    document.getElementById('formulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('back-btn').addEventListener('click', function() {
+    document.getElementById('step-2').style.display = 'none';
+    document.getElementById('step-1').style.display = 'block';
+    document.getElementById('formulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   // ── Form submit → chama a Vercel API (api/submit.js) ──
   document.getElementById('hd-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const nome  = document.getElementById('nome').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const data  = document.getElementById('data').value;
-    const hora  = document.getElementById('hora').value;
-    const local = document.getElementById('local').value.trim();
+    const nome     = document.getElementById('nome').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const telefone = document.getElementById('telefone').value.trim();
+    const data     = document.getElementById('data').value;
+    const hora     = document.getElementById('hora').value;
+    const local    = document.getElementById('local').value.trim();
 
-    if (!nome || !email || !data || !hora || !local) {
+    if (!nome || !email || !telefone || !data || !hora || !local) {
       alert('Por favor, preencha todos os campos para gerar seu mapa.');
       return;
     }
@@ -862,13 +1021,13 @@
     const btn   = document.getElementById('submit-btn');
     const label = document.getElementById('submit-label');
     btn.disabled = true;
-    label.textContent = 'Enviando…';
+    label.textContent = 'Enviando\u2026';
 
     try {
       const res = await fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, data, hora, local })
+        body: JSON.stringify({ nome, email, telefone, data, hora, local })
       });
 
       const json = await res.json();
@@ -881,7 +1040,7 @@
 
     } catch (err) {
       console.error(err);
-      label.textContent = 'Erro ao enviar — tente novamente';
+      label.textContent = 'Erro ao enviar \u2014 tente novamente';
       btn.disabled = false;
     }
   });
