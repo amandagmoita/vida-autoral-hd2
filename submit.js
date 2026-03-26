@@ -14,11 +14,6 @@ const REPLY_TO          = process.env.REPLY_TO;
 const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
 const BODYGRAPH_BASE    = 'https://api.bodygraphchart.com';
 
-// — MAILCHIMP ——————————————————————
-const MC_API_KEY     = process.env.MAILCHIMP_API_KEY;
-const MC_SERVER      = process.env.MAILCHIMP_SERVER;      // ex: "us21"
-const MC_LIST_ID     = process.env.MAILCHIMP_LIST_ID;      // Audience ID
-
 // — TRADUCOES —————————————————————–
 const T = {
 'Generator':'Gerador','Manifested Generator':'Gerador Manifestado',
@@ -726,65 +721,6 @@ req.on('error', reject);
 });
 }
 
-// — MAILCHIMP: ADICIONAR SUBSCRIBER COM TAG ————————————————
-// O Mailchimp usa md5 do email em lowercase como subscriber hash
-function md5(str) {
-  const crypto = require('crypto');
-  return crypto.createHash('md5').update(str.toLowerCase()).digest('hex');
-}
-
-async function addToMailchimp(email, firstName) {
-  if (!MC_API_KEY || !MC_SERVER || !MC_LIST_ID) {
-    console.warn('[Mailchimp] Variáveis não configuradas, pulando...');
-    return;
-  }
-
-  const subscriberHash = md5(email);
-  const url = `https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}/members/${subscriberHash}`;
-
-  try {
-    // PUT = add or update (não dá erro se já existir)
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + Buffer.from('anystring:' + MC_API_KEY).toString('base64'),
-      },
-      body: JSON.stringify({
-        email_address: email,
-        status_if_new: 'subscribed',
-        merge_fields: { FNAME: firstName || '' },
-        tags: ['mapa-hd'],
-      }),
-    });
-
-    if (!res.ok) {
-      const e = await res.json();
-      console.error('[Mailchimp] Erro:', e.title, e.detail);
-      return;
-    }
-
-    // Adicionar tag separadamente (PUT acima não aplica tags em contatos existentes)
-    await fetch(
-      `https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}/members/${subscriberHash}/tags`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + Buffer.from('anystring:' + MC_API_KEY).toString('base64'),
-        },
-        body: JSON.stringify({
-          tags: [{ name: 'mapa-hd', status: 'active' }],
-        }),
-      }
-    );
-
-    console.log('[Mailchimp] ✅', email, 'adicionado com tag mapa-hd');
-  } catch (err) {
-    console.error('[Mailchimp] ❌', err.message);
-  }
-}
-
 // — HANDLER ——————————————————————
 async function handler(req, res) {
 if (req.method !== 'POST') return res.status(405).json({ error:'Method not allowed' });
@@ -825,12 +761,6 @@ await sendEmail(
   [{ filename:'mapa-desenho-humano-'+primeiroNome+'.pdf', content:pdfBase64 }]
 );
 console.log('[6] PDF enviado com sucesso');
-
-// [7] Adicionar ao Mailchimp (tag dispara automação de 5 emails)
-addToMailchimp(email, nome.split(' ')[0]).catch(err =>
-  console.error('[Mailchimp] Erro em background:', err.message)
-);
-console.log('[7] Mailchimp: subscriber sendo adicionado');
 
 return res.status(200).json({ ok:true });
 
