@@ -14,6 +14,12 @@ const REPLY_TO          = process.env.REPLY_TO;
 const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
 const BODYGRAPH_BASE    = 'https://api.bodygraphchart.com';
 
+// — KIT (ex-ConvertKit) ————————————————————
+const KIT_API_KEY     = process.env.KIT_API_KEY;
+const KIT_FORM_ID     = process.env.KIT_FORM_ID;
+const KIT_SEQUENCE_ID = process.env.KIT_SEQUENCE_ID;
+const KIT_TAG_ID      = process.env.KIT_TAG_ID;
+
 // — TRADUCOES —————————————————————–
 const T = {
 'Generator':'Gerador','Manifested Generator':'Gerador Manifestado',
@@ -721,6 +727,49 @@ req.on('error', reject);
 });
 }
 
+// — KIT: ADICIONAR SUBSCRIBER À SEQUÊNCIA ——————————————————
+async function addToKit(email, firstName) {
+  if (!KIT_API_KEY) { console.warn('[Kit] API key não configurada, pulando...'); return; }
+  const headers = { 'Content-Type': 'application/json', 'X-Kit-Api-Key': KIT_API_KEY };
+  try {
+    // 1. Criar subscriber
+    const r1 = await fetch('https://api.kit.com/v4/subscribers', {
+      method: 'POST', headers,
+      body: JSON.stringify({ email_address: email, first_name: firstName || '', state: 'active' }),
+    });
+    if (!r1.ok) { const e = await r1.json(); console.error('[Kit] Criar subscriber:', e); return; }
+
+    // 2. Adicionar ao form (tracking de origem)
+    if (KIT_FORM_ID) {
+      await fetch('https://api.kit.com/v4/forms/' + KIT_FORM_ID + '/subscribers', {
+        method: 'POST', headers,
+        body: JSON.stringify({ email_address: email }),
+      });
+    }
+
+    // 3. Adicionar tag "mapa-hd"
+    if (KIT_TAG_ID) {
+      await fetch('https://api.kit.com/v4/tags/' + KIT_TAG_ID + '/subscribers', {
+        method: 'POST', headers,
+        body: JSON.stringify({ email_address: email }),
+      });
+    }
+
+    // 4. Inscrever na sequência de 5 emails
+    if (KIT_SEQUENCE_ID) {
+      const r4 = await fetch('https://api.kit.com/v4/sequences/' + KIT_SEQUENCE_ID + '/subscribers', {
+        method: 'POST', headers,
+        body: JSON.stringify({ email_address: email }),
+      });
+      if (!r4.ok) { const e = await r4.json(); console.error('[Kit] Sequência:', e); return; }
+    }
+
+    console.log('[Kit] ✅', email, 'adicionado à sequência');
+  } catch (err) {
+    console.error('[Kit] ❌', err.message);
+  }
+}
+
 // — HANDLER ——————————————————————
 async function handler(req, res) {
 if (req.method !== 'POST') return res.status(405).json({ error:'Method not allowed' });
@@ -761,6 +810,13 @@ await sendEmail(
   [{ filename:'mapa-desenho-humano-'+primeiroNome+'.pdf', content:pdfBase64 }]
 );
 console.log('[6] PDF enviado com sucesso');
+
+// [7] Adicionar ao Kit (sequência de 5 emails)
+// Roda sem await pra não atrasar a resposta ao usuário
+addToKit(email, nome.split(' ')[0]).catch(err =>
+  console.error('[Kit] Erro em background:', err.message)
+);
+console.log('[7] Kit: subscriber sendo adicionado à sequência');
 
 return res.status(200).json({ ok:true });
 
