@@ -1,875 +1,771 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seu Mapa de Desenho Humano — Vida Autoral</title>
-  <link rel="canonical" href="https://vidaautoral.com.br/mapa" />
-  <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Work+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
-  <script src="https://app.bodygraph.com/integrate-chart/js" defer></script>
-
-  <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "vuregurh46");
-  </script>
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --milky-coffee: #9B7D61;
-      --roasted-peach: #DAA38F;
-      --whole-wheat: #E9D7C0;
-      --eucalyptus: #92ADA4;
-      --cream: #FED8A6;
-      --white: #FFFFFF;
-      --dark: #1a1410;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 300;
-      background-color: var(--whole-wheat);
-      color: var(--dark);
-      overflow-x: hidden;
-    }
-
-    /* ── HERO ─────────────────────────────────────────── */
-    .hero {
-      min-height: 100vh;
-      background: linear-gradient(160deg, var(--dark) 0%, #2e1f14 55%, #4a2e1e 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(155,125,97,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(146,173,164,0.12) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    /* geometric triangle — brand logo hint */
-    .hero-triangle {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 2rem;
-      opacity: 0.92;
-      animation: fadeDown 1s ease both;
-    }
-    .hero-triangle svg { width: 100%; height: 100%; display: block; }
-
-    .hero-eyebrow {
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 200;
-      font-size: 0.78rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--roasted-peach);
-      margin-bottom: 1.4rem;
-      animation: fadeDown 1s 0.1s ease both;
-    }
-
-    .hero-title {
-      font-family: 'Aboreto', cursive;
-      font-size: clamp(2.2rem, 5.5vw, 4rem);
-      color: var(--whole-wheat);
-      text-align: center;
-      line-height: 1.15;
-      letter-spacing: 0.04em;
-      max-width: 700px;
-      margin-bottom: 1.8rem;
-      animation: fadeDown 1s 0.2s ease both;
-    }
-
-    .hero-title em {
-      font-style: normal;
-      color: var(--roasted-peach);
-    }
-
-    .hero-sub {
-      font-size: 1.05rem;
-      font-weight: 200;
-      color: rgba(233,215,192,0.75);
-      text-align: center;
-      max-width: 520px;
-      line-height: 1.8;
-      margin-bottom: 3rem;
-      animation: fadeDown 1s 0.3s ease both;
-    }
-
-    .hero-cta {
-      display: inline-block;
-      background: var(--milky-coffee);
-      color: var(--white);
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 300;
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 1rem 2.6rem;
-      border: 1px solid rgba(218,163,143,0.3);
-      transition: background 0.3s, border-color 0.3s;
-      animation: fadeDown 1s 0.4s ease both;
-    }
-    .hero-cta:hover { background: #7d6249; border-color: var(--roasted-peach); }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      opacity: 0.45;
-      animation: pulse 2.5s ease-in-out infinite;
-    }
-    .hero-scroll span {
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--whole-wheat);
-    }
-    .hero-scroll-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, var(--whole-wheat), transparent);
-    }
-
-    /* ── PROMISE STRIP ───────────────────────────────── */
-    .strip {
-      background: var(--milky-coffee);
-      padding: 1.4rem 2rem;
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      flex-wrap: wrap;
-    }
-    .strip-item {
-      font-size: 0.75rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--whole-wheat);
-      font-weight: 300;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .strip-item::before {
-      content: '◇';
-      color: var(--roasted-peach);
-      font-size: 0.6rem;
-    }
-
-    /* ── WHAT IS HD ──────────────────────────────────── */
-    .what {
-      padding: 6rem 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: center;
-    }
-    @media (max-width: 680px) {
-      .what { grid-template-columns: 1fr; gap: 2.5rem; }
-    }
-
-    .what-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--milky-coffee);
-      margin-bottom: 1.2rem;
-    }
-    .what-title {
-      font-family: 'Aboreto', cursive;
-      font-size: clamp(1.7rem, 3vw, 2.4rem);
-      color: var(--dark);
-      line-height: 1.25;
-      margin-bottom: 1.5rem;
-    }
-    .what-body {
-      font-size: 0.95rem;
-      line-height: 1.9;
-      color: #4a3a2e;
-    }
-    .what-body p + p { margin-top: 1rem; }
-
-    .what-visual {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .bodygraph-preview {
-      width: 100%;
-      max-width: 320px;
-      aspect-ratio: 1;
-      background: linear-gradient(135deg, var(--dark) 0%, #2e1f14 100%);
-      border: 1px solid rgba(155,125,97,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .bodygraph-preview::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(155,125,97,0.15) 0%, transparent 70%);
-    }
-    .bodygraph-preview svg {
-      opacity: 0.6;
-    }
-
-    /* ── BENEFITS ────────────────────────────────────── */
-    .benefits {
-      background: #faf4ec;
-      padding: 5rem 2rem;
-    }
-    .benefits-inner {
-      max-width: 860px;
-      margin: 0 auto;
-    }
-    .section-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--milky-coffee);
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .section-title {
-      font-family: 'Aboreto', cursive;
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      text-align: center;
-      color: var(--dark);
-      margin-bottom: 3.5rem;
-    }
-
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 2rem;
-    }
-    .benefit-card {
-      background: var(--white);
-      border: 1px solid rgba(155,125,97,0.15);
-      padding: 2rem 1.8rem;
-      position: relative;
-    }
-    .benefit-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px;
-      height: 100%;
-      background: linear-gradient(to bottom, var(--roasted-peach), var(--milky-coffee));
-    }
-    .benefit-icon {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-    }
-    .benefit-title {
-      font-family: 'Aboreto', cursive;
-      font-size: 1rem;
-      color: var(--milky-coffee);
-      margin-bottom: 0.6rem;
-    }
-    .benefit-text {
-      font-size: 0.87rem;
-      line-height: 1.75;
-      color: #5a4535;
-    }
-
-    /* ── FORM SECTION ────────────────────────────────── */
-    .form-section {
-      padding: 6rem 2rem;
-      background: linear-gradient(170deg, var(--whole-wheat) 0%, var(--cream) 100%);
-    }
-    .form-inner {
-      max-width: 580px;
-      margin: 0 auto;
-    }
-    .form-inner .section-label { text-align: left; }
-    .form-inner .section-title { text-align: left; margin-bottom: 0.8rem; }
-    .form-intro {
-      font-size: 0.93rem;
-      line-height: 1.8;
-      color: #5a4535;
-      margin-bottom: 2.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--milky-coffee);
-      margin-bottom: 0.5rem;
-    }
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      background: var(--white);
-      border: 1px solid rgba(155,125,97,0.3);
-      padding: 0.9rem 1.1rem;
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 300;
-      font-size: 0.93rem;
-      color: var(--dark);
-      outline: none;
-      transition: border-color 0.2s;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--milky-coffee);
-    }
-    .form-group input::placeholder { color: #b8a090; }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    @media (max-width: 480px) {
-      .form-row { grid-template-columns: 1fr; }
-    }
-
-    .form-submit {
-      margin-top: 2rem;
-      width: 100%;
-      background: var(--dark);
-      color: var(--whole-wheat);
-      border: none;
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 300;
-      font-size: 0.85rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      padding: 1.1rem 2rem;
-      cursor: pointer;
-      transition: background 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .form-submit::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--milky-coffee);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.4s ease;
-    }
-    .form-submit:hover::after { transform: scaleX(1); }
-    .form-submit span { position: relative; z-index: 1; }
-
-    .form-privacy {
-      font-size: 0.75rem;
-      color: #9b836f;
-      margin-top: 1rem;
-      line-height: 1.6;
-      text-align: center;
-    }
-
-    /* ── BODYGRAPH EMBED (após submit) ───────────────── */
-    #chart-result {
-      display: none;
-      padding: 4rem 2rem;
-      background: var(--dark);
-    }
-    #chart-result.visible { display: block; }
-    #chart-result .section-label,
-    #chart-result .section-title { color: var(--whole-wheat); }
-    #chart-result .section-label { color: var(--roasted-peach); }
-    #chart-result bodygraph-embed {
-      display: block;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    /* ── DEPOIMENTOS ─────────────────────────────────── */
-    .testimonials {
-      padding: 6rem 2rem;
-      background: linear-gradient(160deg, var(--dark) 0%, #2e1f14 100%);
-    }
-    .testimonials .section-label { color: var(--roasted-peach); }
-    .testimonials .section-title { color: var(--whole-wheat); margin-bottom: 3.5rem; }
-
-    .testimonials-grid {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 2rem;
-    }
-
-    .testimonial-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(155,125,97,0.22);
-      padding: 2.2rem 2rem 2rem;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-    .testimonial-card::before {
-      content: '\201C';
-      font-family: 'Aboreto', cursive;
-      font-size: 4rem;
-      color: var(--roasted-peach);
-      opacity: 0.35;
-      position: absolute;
-      top: 0.6rem;
-      left: 1.4rem;
-      line-height: 1;
-    }
-
-    .testimonial-stars {
-      color: var(--roasted-peach);
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      opacity: 0.85;
-      margin-bottom: 1.1rem;
-      padding-top: 1.2rem; /* empurra abaixo da aspa mas bem no topo */
-    }
-
-    .testimonial-text {
-      font-size: 0.93rem;
-      line-height: 1.85;
-      color: rgba(233,215,192,0.82);
-      margin-bottom: 1.8rem;
-      font-style: italic;
-      flex: 1;
-    }
-
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-    }
-    .testimonial-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--milky-coffee), var(--roasted-peach));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Aboreto', cursive;
-      font-size: 0.8rem;
-      color: var(--white);
-      flex-shrink: 0;
-    }
-    .testimonial-name {
-      font-family: 'Aboreto', cursive;
-      font-size: 0.85rem;
-      color: var(--whole-wheat);
-      letter-spacing: 0.06em;
-    }
-    .testimonial-role {
-      font-size: 0.72rem;
-      color: var(--roasted-peach);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-top: 0.15rem;
-    }
-
-    /* ── FOOTER ──────────────────────────────────────── */
-    footer {
-      background: var(--dark);
-      padding: 2rem 2rem 1.2rem;
-      text-align: center;
-      overflow: hidden;
-    }
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.8rem;
-      margin-bottom: 1rem;
-    }
-    .footer-logo-text {
-      font-family: 'Aboreto', cursive;
-      font-size: 1rem;
-      letter-spacing: 0.15em;
-      color: var(--whole-wheat);
-    }
-    footer p {
-      font-size: 0.75rem;
-      color: rgba(233,215,192,0.35);
-      letter-spacing: 0.1em;
-    }
-
-    /* ── ANIMATIONS ──────────────────────────────────── */
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.45; transform: translateX(-50%) translateY(0); }
-      50%       { opacity: 0.7;  transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* intersection observer reveals */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-  </style>
-</head>
-<body>
-
-<!-- ═══ HERO ═══════════════════════════════════════════ -->
-<section class="hero" id="top">
-
-  <div class="hero-triangle">
-    <?xml version="1.0" encoding="utf-8" ?><svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
-  </div>
-
-  <p class="hero-eyebrow">Vida Autoral · Desenho Humano</p>
-
-  <h1 class="hero-title">
-    Descubra o seu<br/>
-    <em>mapa energético</em><br/>
-    único
-  </h1>
-
-  <p class="hero-sub">
-    Seu Desenho Humano revela como você foi desenhada para tomar decisões, usar sua energia e viver com autenticidade. Receba seu gráfico personalizado — gratuitamente.
-  </p>
-
-  <a href="#formulario" class="hero-cta">Quero meu mapa</a>
-
-  <div class="hero-scroll">
-    <span>Rolar</span>
-    <div class="hero-scroll-line"></div>
-  </div>
-</section>
-
-<!-- ═══ PROMISE STRIP ══════════════════════════════════ -->
-<div class="strip">
-  <div class="strip-item">Gratuito</div>
-  <div class="strip-item">Personalizado</div>
-  <div class="strip-item">Entregue por e-mail</div>
-</div>
-
-<!-- ═══ FORMULÁRIO ═══════════════════════════════════ -->
-<section class="form-section" id="formulario">
-  <div class="form-inner">
-    <p class="section-label reveal">Seu gráfico personalizado</p>
-    <h2 class="section-title reveal reveal-delay-1">Receba seu mapa<br/>de Desenho Humano</h2>
-    <p class="form-intro reveal reveal-delay-2">
-      Preencha os dados abaixo com atenção — especialmente o horário de nascimento, pois ele define sua Autoridade e centros de energia.
-    </p>
-
-    <form id="hd-form" novalidate>
-
-      <div class="form-group reveal">
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" name="nome" placeholder="Como você prefere ser chamada" required />
-      </div>
-
-      <div class="form-group reveal reveal-delay-1">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="seu@email.com" required />
-      </div>
-
-      <div class="form-row reveal reveal-delay-2">
-        <div class="form-group">
-          <label for="data">Data de nascimento</label>
-          <input type="date" id="data" name="data" required />
-        </div>
-        <div class="form-group">
-          <label for="hora">Horário de nascimento</label>
-          <input type="time" id="hora" name="hora" required />
-        </div>
-      </div>
-
-      <div class="form-group reveal reveal-delay-3">
-        <label for="local">Cidade de nascimento</label>
-        <input type="text" id="local" name="local" placeholder="Ex: São Paulo, SP — Brasil" required />
-      </div>
-
-      <button type="submit" class="form-submit reveal reveal-delay-4" id="submit-btn">
-        <span id="submit-label">Gerar meu mapa →</span>
-      </button>
-
-      <p class="form-privacy reveal">
-        Seus dados são usados exclusivamente para gerar seu gráfico de Desenho Humano.<br/>
-        Não compartilhamos com terceiros.
-      </p>
-    </form>
-
-    <!-- success message -->
-    <div id="form-success" style="display:none; margin-top:2rem; padding:1.5rem 2rem; background:var(--white); border-left:3px solid var(--eucalyptus);">
-      <p style="font-family:'Aboreto',cursive; color:var(--milky-coffee); margin-bottom:0.5rem;">Mapa enviado ✦</p>
-      <p style="font-size:0.9rem; color:#5a4535; line-height:1.7;">Seu gráfico de Desenho Humano foi enviado para o seu e-mail. Verifique também a caixa de spam.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ O QUE É HUMAN DESIGN ══════════════════════════ -->
-<section class="what">
-  <div>
-    <p class="what-label reveal">O que é</p>
-    <h2 class="what-title reveal reveal-delay-1">Desenho Humano é o mapa da sua essência</h2>
-    <div class="what-body reveal reveal-delay-2">
-      <p>Desenho Humano é um sistema que combina Astrologia, I Ching, Kabbalah e Física Quântica para revelar como você foi desenhada para operar no mundo.</p>
-      <p>Com base na sua data, horário e local de nascimento, o gráfico mostra seus centros de energia, tipo, autoridade e estratégia de vida — um guia profundo para decisões mais alinhadas e menos desgastantes.</p>
-      <p>Para mulheres que querem viver com mais propósito e clareza, é um ponto de partida transformador.</p>
-    </div>
-  </div>
-
-  <div class="what-visual reveal reveal-delay-3">
-    <div class="bodygraph-preview">
-      <!-- decorative SVG bodygraph silhouette -->
-      <svg width="200" height="220" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- centres -->
-        <rect x="80" y="10" width="40" height="30" rx="2" stroke="#9B7D61" stroke-width="1"/>
-        <rect x="78" y="50" width="44" height="34" rx="2" stroke="#DAA38F" stroke-width="1"/>
-        <rect x="30" y="55" width="38" height="28" rx="2" stroke="#9B7D61" stroke-width="0.8"/>
-        <rect x="132" y="55" width="38" height="28" rx="2" stroke="#9B7D61" stroke-width="0.8"/>
-        <rect x="78" y="95" width="44" height="34" rx="2" stroke="#92ADA4" stroke-width="1"/>
-        <rect x="30" y="100" width="38" height="28" rx="2" stroke="#9B7D61" stroke-width="0.8"/>
-        <rect x="132" y="100" width="38" height="28" rx="2" stroke="#9B7D61" stroke-width="0.8"/>
-        <rect x="78" y="142" width="44" height="30" rx="2" stroke="#DAA38F" stroke-width="1"/>
-        <rect x="78" y="185" width="44" height="28" rx="2" stroke="#9B7D61" stroke-width="1"/>
-        <!-- channels -->
-        <line x1="100" y1="40" x2="100" y2="50" stroke="#9B7D61" stroke-width="1"/>
-        <line x1="100" y1="84" x2="100" y2="95" stroke="#9B7D61" stroke-width="1"/>
-        <line x1="100" y1="129" x2="100" y2="142" stroke="#9B7D61" stroke-width="1"/>
-        <line x1="100" y1="172" x2="100" y2="185" stroke="#9B7D61" stroke-width="1"/>
-        <line x1="68" y1="67" x2="78" y2="67" stroke="#9B7D61" stroke-width="0.8"/>
-        <line x1="122" y1="67" x2="132" y2="67" stroke="#9B7D61" stroke-width="0.8"/>
-        <line x1="68" y1="114" x2="78" y2="114" stroke="#9B7D61" stroke-width="0.8"/>
-        <line x1="122" y1="114" x2="132" y2="114" stroke="#9B7D61" stroke-width="0.8"/>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ BENEFÍCIOS ═══════════════════════════════════ -->
-<section class="benefits">
-  <div class="benefits-inner">
-    <p class="section-label reveal">O que você vai descobrir</p>
-    <h2 class="section-title reveal reveal-delay-1">Seu gráfico revela</h2>
-
-    <div class="benefits-grid">
-      <div class="benefit-card reveal reveal-delay-1">
-        <div class="benefit-icon">✦</div>
-        <h3 class="benefit-title">Seu Tipo</h3>
-        <p class="benefit-text">Manifestador, Gerador, Projetor ou Refletor — cada tipo tem uma estratégia de vida que, quando seguida, elimina resistência e aumenta fluxo.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-2">
-        <div class="benefit-icon">◇</div>
-        <h3 class="benefit-title">Sua Autoridade</h3>
-        <p class="benefit-text">Como você foi desenhada para tomar decisões. Sacral, Emocional, Esplênico — cada autoridade tem seu ritmo e sinal único.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-3">
-        <div class="benefit-icon">○</div>
-        <h3 class="benefit-title">Seus Centros</h3>
-        <p class="benefit-text">Onde está sua energia consistente e onde você absorve influências externas. Compreender isso muda como você usa — e preserva — sua energia.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-4">
-        <div class="benefit-icon">△</div>
-        <h3 class="benefit-title">Seu Perfil</h3>
-        <p class="benefit-text">A combinação que revela seu papel no mundo e como você aprende, cresce e contribui com autenticidade ao longo da vida.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-1">
-        <div class="benefit-icon">✧</div>
-        <h3 class="benefit-title">Seus Dons Naturais</h3>
-        <p class="benefit-text">As qualidades inatas que você carrega desde o nascimento — aquelas que parecem fáceis para você, mas impressionam as pessoas ao redor. Seu gráfico revela onde sua genialidade natural mora e como usá-la a seu favor.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-2">
-        <div class="benefit-icon">⬡</div>
-        <h3 class="benefit-title">Seus Talentos Únicos</h3>
-        <p class="benefit-text">Os talentos específicos moldados pela sua combinação de Gates e Canais — sua assinatura energética no mundo. Compreendê-los é o primeiro passo para construir uma vida e um negócio verdadeiramente alinhados com quem você é.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ DEPOIMENTOS ══════════════════════════════════ -->
-<section class="testimonials">
-  <div style="max-width:900px; margin:0 auto; text-align:center;">
-    <p class="section-label reveal">O que dizem as mulheres</p>
-    <h2 class="section-title reveal reveal-delay-1">Transformações reais</h2>
-  </div>
-
-  <div class="testimonials-grid">
-
-    <div class="testimonial-card reveal reveal-delay-1">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Recebi meu mapa e fiquei impressionada com a precisão. Finalmente entendi por que me sinto tão diferente das pessoas ao meu redor — e aprendi a parar de me forçar a agir como elas.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">CM</div>
-        <div>
-          <div class="testimonial-name">Camila M.</div>
-          <div class="testimonial-role">São Paulo, SP</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card reveal reveal-delay-2">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">O gráfico chegou lindo e super detalhado. Entender minha Autoridade Sacral mudou completamente a forma como tomo decisões no meu negócio. Recomendo de olhos fechados!</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">RF</div>
-        <div>
-          <div class="testimonial-name">Rafaela F.</div>
-          <div class="testimonial-role">Belo Horizonte, MG</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card reveal reveal-delay-3">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Sempre tive dificuldade de me posicionar profissionalmente. Depois de entender meu Perfil e meu Tipo, tudo fez sentido. Parece que me deram um manual de instrução da minha própria vida.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">JL</div>
-        <div>
-          <div class="testimonial-name">Juliana L.</div>
-          <div class="testimonial-role">Curitiba, PR</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card reveal reveal-delay-4">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Nunca tinha ouvido falar em Desenho Humano antes. Recebi o mapa com o coração aberto e saí completamente diferente — com clareza sobre minha energia, meus limites e meu propósito. Foi um presente.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">TA</div>
-        <div>
-          <div class="testimonial-name">Tatiana A.</div>
-          <div class="testimonial-role">Fortaleza, CE</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card reveal reveal-delay-1">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Sou terapeuta, então já fiz MBTI, Eneagrama, tudo que existe. Achei que seria mais do mesmo. Me enganei. O Desenho Humano foi o único sistema que não só me descreveu — me mostrou o <em style="font-style:italic; color:var(--roasted-peach);">porquê</em> de cada padrão e o que fazer com isso. É completamente diferente.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">PS</div>
-        <div>
-          <div class="testimonial-name">Priscila S.</div>
-          <div class="testimonial-role">Florianópolis, SC</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card reveal reveal-delay-2">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Fiquei com medo de tentar porque não sabia meu horário exato de nascimento. Coloquei um aproximado e o mapa ainda assim fez sentido absurdo. A orientação sobre isso é muito boa. Vale tentar mesmo com a informação que você tem.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">BN</div>
-        <div>
-          <div class="testimonial-name">Beatriz N.</div>
-          <div class="testimonial-role">Recife, PE</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══ FOOTER ═══════════════════════════════════════ -->
-<footer>
-    <div class="footer-logo">
-    <div style="width:44px;height:38px;display:flex;align-items:center;justify-content:center;">
-      <?xml version="1.0" encoding="utf-8" ?><svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
-    </div>
-    <span class="footer-logo-text">Vida Autoral</span>
-  </div>
-  <p>© 2026 Vida Autoral · Todos os direitos reservados</p>
-</footer>
-
-<script>
-  // ── Intersection Observer (reveal animations) ──
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
-    });
-  }, { threshold: 0.12 });
-  revealEls.forEach(el => observer.observe(el));
-
-  // ── Form submit → chama a Vercel API (api/submit.js) ──
-  document.getElementById('hd-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const nome  = document.getElementById('nome').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const data  = document.getElementById('data').value;
-    const hora  = document.getElementById('hora').value;
-    const local = document.getElementById('local').value.trim();
-
-    if (!nome || !email || !data || !hora || !local) {
-      alert('Por favor, preencha todos os campos para gerar seu mapa.');
-      return;
-    }
-
-    const btn   = document.getElementById('submit-btn');
-    const label = document.getElementById('submit-label');
-    btn.disabled = true;
-    label.textContent = 'Enviando…';
-
-    try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, data, hora, local })
+'use strict';
+// pdfkit + svg-to-pdfkit: JS puro. SVG do bodygraph inserido como vetor no PDF.
+// Zero WASM, zero binarios nativos - Fluid runtime nao tem nada para corromper.
+
+const maxDuration = 30;
+module.exports = handler;
+module.exports.maxDuration = maxDuration;
+
+// — ENV ———————————————————————–
+const RESEND_API_KEY    = process.env.RESEND_API_KEY;
+const FROM_EMAIL        = process.env.FROM_EMAIL;
+const FROM_NAME         = process.env.FROM_NAME;
+const REPLY_TO          = process.env.REPLY_TO;
+const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
+const BODYGRAPH_BASE    = 'https://api.bodygraphchart.com';
+
+// — TRADUCOES —————————————————————–
+const T = {
+'Generator':'Gerador','Manifested Generator':'Gerador Manifestado',
+'Manifestor':'Manifestador','Projector':'Projetor','Reflector':'Refletor',
+'To Respond':'Responder','To Inform':'Informar','To Initiate':'Iniciar',
+'Wait for the Invitation':'Aguardar o Convite',
+'Wait for a Lunar Cycle':'Aguardar Ciclo Lunar',
+'Wait a Lunar Cycle':'Aguardar Ciclo Lunar',
+'Sacral':'Sacral','Emotional':'Emocional','Splenic':'Espl\u00e9nica',
+'Ego':'Ego','Self-Projected':'Proje\u00e7\u00e3o do Eu','Mental':'Mental',
+'No Authority':'Sem Autoridade Interna','Lunar':'Lunar',
+'Ego Manifestor':'Ego (Manifestador)',
+'Single Definition':'Defini\u00e7\u00e3o \u00danica',
+'Split Definition':'Defini\u00e7\u00e3o Dividida',
+'Triple Split Definition':'Tripla Divis\u00e3o',
+'Quadruple Split':'Qu\u00e1drupla Divis\u00e3o',
+'No Definition':'Sem Defini\u00e7\u00e3o',
+'Satisfaction':'Satisfa\u00e7\u00e3o','Success':'Sucesso',
+'Peace':'Paz','Surprise':'Surpresa',
+'Frustration':'Frustra\u00e7\u00e3o','Bitterness':'Amargura',
+'Anger':'Raiva','Disappointment':'Decep\u00e7\u00e3o',
+'Emotional - Solar Plexus':'Emocional','Sacral Authority':'Sacral',
+'Manifesting Generator':'Gerador Manifestante',
+};
+function tr(v) { return (v && T[v]) || v || '-'; }
+
+// — DESCRIÇÕES DOS TÓPICOS ————————————————————————
+const DESC = {
+  tipo: {
+    'Generator': {
+      descricao:       'Você é a força vital do mundo. Sua energia constrói, sustenta e inspira — mas só quando seu corpo diz sim de verdade.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Elevo a energia das pessoas ao meu redor quando sigo o sim do meu corpo.',
+    },
+    'Manifested Generator': {
+      descricao:       'Você é multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Tenho energia ágil e multipotencial para encontrar o caminho mais rápido ao resultado.',
+    },
+    'Manifesting Generator': {
+      descricao:       'Você é multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem elevadas e entusiasmadas. Tenho energia ágil e multipotencial para encontrar o caminho mais rápido ao resultado.',
+    },
+    'Manifestor': {
+      descricao:       'Você nasceu para iniciar movimentos. Seu poder é colocar coisas no mundo — e tudo flui quando você age com coragem e informa antes.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem movidas a agir. Inicio movimentos na vida das pessoas ao meu redor quando sigo minhas próprias inspirações.',
+    },
+    'Projector': {
+      descricao:       'Você veio para guiar, não para correr. Sua visão de águia enxerga o que ninguém mais vê — e brilha quando é reconhecida e convidada.',
+      fraseIdentidade: 'Na minha presença as pessoas se sentem profundamente vistas e ouvidas. Sou uma guia poderosa que lê a energia das pessoas e dos ambientes.',
+    },
+    'Reflector': {
+      descricao:       'Você é o espelho do ambiente. Rara e sensível, revela verdades que ninguém mais percebe — e decide melhor com tempo e espaço.',
+      fraseIdentidade: 'Na minha presença as pessoas se veem como nunca antes. Reflito a energia das pessoas ao meu redor quando mantenho minha própria energia limpa.',
+    },
+  },
+  estrategia: {
+    'To Respond':              'Não inicie — reaja. Quando algo de fora acende seu corpo, esse é o sinal. Forçar sem resposta esgota.',
+    'To Inform':               'Responda ao que vem de fora, depois avise quem será impactado. Pular um dos dois cria caos.',
+    'To Initiate':             'Antes de agir, avise quem será impactado. Esse gesto simples transforma resistência em apoio.',
+    'Wait for the Invitation': 'Sua orientação é valiosa demais para ser dada sem pedido. Espere ser reconhecida — então vá fundo.',
+    'Wait for a Lunar Cycle':  'Decisões grandes pedem 28 dias. Fale com pessoas diferentes, observe — a clareza vem com o tempo.',
+    'Wait a Lunar Cycle':      'Decisões grandes pedem 28 dias. Fale com pessoas diferentes, observe — a clareza vem com o tempo.',
+  },
+  autoridade: {
+    'Sacral':                   'Sua bússola é o seu corpo. Um "hm-hm" interno significa sim; "uhn-uhn" significa não. Confie sem precisar explicar.',
+    'Emotional':                'Nunca decida no pico da emoção. Sua clareza vem depois que a onda passa — espere a névoa baixar.',
+    'Emotional - Solar Plexus': 'Nunca decida no pico da emoção. Sua clareza vem depois que a onda passa — espere a névoa baixar.',
+    'Splenic':                  'É um sussurro no momento presente. Você sabe, mas não sabe explicar por quê. Confie na primeira impressão.',
+    'Ego':                      'Se não sai do coração de verdade, não vai até o fim. Sua vontade genuína é o guia — não o dever.',
+    'Ego Manifestor':           'Se não sai do coração de verdade, não vai até o fim. Sua vontade genuína é o guia — não o dever.',
+    'Self-Projected':           'Fale em voz alta com alguém neutro. A clareza vem ouvindo a própria voz — não pela mente pensante.',
+    'Mental':                   'Você precisa de tempo e de ambientes diferentes para decidir. Durma, observe, converse — depois escolha.',
+    'No Authority':             'Você precisa de tempo e de ambientes diferentes para decidir. Durma, observe, converse — depois escolha.',
+    'Lunar':                    'Decisões grandes pedem 28 dias. Fale com pessoas diferentes, observe — a clareza vem com o tempo.',
+  },
+  perfil: {
+    '1/3': 'Você aprende estudando fundo e testando na prática — às vezes na marra. Cada erro é um dado valioso.',
+    '1/4': 'Base sólida de conhecimento + rede de confiança. Você influencia quem já conhece.',
+    '2/4': 'Precisa de tempo a sós para recarregar, mas seus dons chamam as pessoas naturalmente.',
+    '2/5': 'Você parece ter a solução que os outros precisam. Sua presença projeta liderança — queira ou não.',
+    '3/5': 'Aprende pela tentativa e erro e vira referência por isso. Seu caminho não precisa ser linear.',
+    '3/6': 'Fase de experiências intensas → sabedoria compartilhada. Você vai se tornar um modelo de vida.',
+    '4/6': 'Rede de relacionamentos de confiança + visão de longo prazo. Você é o modelo que inspira pelo exemplo.',
+    '4/1': 'Você influencia quem está perto com base sólida de conhecimento. Relacionamento é sua alavanca.',
+    '5/1': 'As pessoas projetam em você a solução que precisam. Sua preparação é o que sustenta essa expectativa.',
+    '5/2': 'Você tem genialidade natural e atrai projeções. Hora de recolhimento é essencial para se renovar.',
+    '6/2': 'Três fases: experimentação, observação, sabedoria. Com o tempo, você vira o modelo que outros seguem.',
+    '6/3': 'Você aprende tudo na prática — e essa vivência te transforma em referência autêntica.',
+  },
+  definicao: {
+    'Single Definition':      'Você é consistente e previsível. Seu campo de energia é um bloco coeso — menos impactado pelos outros.',
+    'Split Definition':       'Você tem duas ilhas de energia. Certas pessoas naturalmente "completam" seu circuito — e você sente.',
+    'Triple Split Definition':'Três blocos independentes. Você precisa de mais conexões para se sentir inteira — e tudo bem.',
+    'Quadruple Split':        'Quatro ilhas de energia. Você é muito adaptável ao ambiente e às pessoas — o contexto te molda muito.',
+    'No Definition':          'Você é o espelho puro do coletivo. Sua energia é fluida — escolher bem seu entorno é essencial.',
+  },
+  assinatura: {
+    'Satisfaction': 'Quando você está alinhada, sente satisfação profunda no que faz — não euforia, mas solidez interior.',
+    'Success':      'Quando reconhecida e convidada, você prospera. O sucesso flui — não é forçado, é natural.',
+    'Peace':        'Sua assinatura é paz. Quando você avisa antes de agir, a resistência desaparece e tudo flui.',
+    'Surprise':     'Você está alinhada quando a vida te surpreende positivamente. A surpresa é seu sinal de que está certa.',
+  },
+  naoself: {
+    'Frustration':    'Frustração é o sinal de que você iniciou sem resposta ou disse sim para algo errado. Pare e redirecione.',
+    'Anger':          'Raiva é o sinal de que você agiu sem avisar. Não é defeito — é aviso para ajustar a comunicação.',
+    'Bitterness':     'Amargura aparece quando você oferece seu dom sem ser chamada. Espere o convite — seu valor é real.',
+    'Disappointment': 'Decepção indica que você decidiu rápido demais ou está num ambiente errado. Dê mais tempo a si.',
+  },
+  cruz: {
+    'Right Angle Cross of the Sphinx':          '',
+    'Right Angle Cross of Planning':            '',
+    'Right Angle Cross of the Vessel of Love':  '',
+    'Right Angle Cross of Eden':                '',
+    'Right Angle Cross of the Sleeping Phoenix':'',
+    'Right Angle Cross of the Unexpected':      '',
+    'Right Angle Cross of Penetration':         '',
+    'Right Angle Cross of Consciousness':       '',
+    'Right Angle Cross of Explanation':         '',
+    'Right Angle Cross of the Four Ways':       '',
+    'Right Angle Cross of Laws':                '',
+    'Right Angle Cross of Service':             '',
+    'Right Angle Cross of the Rulebook':        '',
+    'Right Angle Cross of Revolution':          '',
+    'Right Angle Cross of the Vessel':          '',
+    'Right Angle Cross':                        '',
+    'Juxtaposition Cross of the Sphinx':        '',
+    'Juxtaposition Cross of Planning':          '',
+    'Juxtaposition Cross of Penetration':       '',
+    'Juxtaposition Cross of Consciousness':     '',
+    'Juxtaposition Cross':                      '',
+    'Left Angle Cross of Separation':           '',
+    'Left Angle Cross of Demands':              '',
+    'Left Angle Cross of Masks':                '',
+    'Left Angle Cross of Incarnation':          '',
+    'Left Angle Cross of Alignment':            '',
+    'Left Angle Cross of Education':            '',
+    'Left Angle Cross of the Alpha':            '',
+    'Left Angle Cross of Healing':              '',
+    'Left Angle Cross of Prevention':           '',
+    'Left Angle Cross of the Clarion':          '',
+    'Left Angle Cross of Defiance':             '',
+    'Left Angle Cross of Migration':            '',
+    'Left Angle Cross':                         '',
+  },
+};
+
+function getDesc(categoria, valor) {
+  if (!valor || valor === '-') return '';
+  const mapa = DESC[categoria] || {};
+  if (mapa[valor] !== undefined) return mapa[valor];
+  const key = Object.keys(mapa).find(k => valor.includes(k) || k.includes(valor));
+  return key !== undefined ? mapa[key] : '';
+}
+
+function getTipoObj(valor) {
+  if (!valor) return null;
+  const mapa = DESC.tipo || {};
+  return mapa[valor] || null;
+}
+
+function traduzirCruz(v) {
+  if (!v) return '-';
+  return v
+    .replace('Right Angle Cross of', 'Cruz de \u00c2ngulo Reto de')
+    .replace('Left Angle Cross of', 'Cruz de \u00c2ngulo Esquerdo de')
+    .replace('Juxtaposition Cross of', 'Cruz de Justaposi\u00e7\u00e3o de')
+    .replace('Right Angle Cross', 'Cruz de \u00c2ngulo Reto')
+    .replace('Left Angle Cross', 'Cruz de \u00c2ngulo Esquerdo')
+    .replace('Juxtaposition Cross', 'Cruz de Justaposi\u00e7\u00e3o')
+    .replace(' The ', ' ')
+    .replace(' the ', ' ')
+    .replace(' of ', ' da ')
+    .replace(' Of ', ' da ');
+}
+
+// — BODYGRAPH API ———————————————————––
+async function resolveTimezone(city) {
+const url = BODYGRAPH_BASE + '/v210502/locations?api_key=' + BODYGRAPH_API_KEY
++ '&query=' + encodeURIComponent(city);
+const res = await fetch(url);
+if (!res.ok) throw new Error('Locations API: ' + res.status);
+const data = await res.json();
+if (!data || !data.length) throw new Error('Cidade nao encontrada: ' + city);
+return data[0].timezone;
+}
+
+async function fetchHDData(date, hora, timezone) {
+const url = BODYGRAPH_BASE + '/v221006/hd-data?api_key=' + BODYGRAPH_API_KEY
++ '&date=' + encodeURIComponent(date + ' ' + hora)
++ '&timezone=' + encodeURIComponent(timezone)
++ '&design=Leo';
+const res = await fetch(url);
+if (!res.ok) throw new Error('HD Data API: ' + res.status);
+return res.json();
+}
+
+// — DADOS HD ——————————————————————
+const PLANET_ORDER = ['Sun','Earth','North Node','South Node','Moon','Mercury',
+'Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
+const PLANET_PT  = {
+'Sun':'Sol','Earth':'Terra','North Node':'N\u00f3 Norte','South Node':'N\u00f3 Sul',
+'Moon':'Lua','Mercury':'Merc\u00fario','Venus':'V\u00eanus','Mars':'Marte',
+'Jupiter':'J\u00fapiter','Saturn':'Saturno','Uranus':'Urano',
+'Neptune':'Netuno','Pluto':'Plut\u00e3o',
+};
+const PLANET_SYM = {
+'Sun':'\u2609','Earth':'\u2295','North Node':'\u260a','South Node':'\u260b',
+'Moon':'\u263d','Mercury':'\u263f','Venus':'\u2640','Mars':'\u2642',
+'Jupiter':'\u2643','Saturn':'\u2644','Uranus':'\u2645','Neptune':'\u2646','Pluto':'\u2647'
+};
+
+function extrairPlanetas(hd) {
+const pers   = hd.Personality || {};
+const design = hd.Design      || {};
+return PLANET_ORDER.map(name => ({
+name, pt: PLANET_PT[name]||name, sym: PLANET_SYM[name]||'',
+pers:   pers[name]   && pers[name].Gate   ? pers[name].Gate   + '.' + pers[name].Line   : '-',
+design: design[name] && design[name].Gate  ? design[name].Gate + '.' + design[name].Line : '-',
+}));
+}
+
+function extrairPortoesCanais(hd) {
+let portoes = [];
+if (hd.ActiveGates && hd.ActiveGates.length) {
+portoes = hd.ActiveGates.map(Number);
+} else {
+const seen = {};
+const add = side => Object.values(side).forEach(p => {
+if (p && p.Gate && !seen[p.Gate]) { seen[p.Gate]=true; portoes.push(+p.Gate); }
+});
+if (hd.Personality) add(hd.Personality);
+if (hd.Design) add(hd.Design);
+}
+let canais = [];
+const raw = hd.ActiveChannels || hd.Channels || hd.channels || [];
+console.log('[canais] raw type:', typeof raw, 'length:', raw.length, 'sample:', JSON.stringify(raw[0]));
+raw.forEach(c => {
+if (typeof c === 'string') canais.push(c);
+else if (c && c.id) canais.push(String(c.id));
+else if (c && c.Gate1 && c.Gate2) canais.push(c.Gate1 + '-' + c.Gate2);
+else if (c && c.gate1 && c.gate2) canais.push(c.gate1 + '-' + c.gate2);
+else canais.push(JSON.stringify(c));
+});
+return { portoes, canais };
+}
+
+function getSetas(hd) {
+const v = hd.Variables || {};
+return { tl:v.Digestion||'left', tr:v.Perspective||'left', bl:v.Environment||'left', br:v.Awareness||'left' };
+}
+
+const CENTER_SVG_MAP = {
+  'head center':        ['head', 'Head'],
+  'ajna center':        ['ajna', 'Ajna', 'mind'],
+  'throat center':      ['throat', 'Throat'],
+  'g center':           ['g-center', 'gcenter', 'g_center', 'identity', 'Identity', 'self', 'Self', 'G Center', 'G-Center'],
+  'heart center':       ['heart', 'Heart', 'ego', 'Ego', 'will', 'Will'],
+  'sacral center':      ['sacral', 'Sacral'],
+  'solar plexus center':['solar', 'Solar', 'solarplexus', 'solar-plexus', 'Solar Plexus', 'emotional', 'Emotional'],
+  'splenic center':     ['spleen', 'Spleen', 'splenic', 'Splenic'],
+  'root center':        ['root', 'Root'],
+};
+
+function colorirCentrosSVG(svg, definedCenters, openCenters) {
+  if (!svg) return svg;
+
+  const DEFINED_COLOR = '#C8C8C8';
+  const OPEN_COLOR    = '#FFFFFF';
+
+  const definedSet = new Set((definedCenters || []).map(c => c.toLowerCase()));
+  const openSet    = new Set((openCenters    || []).map(c => c.toLowerCase()));
+
+  Object.entries(CENTER_SVG_MAP).forEach(([apiName, svgIds]) => {
+    const isDefined = definedSet.has(apiName);
+    const isOpen    = openSet.has(apiName);
+    const targetColor = isDefined ? DEFINED_COLOR : (isOpen ? OPEN_COLOR : null);
+
+    if (!targetColor) return;
+
+    svgIds.forEach(svgId => {
+      const idRegex = new RegExp(
+        '(<[^>]*\\bid\\s*=\\s*["\'][^"\']*' + escapeRegex(svgId) + '[^"\']*["\'][^>]*)(fill\\s*=\\s*["\'][^"\']*["\'])',
+        'gi'
+      );
+      svg = svg.replace(idRegex, function(match, before, fillAttr) {
+        return before + 'fill="' + targetColor + '"';
       });
 
-      const json = await res.json();
-
-      if (!res.ok) throw new Error(json.error || 'Erro desconhecido');
-
-      // Sucesso — esconde form, exibe confirmação
-      document.getElementById('hd-form').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-
-    } catch (err) {
-      console.error(err);
-      label.textContent = 'Erro ao enviar — tente novamente';
-      btn.disabled = false;
-    }
+      const classRegex = new RegExp(
+        '(<[^>]*\\bclass\\s*=\\s*["\'][^"\']*' + escapeRegex(svgId) + '[^"\']*["\'][^>]*)(fill\\s*=\\s*["\'][^"\']*["\'])',
+        'gi'
+      );
+      svg = svg.replace(classRegex, function(match, before, fillAttr) {
+        return before + 'fill="' + targetColor + '"';
+      });
+    });
   });
-</script>
-</body>
-</html>
+
+  return svg;
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// — PDF ———————————————————————–
+function buildPdf(nome, data, hora, local, hd, planetas, portoes, canais, sv) {
+return new Promise((resolve, reject) => {
+const PDFDoc   = require('pdfkit');
+const SVGtoPDF = require('svg-to-pdfkit');
+const chunks   = [];
+
+const doc = new PDFDoc({ size: 'A4', layout: 'landscape', margin: 0,
+  info: { Title: 'Mapa de Desenho Humano', Author: 'Vida Autoral' } });
+
+doc.on('data',  c => chunks.push(c));
+doc.on('end',   () => resolve(Buffer.concat(chunks)));
+doc.on('error', reject);
+
+const fontPath = require('path').join(process.cwd(), 'fonts', 'DejaVuSans.ttf');
+doc.registerFont('DejaVu', fontPath);
+
+const W = 841.89, H = 595.28;
+const DIVIDER = 490;
+const COL_W   = 72;
+const PILL_H  = 20;
+const PILL_W  = COL_W - 6;
+const HEADER_H = 41.4;
+const FOOTER_H = 20;
+const PAD_TOP  = 30;
+const PAD_BOT  = 20;
+const CONTENT_Y0 = HEADER_H + PAD_TOP;
+const CONTENT_Y1 = H - FOOTER_H - PAD_BOT;
+const AREA_H     = CONTENT_Y1 - CONTENT_Y0;
+const CHART_X0 = COL_W;
+const CHART_W  = DIVIDER - COL_W * 2;
+
+const props = hd.Properties || {};
+
+const COFFEE    = '#9B7D61';
+const PEACH     = '#DAA38F';
+const EUCALYPT  = '#92ADA4';
+const WHEAT     = '#E9D7C0';
+const SALMON    = '#C7826F';
+const MINT      = '#7DAAA0';
+const GRAY_LT   = '#F5F4F2';
+const TEXT_DARK = '#2E2419';
+const TEXT_MED  = '#6B5A4B';
+
+doc.rect(0, 0, W, H).fill('#ffffff');
+
+doc.rect(0, 0, DIVIDER, 64.4).fill(WHEAT);
+
+const LOGO_SIZE = 21.165;
+const LOGO_VB_W = 237.7;
+const LOGO_VB_H = 204.8;
+const LOGO_X = 10;
+const LOGO_SCALE = LOGO_SIZE / LOGO_VB_H;
+const LOGO_RENDER_W = LOGO_VB_W * LOGO_SCALE;
+const LOGO_Y = 32.01 - LOGO_SIZE / 2;
+const TEXT_X_HDR = LOGO_X + LOGO_RENDER_W + 8;
+
+const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="130.9 152.0 237.7 204.8">'
+  + '<path fill="' + COFFEE + '" d="M142.405 152.52C151.92 152.039 165.173 152.42 174.981 152.422L236.611 152.432L314.743 152.431C328.203 152.43 343.15 152.088 356.483 152.509C354.808 156.741 352.265 160.165 349.989 164.067C348.253 167.044 346.565 170.05 344.831 173.034L318.228 218.611L276.955 289.203L265.017 309.681C262.355 314.267 259.825 318.919 256.848 323.298C254.997 319.411 253.687 319.347 256.01 315.144L324.575 197.707C329.203 189.678 333.876 181.676 338.596 173.701C341.81 168.246 344.986 163.088 347.964 157.489L150 157.482C152.452 160.913 154.682 164.84 156.554 168.614C155.403 168.708 151.975 169.117 151.432 168.466C149.082 165.65 142.766 155.641 142.405 152.52Z"/>'
+  + '<path fill="' + COFFEE + '" d="M351.345 174.796C354.065 174.489 365.579 174.747 368.614 174.834C365.768 180.642 361.518 187.034 358.141 192.706C351.982 203.06 345.882 213.449 339.84 223.872L288.55 311.615C279.773 326.578 270.734 341.723 262.138 356.788C258.643 351.045 255.289 344.95 251.813 339.134L189.817 234.06C182.18 221.192 174.394 207.152 166.431 194.638C164.409 191.401 162.657 188.569 161.115 185.053C164.643 184.635 165.955 184.069 168.018 187.429C170.791 191.945 173.43 196.545 176.11 201.118L190.636 225.654L245.29 318.625L254.717 334.652C257.533 339.509 258.747 342.474 262.382 346.886C265.167 340.866 268.027 336.737 271.339 331.097L285.711 306.49L333.522 224.746L350.348 196.118C353.628 190.509 356.854 185.448 359.787 179.633C356.416 179.79 351.01 179.533 347.418 179.526C348.529 177.15 348.882 175.785 351.345 174.796Z"/>'
+  + '<path fill="' + COFFEE + '" d="M158.881 174.873L264.701 174.666C278.921 174.77 293.141 174.8 307.361 174.755C315.263 174.762 323.166 174.905 331.064 174.738C328.021 179.25 329.806 179.67 323.158 179.724C318.88 179.759 314.455 179.592 310.18 179.591L285.336 179.695L207.965 179.707L162.471 179.684C155.847 179.679 145.365 179.974 138.938 179.549C140.839 183.586 143.332 187.438 145.653 191.257C148.519 195.986 151.358 200.732 154.169 205.494L186.272 260.112L222.663 321.648C224.828 325.362 227.046 329.045 229.318 332.695C232.322 337.458 235.301 341.663 237.477 346.905C238.746 344.948 242.085 339.304 243.261 337.947L243.673 337.997C244.923 338.931 245.375 340.407 245.949 341.839C244.924 345.229 239.687 352.76 237.725 356.763C236.91 354.882 235.872 353.092 234.874 351.303C227.798 338.622 219.946 326.394 212.571 313.889L151.536 210.65L138.424 188.541C136.166 184.76 132.368 178.925 130.931 175.05C133.294 174.863 136.011 175.07 138.444 175.005C145.192 174.824 152.175 175.156 158.881 174.873Z"/>'
+  + '</svg>';
+
+SVGtoPDF(doc, LOGO_SVG, LOGO_X, LOGO_Y, { width: LOGO_RENDER_W, height: LOGO_SIZE });
+
+doc.font('DejaVu').fontSize(12.65).fillColor(COFFEE)
+   .text('VIDA AUTORAL', TEXT_X_HDR, 20.7, { lineBreak: false, characterSpacing: 1 });
+doc.font('DejaVu').fontSize(6.325).fillColor(TEXT_MED)
+   .text('MAPA DO DESENHO HUMANO', TEXT_X_HDR, 37, { lineBreak: false, characterSpacing: 1 });
+
+const pillStepBase = PILL_H + (AREA_H / PLANET_ORDER.length - PILL_H) / 2;
+const pillStep = pillStepBase * 1.144;
+const pillsTotalH = PLANET_ORDER.length * pillStep;
+const pillsStartY = H / 2 - pillsTotalH / 2 + 10;
+
+const labelY = pillsStartY - 5;
+doc.font('DejaVu').fontSize(7).fillColor(SALMON)
+   .text('DESIGN', 0, labelY, { width: COL_W, align: 'center', lineBreak: false });
+doc.font('DejaVu').fontSize(7).fillColor(MINT)
+   .text('PERSONALIDADE', DIVIDER - COL_W, labelY, { width: COL_W, align: 'center', lineBreak: false });
+
+planetas.forEach((p, i) => {
+  const pillTop = pillsStartY + i * pillStep + (pillStep - PILL_H) / 2;
+
+  const dActive = p.design !== '-';
+  doc.roundedRect(3, pillTop, PILL_W, PILL_H, 4)
+     .fill(dActive ? SALMON : GRAY_LT);
+  if (p.sym) {
+    doc.font('DejaVu').fontSize(11).fillColor('#ffffff')
+       .text(p.sym, 5, pillTop + 4, { lineBreak: false });
+  }
+  if (dActive) {
+    doc.font('DejaVu').fontSize(8).fillColor('#ffffff')
+       .text(p.design, 19, pillTop + 6, { lineBreak: false });
+  }
+
+  const prActive = p.pers !== '-';
+  const px2 = DIVIDER - COL_W + 3;
+  doc.roundedRect(px2, pillTop, PILL_W, PILL_H, 4)
+     .fill(prActive ? MINT : GRAY_LT);
+  if (p.sym) {
+    doc.font('DejaVu').fontSize(11).fillColor('#ffffff')
+       .text(p.sym, px2 + 2, pillTop + 4, { lineBreak: false });
+  }
+  if (prActive) {
+    doc.font('DejaVu').fontSize(8).fillColor('#ffffff')
+       .text(p.pers, px2 + 16, pillTop + 6, { lineBreak: false });
+  }
+});
+
+const chartX = CHART_X0;
+const chartY = CONTENT_Y0;
+if (hd.SVG) {
+  try {
+    let svg = hd.SVG;
+
+    svg = colorirCentrosSVG(svg, hd.DefinedCenters || [], hd.OpenCenters || []);
+
+    const vb = svg.match(/viewbox=["']([^"']+)["']/i);
+    let vbW = 400, vbH = 694;
+    if (vb) {
+      const parts = vb[1].trim().split(/[\s,]+/);
+      vbW = parseFloat(parts[2]) || 400;
+      vbH = parseFloat(parts[3]) || 694;
+    }
+
+    const scaleX = CHART_W / vbW;
+    const scaleY = AREA_H / vbH;
+    const baseScale = Math.min(scaleX, scaleY);
+    const scale = baseScale * 1.20;
+    const fitW = vbW * scale;
+    const fitH = vbH * scale;
+
+    const areaCenterX = (COL_W + (DIVIDER - COL_W)) / 2;
+    const areaCenterY = H / 2;
+    const CHART_OFFSET_X = 38;
+    const CHART_OFFSET_Y = 90;
+    const cx = areaCenterX - fitW / 2 + CHART_OFFSET_X;
+    const cy = areaCenterY - fitH / 2 + CHART_OFFSET_Y;
+
+    doc.save();
+    doc.translate(cx, cy);
+    doc.scale(scale);
+    svg = svg.replace(/<svg([^>]*)>/, function(m, attrs) {
+      attrs = attrs.replace(/\s+width\s*=\s*["'][^"']*["']/gi, '');
+      attrs = attrs.replace(/\s+height\s*=\s*["'][^"']*["']/gi, '');
+      return '<svg' + attrs + '>';
+    });
+    SVGtoPDF(doc, svg, 0, 0);
+    doc.restore();
+
+    console.log('[PDF] Bodygraph: vb=' + vbW + 'x' + vbH + ' scale=' + scale.toFixed(3) + ' fit=' + fitW.toFixed(0) + 'x' + fitH.toFixed(0) + ' pos=(' + cx.toFixed(0) + ',' + cy.toFixed(0) + ')');
+    console.log('[PDF] Layout: COL_W=' + COL_W + ' DIVIDER=' + DIVIDER + ' CHART_X0=' + CHART_X0 + ' CHART_W=' + CHART_W);
+    console.log('[PDF] Center: areaCenterX=' + areaCenterX.toFixed(1) + ' areaCenterY=' + areaCenterY.toFixed(1));
+    console.log('[PDF] SVG viewBox raw:', (hd.SVG.match(/viewbox=["']([^"']+)["']/i) || ['','none'])[1]);
+    console.log('[PDF] Fit bounds: x=[' + cx.toFixed(1) + ' .. ' + (cx+fitW).toFixed(1) + '] y=[' + cy.toFixed(1) + ' .. ' + (cy+fitH).toFixed(1) + ']');
+    console.log('[PDF] Page H=' + H + ' halfH=' + (H/2).toFixed(1));
+    var allX = [], allY = [];
+    (hd.SVG.match(/\bcx=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/cx=["']/i,''));
+      if (!isNaN(v)) allX.push(v);
+    });
+    (hd.SVG.match(/\bcy=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/cy=["']/i,''));
+      if (!isNaN(v)) allY.push(v);
+    });
+    (hd.SVG.match(/\bx=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/x=["']/i,''));
+      if (!isNaN(v)) allX.push(v);
+    });
+    (hd.SVG.match(/\by=["']([^"']+)["']/gi) || []).forEach(function(m) {
+      var v = parseFloat(m.replace(/y=["']/i,''));
+      if (!isNaN(v)) allY.push(v);
+    });
+    if (allX.length && allY.length) {
+      var minX = Math.min.apply(null, allX), maxX = Math.max.apply(null, allX);
+      var minY = Math.min.apply(null, allY), maxY = Math.max.apply(null, allY);
+      var contentCenterX = (minX + maxX) / 2;
+      var contentCenterY = (minY + maxY) / 2;
+      var vbCenterX = vbW / 2;
+      var vbCenterY = vbH / 2;
+      console.log('[PDF] SVG content bbox: x=[' + minX.toFixed(1) + '..' + maxX.toFixed(1) + '] y=[' + minY.toFixed(1) + '..' + maxY.toFixed(1) + ']');
+      console.log('[PDF] SVG content center: (' + contentCenterX.toFixed(1) + ',' + contentCenterY.toFixed(1) + ') vs viewBox center: (' + vbCenterX.toFixed(1) + ',' + vbCenterY.toFixed(1) + ')');
+      console.log('[PDF] SVG offset needed: dx=' + (vbCenterX - contentCenterX).toFixed(1) + ' dy=' + (vbCenterY - contentCenterY).toFixed(1));
+    }
+  } catch(e) {
+    console.error('[PDF] SVGtoPDF erro:', e.message);
+  }
+}
+
+const arrowY1 = chartY + AREA_H * 0.06 + 30;
+const arrowY2 = chartY + AREA_H * 0.12 + 30;
+const chartCenterX = (COL_W + (DIVIDER - COL_W)) / 2;
+const lgc   = COL_W + 30;
+const rgc   = (DIVIDER - COL_W) - 30;
+
+function seta(cx, cy, dir, cor) {
+  const W2=12, H2=5;
+  doc.strokeColor(cor).lineWidth(2);
+  if (dir==='right') {
+    const tip = cx + W2/2;
+    doc.moveTo(tip-W2, cy).lineTo(tip, cy).stroke();
+    doc.moveTo(tip, cy).lineTo(tip-6, cy-H2).stroke();
+    doc.moveTo(tip, cy).lineTo(tip-6, cy+H2).stroke();
+  } else {
+    const tip = cx - W2/2;
+    doc.moveTo(tip+W2, cy).lineTo(tip, cy).stroke();
+    doc.moveTo(tip, cy).lineTo(tip+6, cy-H2).stroke();
+    doc.moveTo(tip, cy).lineTo(tip+6, cy+H2).stroke();
+  }
+}
+seta(lgc, arrowY1, sv.tl, SALMON);
+seta(rgc, arrowY1, sv.tr, MINT);
+seta(lgc, arrowY2, sv.bl, SALMON);
+seta(rgc, arrowY2, sv.br, MINT);
+
+const DX = DIVIDER + 14;
+const DW = W - DIVIDER - 20;
+
+doc.rect(DIVIDER, 0, W - DIVIDER, 64.4).fill(COFFEE);
+
+const nomeDisplay = nome.length > 28 ? nome.slice(0,28)+'...' : nome;
+doc.font('DejaVu').fontSize(14.95).fillColor('#ffffff')
+   .text(nomeDisplay.toUpperCase(), DX, 19.3, { lineBreak: false, characterSpacing: 1 });
+
+doc.font('DejaVu').fontSize(6.9).fillColor(WHEAT)
+   .text(local + '  \u00b7  ' + data + '  \u00b7  ' + hora, DX, 38, { lineBreak: false, characterSpacing: 1 });
+
+const rawTipo       = props.Type && props.Type.id;
+const rawEstrategia = props.Strategy && props.Strategy.id;
+const rawAutoridade = props.InnerAuthority && props.InnerAuthority.id;
+const rawPerfilRaw  = (props.Profile && props.Profile.id) || null;
+const rawPerfil     = rawPerfilRaw ? rawPerfilRaw.replace(/\s/g, '') : null;
+const rawDefinicao  = props.Definition && props.Definition.id;
+const rawAssinatura = props.Signature && props.Signature.id;
+const rawNaoSelf    = props.NotSelfTheme && props.NotSelfTheme.id;
+
+const tipoObj = getTipoObj(rawTipo);
+
+const COL_GAP     = 10;
+const CW2        = (DW / 2) - (COL_GAP / 2);
+const TIPO_H     = 75;
+const CARD_H     = 60;
+const ROW_H      = CARD_H + 9;
+const CARDS_START_Y = 95;
+
+const tipoY = CARDS_START_Y;
+doc.roundedRect(DX, tipoY, DW, TIPO_H, 5).fill(GRAY_LT);
+
+doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
+   .text('TIPO', DX+6, tipoY+7, { lineBreak: false, characterSpacing: 1 });
+
+doc.font('DejaVu').fontSize(11).fillColor(TEXT_DARK)
+   .text(tr(rawTipo) || '-', DX+6, tipoY+17, { lineBreak: false });
+
+if (tipoObj) {
+  doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
+     .text(tipoObj.descricao, DX+6, tipoY+32, { width: DW - 12, lineBreak: true, ellipsis: true });
+
+  const afterDesc = doc.y + 5;
+  doc.font('DejaVu').fontSize(6.5).fillColor(COFFEE)
+     .text('\u201C' + tipoObj.fraseIdentidade + '\u201D', DX+6, afterDesc, { width: DW - 12, lineBreak: true, ellipsis: true });
+}
+
+const LABELS = [
+  ['Estrat\u00e9gia',  tr(rawEstrategia),  getDesc('estrategia', rawEstrategia)],
+  ['Autoridade',        tr(rawAutoridade),  getDesc('autoridade', rawAutoridade)],
+  ['Perfil',            rawPerfilRaw || '-',   getDesc('perfil', rawPerfil)],
+  ['Defini\u00e7\u00e3o', tr(rawDefinicao), getDesc('definicao',  rawDefinicao)],
+  ['Assinatura',        tr(rawAssinatura),  getDesc('assinatura', rawAssinatura)],
+  ['N\u00e3o-Self / Frustra\u00e7\u00e3o', tr(rawNaoSelf), getDesc('naoself', rawNaoSelf)],
+];
+
+const GRID_START_Y = tipoY + TIPO_H + 9;
+
+LABELS.forEach(([label, val, desc], i) => {
+  const col = i % 2;
+  const row = Math.floor(i / 2);
+  const lx = DX + col * (CW2 + COL_GAP);
+  const ly = GRID_START_Y + row * ROW_H;
+
+  doc.roundedRect(lx, ly, CW2, CARD_H, 5).fill(GRAY_LT);
+
+  doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
+     .text(label.toUpperCase(), lx+6, ly+7, { lineBreak: false, characterSpacing: 1 });
+
+  doc.font('DejaVu').fontSize(10).fillColor(TEXT_DARK)
+     .text((val||'-').slice(0, 28), lx+6, ly+17, { lineBreak: false });
+
+  if (desc) {
+    doc.font('DejaVu').fontSize(6.5).fillColor(TEXT_MED)
+       .text(desc, lx+6, ly+31, { width: CW2 - 12, height: CARD_H - 33, lineBreak: true, ellipsis: true });
+  }
+});
+
+const cruzRaw  = (props.IncarnationCross && props.IncarnationCross.id) || '-';
+const cruzY    = GRID_START_Y + Math.ceil(LABELS.length / 2) * ROW_H;
+const cruzVal  = traduzirCruz(cruzRaw);
+const CRUZ_H   = 36;
+
+doc.roundedRect(DX, cruzY, DW, CRUZ_H, 5).fill(GRAY_LT);
+doc.font('DejaVu').fontSize(6).fillColor(TEXT_MED)
+   .text('CRUZ DE ENCARNA\u00c7\u00c3O', DX+6, cruzY+7, { lineBreak: false, characterSpacing: 1 });
+doc.font('DejaVu').fontSize(10).fillColor(TEXT_DARK)
+   .text(cruzVal, DX+6, cruzY+17, { width: DW - 12, lineBreak: false, ellipsis: true });
+
+let secY = cruzY + CRUZ_H + 8;
+doc.font('DejaVu').fontSize(6).fillColor(COFFEE)
+   .text('PORT\u00d5ES ATIVADOS', DX, secY);
+let bx = DX, by2 = secY + 12;
+portoes.slice().sort((a,b)=>a-b).forEach(g => {
+  const lbl = String(g);
+  const bw = lbl.length * 5.5 + 10;
+  if (bx + bw > W - 10) { bx = DX; by2 += 16; }
+  doc.roundedRect(bx, by2, bw, 13, 6).fill(EUCALYPT);
+  doc.font('DejaVu').fontSize(7).fillColor('#ffffff')
+     .text(lbl, bx+5, by2+2, { lineBreak: false });
+  bx += bw + 4;
+});
+
+let cy3 = by2 + 22;
+doc.font('DejaVu').fontSize(6).fillColor(COFFEE)
+   .text('CANAIS ATIVADOS', DX, cy3);
+let cx3 = DX; cy3 += 12;
+canais.forEach(c => {
+  const lbl = String(c);
+  const cw  = lbl.length * 5 + 10;
+  if (cx3 + cw > W - 10) { cx3 = DX; cy3 += 16; }
+  doc.roundedRect(cx3, cy3, cw, 13, 4).fill(WHEAT);
+  doc.font('DejaVu').fontSize(7).fillColor(TEXT_MED)
+     .text(lbl, cx3+5, cy3+2, { lineBreak: false });
+  cx3 += cw + 4;
+});
+
+doc.font('DejaVu').fontSize(5.5).fillColor(TEXT_MED)
+   .text('\u00a9 2026 Vida Autoral . Todos os direitos reservados', 300, H - FOOTER_H + 4, { lineBreak: false });
+
+doc.end();
+
+});
+}
+
+// — EMAIL HTML —————————————————————
+const CSS = '<style>'
++ 'body{margin:0;background:#f5f0eb;font-family:Georgia,serif}'
++ '.w{max-width:680px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden}'
++ '.h{background:#9B7D61;padding:24px 32px;display:flex;align-items:center;gap:14px}'
++ '.h h1{color:#fff;margin:0;font-size:18px;letter-spacing:2px;font-weight:400}'
++ '.b{padding:28px 32px}'
++ '.b p{color:#2E2419;line-height:1.7;font-size:15px}'
++ '.info{background:#FEF3E8;border-left:3px solid #DAA38F;padding:12px 16px;border-radius:0 8px 8px 0;margin:18px 0;font-size:14px;color:#6B5A4B}'
++ '.f{background:#F6F4F2;padding:14px 32px;text-align:center;font-size:11px;color:#9B7D61}'
++ '</style>';
+  const LOGO = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 500 500"><path fill="white" d="M142.405 152.52C151.92 152.039 165.173 152.42 174.981 152.422L236.611 152.432L314.743 152.431C328.203 152.43 343.15 152.088 356.483 152.509C354.808 156.741 352.265 160.165 349.989 164.067C348.253 167.044 346.565 170.05 344.831 173.034L318.228 218.611L276.955 289.203L265.017 309.681C262.355 314.267 259.825 318.919 256.848 323.298C254.997 319.411 253.687 319.347 256.01 315.144L324.575 197.707C329.203 189.678 333.876 181.676 338.596 173.701C341.81 168.246 344.986 163.088 347.964 157.489L150 157.482C152.452 160.913 154.682 164.84 156.554 168.614C155.403 168.708 151.975 169.117 151.432 168.466C149.082 165.65 142.766 155.641 142.405 152.52Z"/><path fill="white" d="M351.345 174.796C354.065 174.489 365.579 174.747 368.614 174.834C365.768 180.642 361.518 187.034 358.141 192.706C351.982 203.06 345.882 213.449 339.84 223.872L288.55 311.615C279.773 326.578 270.734 341.723 262.138 356.788C258.643 351.045 255.289 344.95 251.813 339.134L189.817 234.06C182.18 221.192 174.394 207.152 166.431 194.638C164.409 191.401 162.657 188.569 161.115 185.053C164.643 184.635 165.955 184.069 168.018 187.429C170.791 191.945 173.43 196.545 176.11 201.118L190.636 225.654L245.29 318.625L254.717 334.652C257.533 339.509 258.747 342.474 262.382 346.886C265.167 340.866 268.027 336.737 271.339 331.097L285.711 306.49L333.522 224.746L350.348 196.118C353.628 190.509 356.854 185.448 359.787 179.633C356.416 179.79 351.01 179.533 347.418 179.526C348.529 177.15 348.882 175.785 351.345 174.796Z"/><path fill="white" d="M158.881 174.873L264.701 174.666C278.921 174.77 293.141 174.8 307.361 174.755C315.263 174.762 323.166 174.905 331.064 174.738C328.021 179.25 329.806 179.67 323.158 179.724C318.88 179.759 314.455 179.592 310.18 179.591L285.336 179.695L207.965 179.707L162.471 179.684C155.847 179.679 145.365 179.974 138.938 179.549C140.839 183.586 143.332 187.438 145.653 191.257C148.519 195.986 151.358 200.732 154.169 205.494L186.272 260.112L222.663 321.648C224.828 325.362 227.046 329.045 229.318 332.695C232.322 337.458 235.301 341.663 237.477 346.905C238.746 344.948 242.085 339.304 243.261 337.947L243.673 337.997C244.923 338.931 245.375 340.407 245.949 341.839C244.924 345.229 239.687 352.76 237.725 356.763C236.91 354.882 235.872 353.092 234.874 351.303C227.798 338.622 219.946 326.394 212.571 313.889L151.536 210.65L138.424 188.541C136.166 184.76 132.368 178.925 130.931 175.05C133.294 174.863 136.011 175.07 138.444 175.005C145.192 174.824 152.175 175.156 158.881 174.873Z"/></svg>';
+
+function emailConfirmacao(nome, data, hora, local, telefone) {
+return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body>'
++ '<div class="w"><div class="h">' + LOGO + '<h1>VIDA AUTORAL</h1></div>'
++ '<div class="b"><p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
++ '<p>Recebemos seus dados. Seu mapa est\u00e1 sendo gerado e chegar\u00e1 em breve.</p>'
++ '<div class="info">\ud83d\udcc5 ' + data + ' \u00b7 \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + (telefone ? '<br>\ud83d\udcf1 ' + telefone : '') + '</div>'
++ '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
++ '</div><div class="f">\u00a9 2026 Vida Autoral</div></div></body></html>';
+}
+
+function emailPdf(nome, data, hora, local, telefone) {
+return '<!DOCTYPE html><html><head><meta charset="utf-8">' + CSS + '</head><body>'
++ '<div class="w"><div class="h">' + LOGO + '<h1>VIDA AUTORAL</h1></div>'
++ '<div class="b"><p>Ol\u00e1, <strong>' + nome + '</strong>!</p>'
++ '<p>Seu Mapa de Desenho Humano est\u00e1 pronto \ud83c\udf81 O PDF completo com seu gr\u00e1fico Bodygraph est\u00e1 em anexo.</p>'
++ '<div class="info">\ud83d\udcc5 ' + data + ' \u00b7 \ud83d\udd54 ' + hora + '<br>\ud83d\udccd ' + local + (telefone ? '<br>\ud83d\udcf1 ' + telefone : '') + '</div>'
++ '<p>O PDF inclui: Tipo, Estrat\u00e9gia, Autoridade, Perfil, Defini\u00e7\u00e3o, planetas Design e Personalidade, setas do Variable, Port\u00f5es e Canais ativados.</p>'
++ '<p style="font-size:.83rem;color:#9b836f">Com carinho,<br><strong>Equipe Vida Autoral</strong></p>'
++ '</div><div class="f">\u00a9 2026 Vida Autoral</div></div></body></html>';
+}
+
+// — RESEND —————————————————————––
+async function sendEmail(to, subject, html, attachments) {
+const body = {
+from: FROM_NAME + ' <' + FROM_EMAIL + '>',
+to: [to], reply_to: REPLY_TO, subject, html,
+};
+if (attachments && attachments.length) body.attachments = attachments;
+const res = await fetch('https://api.resend.com/emails', {
+method:'POST',
+headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+RESEND_API_KEY },
+body: JSON.stringify(body),
+});
+if (!res.ok) throw new Error('Resend: ' + JSON.stringify(await res.json()));
+return res.json();
+}
+
+// — PARSE BODY —————————————————————
+async function parseBody(req) {
+if (req.body && typeof req.body === 'object') return req.body;
+return new Promise((resolve, reject) => {
+let raw = '';
+req.on('data', c => { raw += c; });
+req.on('end',  () => { try { resolve(JSON.parse(raw||'{}')); } catch(e) { resolve({}); } });
+req.on('error', reject);
+});
+}
+
+// — HANDLER ——————————————————————
+async function handler(req, res) {
+if (req.method !== 'POST') return res.status(405).json({ error:'Method not allowed' });
+res.setHeader('Access-Control-Allow-Origin', '*');
+
+const body = await parseBody(req);
+const { nome, email, telefone, data, hora, local } = body;
+if (!nome||!email||!data||!hora||!local)
+return res.status(400).json({ error:'Todos os campos sao obrigatorios.' });
+
+try {
+console.log('[1] Iniciando para', email, '| tel:', telefone || 'n/a');
+await sendEmail(email, nome+', recebemos seus dados \u2605', emailConfirmacao(nome,data,hora,local,telefone));
+console.log('[2] Confirmacao enviada');
+
+const timezone = await resolveTimezone(local);
+console.log('[3] Timezone:', timezone);
+
+const hd = await fetchHDData(data, hora, timezone);
+const tipo = hd.Properties && hd.Properties.Type && hd.Properties.Type.id;
+console.log('[4] HD ok. Tipo:', tipo, '| SVG:', (hd.SVG||'').length, 'chars');
+console.log('[4b] DefinedCenters:', JSON.stringify(hd.DefinedCenters));
+console.log('[4c] OpenCenters:', JSON.stringify(hd.OpenCenters));
+
+const planetas = extrairPlanetas(hd);
+const { portoes, canais } = extrairPortoesCanais(hd);
+const sv = getSetas(hd);
+
+const pdfBytes  = await buildPdf(nome, data, hora, local, hd, planetas, portoes, canais, sv);
+const pdfBase64 = Buffer.from(pdfBytes).toString('base64');
+console.log('[5] PDF gerado:', pdfBytes.length, 'bytes');
+
+const primeiroNome = nome.split(' ')[0].toLowerCase();
+await sendEmail(
+  email,
+  nome + ', seu Mapa de Desenho Humano est\u00e1 pronto \u2605',
+  emailPdf(nome, data, hora, local, telefone),
+  [{ filename:'mapa-desenho-humano-'+primeiroNome+'.pdf', content:pdfBase64 }]
+);
+console.log('[6] PDF enviado com sucesso');
+
+return res.status(200).json({ ok:true });
+
+} catch(err) {
+console.error('[Erro]', err.message);
+return res.status(500).json({ error: err.message });
+}
+}
