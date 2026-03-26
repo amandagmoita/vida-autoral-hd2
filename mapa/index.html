@@ -941,18 +941,38 @@
 
     async function fetchCities(query) {
       try {
-        const url = 'https://secure.geonames.org/searchJSON?name_startsWith='
+        var base = 'https://secure.geonames.org/searchJSON?name_startsWith='
           + encodeURIComponent(query)
-          + '&featureClass=P&maxRows=8&orderby=population&lang=pt&username=vidaautoral';
-        const res = await fetch(url);
-        const data = await res.json();
+          + '&featureClass=P&orderby=population&lang=pt&username=vidaautoral';
 
-        if (!data.geonames || data.geonames.length === 0) {
+        // Busca Brasil e mundial em paralelo
+        var [resBR, resAll] = await Promise.all([
+          fetch(base + '&maxRows=8&country=BR'),
+          fetch(base + '&maxRows=8')
+        ]);
+
+        var dataBR  = await resBR.json();
+        var dataAll = await resAll.json();
+
+        var brCities    = (dataBR.geonames || []);
+        var allCities   = (dataAll.geonames || []);
+
+        // Filtra internacionais que não sejam BR (evita duplicatas)
+        var brIds = new Set(brCities.map(function(c) { return c.geonameId; }));
+        var intlCities = allCities.filter(function(c) {
+          return c.countryCode !== 'BR' && !brIds.has(c.geonameId);
+        });
+
+        // Monta lista: todas as BR primeiro, depois completa com internacionais até 8
+        var slotsLeft = Math.max(0, 8 - brCities.length);
+        var combined = brCities.concat(intlCities.slice(0, slotsLeft));
+
+        if (combined.length === 0) {
           closeDropdown();
           return;
         }
 
-        renderDropdown(data.geonames);
+        renderDropdown(combined);
       } catch (err) {
         console.error('Erro ao buscar cidades:', err);
         closeDropdown();
