@@ -990,18 +990,19 @@
 
         li.innerHTML = city.name + '<span class="city-country">' + region + ' \u2014 ' + city.countryName + '</span>';
         li.dataset.value = display;
+        li.dataset.cityName = city.name;
         li.dataset.index = i;
 
-        li.addEventListener('click', function() { selectCity(display); });
+        li.addEventListener('click', function() { selectCity(display, city.name); });
         dropdown.appendChild(li);
       });
 
       dropdown.classList.add('open');
     }
 
-    function selectCity(value) {
-      input.value = value;
-      hidden.value = value;
+    function selectCity(display, cityName) {
+      input.value = display;
+      hidden.value = cityName;
       input.classList.add('city-selected');
       closeDropdown();
     }
@@ -1026,7 +1027,7 @@
         updateActive(items);
       } else if (e.key === 'Enter' && selectedIndex >= 0) {
         e.preventDefault();
-        selectCity(items[selectedIndex].dataset.value);
+        selectCity(items[selectedIndex].dataset.value, items[selectedIndex].dataset.cityName);
       }
     });
 
