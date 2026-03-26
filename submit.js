@@ -14,11 +14,10 @@ const REPLY_TO          = process.env.REPLY_TO;
 const BODYGRAPH_API_KEY = process.env.BODYGRAPH_API_KEY;
 const BODYGRAPH_BASE    = 'https://api.bodygraphchart.com';
 
-// — KIT (ex-ConvertKit) ————————————————————
-const KIT_API_KEY     = process.env.KIT_API_KEY;
-const KIT_FORM_ID     = process.env.KIT_FORM_ID;
-const KIT_SEQUENCE_ID = process.env.KIT_SEQUENCE_ID;
-const KIT_TAG_ID      = process.env.KIT_TAG_ID;
+// — MAILCHIMP ——————————————————————
+const MC_API_KEY     = process.env.MAILCHIMP_API_KEY;
+const MC_SERVER      = process.env.MAILCHIMP_SERVER;      // ex: "us21"
+const MC_LIST_ID     = process.env.MAILCHIMP_LIST_ID;      // Audience ID
 
 // — TRADUCOES —————————————————————–
 const T = {
@@ -727,46 +726,62 @@ req.on('error', reject);
 });
 }
 
-// — KIT: ADICIONAR SUBSCRIBER À SEQUÊNCIA ——————————————————
-async function addToKit(email, firstName) {
-  if (!KIT_API_KEY) { console.warn('[Kit] API key não configurada, pulando...'); return; }
-  const headers = { 'Content-Type': 'application/json', 'X-Kit-Api-Key': KIT_API_KEY };
+// — MAILCHIMP: ADICIONAR SUBSCRIBER COM TAG ————————————————
+// O Mailchimp usa md5 do email em lowercase como subscriber hash
+function md5(str) {
+  const crypto = require('crypto');
+  return crypto.createHash('md5').update(str.toLowerCase()).digest('hex');
+}
+
+async function addToMailchimp(email, firstName) {
+  if (!MC_API_KEY || !MC_SERVER || !MC_LIST_ID) {
+    console.warn('[Mailchimp] Variáveis não configuradas, pulando...');
+    return;
+  }
+
+  const subscriberHash = md5(email);
+  const url = `https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}/members/${subscriberHash}`;
+
   try {
-    // 1. Criar subscriber
-    const r1 = await fetch('https://api.kit.com/v4/subscribers', {
-      method: 'POST', headers,
-      body: JSON.stringify({ email_address: email, first_name: firstName || '', state: 'active' }),
+    // PUT = add or update (não dá erro se já existir)
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + Buffer.from('anystring:' + MC_API_KEY).toString('base64'),
+      },
+      body: JSON.stringify({
+        email_address: email,
+        status_if_new: 'subscribed',
+        merge_fields: { FNAME: firstName || '' },
+        tags: ['mapa-hd'],
+      }),
     });
-    if (!r1.ok) { const e = await r1.json(); console.error('[Kit] Criar subscriber:', e); return; }
 
-    // 2. Adicionar ao form (tracking de origem)
-    if (KIT_FORM_ID) {
-      await fetch('https://api.kit.com/v4/forms/' + KIT_FORM_ID + '/subscribers', {
-        method: 'POST', headers,
-        body: JSON.stringify({ email_address: email }),
-      });
+    if (!res.ok) {
+      const e = await res.json();
+      console.error('[Mailchimp] Erro:', e.title, e.detail);
+      return;
     }
 
-    // 3. Adicionar tag "mapa-hd"
-    if (KIT_TAG_ID) {
-      await fetch('https://api.kit.com/v4/tags/' + KIT_TAG_ID + '/subscribers', {
-        method: 'POST', headers,
-        body: JSON.stringify({ email_address: email }),
-      });
-    }
+    // Adicionar tag separadamente (PUT acima não aplica tags em contatos existentes)
+    await fetch(
+      `https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}/members/${subscriberHash}/tags`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + Buffer.from('anystring:' + MC_API_KEY).toString('base64'),
+        },
+        body: JSON.stringify({
+          tags: [{ name: 'mapa-hd', status: 'active' }],
+        }),
+      }
+    );
 
-    // 4. Inscrever na sequência de 5 emails
-    if (KIT_SEQUENCE_ID) {
-      const r4 = await fetch('https://api.kit.com/v4/sequences/' + KIT_SEQUENCE_ID + '/subscribers', {
-        method: 'POST', headers,
-        body: JSON.stringify({ email_address: email }),
-      });
-      if (!r4.ok) { const e = await r4.json(); console.error('[Kit] Sequência:', e); return; }
-    }
-
-    console.log('[Kit] ✅', email, 'adicionado à sequência');
+    console.log('[Mailchimp] ✅', email, 'adicionado com tag mapa-hd');
   } catch (err) {
-    console.error('[Kit] ❌', err.message);
+    console.error('[Mailchimp] ❌', err.message);
   }
 }
 
@@ -811,12 +826,11 @@ await sendEmail(
 );
 console.log('[6] PDF enviado com sucesso');
 
-// [7] Adicionar ao Kit (sequência de 5 emails)
-// Roda sem await pra não atrasar a resposta ao usuário
-addToKit(email, nome.split(' ')[0]).catch(err =>
-  console.error('[Kit] Erro em background:', err.message)
+// [7] Adicionar ao Mailchimp (tag dispara automação de 5 emails)
+addToMailchimp(email, nome.split(' ')[0]).catch(err =>
+  console.error('[Mailchimp] Erro em background:', err.message)
 );
-console.log('[7] Kit: subscriber sendo adicionado à sequência');
+console.log('[7] Mailchimp: subscriber sendo adicionado');
 
 return res.status(200).json({ ok:true });
 
