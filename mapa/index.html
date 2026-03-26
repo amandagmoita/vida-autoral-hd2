@@ -538,8 +538,9 @@
       border-top: none;
       max-height: 220px;
       overflow-y: auto;
-      z-index: 50;
+      z-index: 100;
       display: none;
+      box-shadow: 0 8px 24px rgba(26,20,16,0.15);
     }
     .city-dropdown.open { display: block; }
     .city-dropdown li {
@@ -563,6 +564,10 @@
     }
     #local-input.city-selected {
       border-color: var(--eucalyptus);
+    }
+    .form-group.city-autocomplete-wrapper {
+      position: relative;
+      z-index: 10;
     }
 
     /* ── ANIMATIONS ──────────────────────────────────── */
@@ -659,7 +664,7 @@
         </div>
       </div>
 
-      <div class="form-group reveal reveal-delay-3" style="position:relative;">
+      <div class="form-group city-autocomplete-wrapper reveal reveal-delay-3">
         <label for="local-input">Cidade de nascimento</label>
         <input type="text" id="local-input" autocomplete="off" placeholder="Comece a digitar sua cidade…" required />
         <input type="hidden" id="local" name="local" />
