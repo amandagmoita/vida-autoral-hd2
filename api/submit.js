@@ -778,11 +778,13 @@ function extractStr(prop) {
 
 const tipoId       = extractStr(props.Type);
 const estrategiaId = extractStr(props.Strategy);
-const autoridadeId = extractStr(props.Authority);
+// A API usa InnerAuthority, não Authority
+const autoridadeId = extractStr(props.InnerAuthority) || extractStr(props.Authority);
 const perfilId     = extractStr(props.Profile);
 const definicaoId  = extractStr(props.Definition);
 const assinaturaId = extractStr(props.Signature);
-const naoselfId    = extractStr(props.NotSelf);
+// A API usa NotSelfTheme, não NotSelf
+const naoselfId    = extractStr(props.NotSelfTheme) || extractStr(props.NotSelf);
 const cruzRaw      = props.IncarnationCross
   ? (typeof props.IncarnationCross === 'string'
       ? props.IncarnationCross
@@ -790,6 +792,7 @@ const cruzRaw      = props.IncarnationCross
   : '';
 
 console.log('[payload] tipo:', tipoId, '| estrategia:', estrategiaId, '| autoridade:', autoridadeId, '| perfil:', perfilId);
+console.log('[payload] props.InnerAuthority raw:', JSON.stringify(props.InnerAuthority));
 console.log('[payload] props.Authority raw:', JSON.stringify(props.Authority));
 
 // SVG colorido com centros definidos/abertos
