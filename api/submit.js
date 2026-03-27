@@ -762,7 +762,7 @@ await sendEmail(
 );
 console.log('[6] PDF enviado com sucesso');
 
-return res.status(200).json({ ok:true });
+return res.status(200).json({ ok: true, mapa: mapaPayload });
 
 } catch(err) {
 console.error('[Erro]', err.message);
