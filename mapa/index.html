@@ -781,104 +781,38 @@
       font-size: 0.9rem;
     }
 
-    /* ── BODYGRAPH SECTION ───────────────────────────── */
-    .bodygraph-section {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 3rem 2rem 1rem;
-    }
-
-    .bodygraph-embed-wrap {
-      background: var(--white);
-      border: 1px solid rgba(155,125,97,0.2);
-      padding: 1rem;
-      overflow: hidden;
-    }
-    .bodygraph-embed-wrap svg { width:100%; height:auto; display:block; }
-    .mapa-tag-canal {
-      background: rgba(146,173,164,0.12);
-      border-color: var(--eucalyptus) !important;
-      color: #4a7a72 !important;
-    }
-
-    /* ── UPSELL WRAPPER (botão solto, sem card escuro) ── */
+    /* ── UPSELL CARD ─────────────────────────────────── */
     .upsell-wrapper {
       max-width: 640px;
       margin: 0 auto;
-      padding: 2rem 2rem 5rem;
+      padding: 0 2rem 5rem;
     }
 
-    .upsell-wrapper .upsell-urgency {
-      background: rgba(155,125,97,0.08);
-      border: 1px solid rgba(155,125,97,0.2);
-      margin-bottom: 1.4rem;
-    }
-
-    .upsell-wrapper .upsell-urgency span { color: #5a4535; }
-    .upsell-wrapper .upsell-urgency strong { color: var(--milky-coffee); }
-    .mapa-cards-section {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 0 2rem 2rem;
-    }
-
-    .mapa-cards-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--milky-coffee);
-      margin-bottom: 1.2rem;
-    }
-
-    .mapa-card {
-      background: var(--white);
-      border: 1px solid rgba(155,125,97,0.2);
-      padding: 1.6rem 1.6rem 0;
-      margin-bottom: 1rem;
+    .upsell-card {
+      background: var(--dark);
+      padding: 3rem 2.5rem;
       position: relative;
       overflow: hidden;
     }
-    .mapa-card::before {
+
+    .upsell-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: linear-gradient(to bottom, var(--roasted-peach), var(--milky-coffee));
+      top: -80px; right: -60px;
+      width: 240px; height: 240px;
+      border: 1px solid rgba(218,163,143,0.1);
+      border-radius: 50%;
+      pointer-events: none;
     }
-
-    .mapa-card-header {
-      display: flex;
-      align-items: baseline;
-      gap: 0.7rem;
-      margin-bottom: 0.4rem;
+    .upsell-card::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -70px;
+      width: 300px; height: 300px;
+      border: 1px solid rgba(155,125,97,0.07);
+      border-radius: 50%;
+      pointer-events: none;
     }
-
-    .mapa-card-topic {
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--milky-coffee);
-    }
-
-    .mapa-card-value {
-      font-family: 'Aboreto', cursive;
-      font-size: 1.05rem;
-      color: var(--dark);
-      margin-bottom: 0.5rem;
-    }
-
-    .mapa-card-preview {
-      font-size: 0.87rem;
-      line-height: 1.75;
-      color: #5a4535;
-      padding-bottom: 0.8rem;
-    }
-
-    .mapa-card-locked { display: none; }
-    .mapa-tags-locked { display: none; }
-
-    /* ── UPSELL CARD (mantido para referência, não usado na página) ── */
-    .upsell-card { display: none; }
 
     /* urgência */
     .upsell-urgency {
@@ -886,9 +820,11 @@
       align-items: center;
       gap: 0.7rem;
       padding: 0.7rem 1.1rem;
-      border: 1px solid rgba(155,125,97,0.2);
-      background: rgba(155,125,97,0.08);
-      margin-bottom: 1.4rem;
+      border: 1px solid rgba(218,163,143,0.2);
+      background: rgba(218,163,143,0.06);
+      margin-bottom: 1.8rem;
+      position: relative;
+      z-index: 1;
     }
 
     .urgency-dot {
@@ -908,10 +844,10 @@
       font-size: 0.78rem;
       font-weight: 200;
       letter-spacing: 0.08em;
-      color: #5a4535;
+      color: rgba(233,215,192,0.7);
     }
     .upsell-urgency strong {
-      color: var(--milky-coffee);
+      color: var(--roasted-peach);
       font-weight: 400;
     }
 
@@ -1469,72 +1405,69 @@
 
 <!-- Preview parcial de outros itens -->
 <p class="result-free-label result-reveal result-reveal-4" style="margin-bottom:0.8rem;">Seu mapa também contém</p>
-```
-
+<div class="result-preview-grid result-reveal result-reveal-4">
+  <div class="preview-card">
+    <p class="preview-card-label">Estratégia de Vida</p>
+    <p class="preview-card-content" id="result-strategy-text">Informar antes de agir elimina a resistência e abre espaço para seu impacto real no mundo.</p>
   </div>
-
-  <!-- BODYGRAPH EMBED -->
-
-  <div class="bodygraph-section result-reveal result-reveal-4">
-    <p class="result-free-label" style="margin-bottom:1rem;">Seu gráfico Bodygraph</p>
-    <div class="bodygraph-embed-wrap">
-      <div id="bodygraph-svg-wrap"></div>
-    </div>
+  <div class="preview-card locked">
+    <p class="preview-card-label">Autoridade Interior</p>
+    <p class="preview-card-content">Seu processo de decisão ideal envolve aguardar a clareza emocional antes de comprometer.</p>
+    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
   </div>
-
-  <!-- MAPA CARDS — dados reais, sem blur -->
-
-  <div class="mapa-cards-section result-reveal result-reveal-5">
-    <p class="result-free-label" style="margin-bottom:1.2rem;">Sua configuração energética</p>
-
-```
-<!-- Estratégia -->
-<div class="mapa-card">
-  <p class="mapa-card-topic">Estratégia</p>
-  <p class="mapa-card-value" id="mc-estrategia-valor">—</p>
-  <p class="mapa-card-preview" id="mc-estrategia-preview">—</p>
-</div>
-
-<!-- Autoridade -->
-<div class="mapa-card">
-  <p class="mapa-card-topic">Autoridade Interior</p>
-  <p class="mapa-card-value" id="mc-autoridade-valor">—</p>
-  <p class="mapa-card-preview" id="mc-autoridade-preview">—</p>
-</div>
-
-<!-- Perfil -->
-<div class="mapa-card">
-  <p class="mapa-card-topic">Perfil de Vida</p>
-  <p class="mapa-card-value" id="mc-perfil-valor">—</p>
-  <p class="mapa-card-preview" id="mc-perfil-preview">—</p>
-</div>
-
-<!-- Portões e Canais -->
-<div class="mapa-card">
-  <p class="mapa-card-topic">Portões &amp; Canais Ativados</p>
-  <p class="mapa-card-preview" style="padding-bottom:0.6rem;">Sua assinatura energética única:</p>
-  <div class="mapa-tags" id="mc-portoes-tags"></div>
+  <div class="preview-card locked">
+    <p class="preview-card-label">Centros Definidos</p>
+    <p class="preview-card-content">5 centros definidos indicam energia consistente em áreas específicas da sua vida.</p>
+    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+  </div>
+  <div class="preview-card locked">
+    <p class="preview-card-label">Perfil &amp; Propósito</p>
+    <p class="preview-card-content">Perfil 3/5 traz o papel de mártir e herético — aprendizado pelo experimento e por ser modelo.</p>
+    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+  </div>
 </div>
 ```
 
   </div>
 
-  <!-- BOTÃO ÚNICO DE UPSELL -->
+  <!-- UPSELL -->
 
-  <div class="upsell-wrapper result-reveal result-reveal-5">
-    <div class="upsell-urgency" style="margin-bottom:1.4rem;">
-      <div class="urgency-dot"></div>
-      <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
-    </div>
+  <div class="upsell-wrapper">
+    <div class="upsell-card result-reveal result-reveal-5">
 
 ```
-<button class="upsell-btn" id="upsell-btn">
-  <span>Quero desbloquear meu mapa completo →</span>
-</button>
+  <div class="upsell-urgency">
+    <div class="urgency-dot"></div>
+    <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
+  </div>
 
-<button class="upsell-skip" id="skip-btn">
-  Não, prefiro ficar com o básico
-</button>
+  <p class="upsell-eyebrow">Análise Premium</p>
+  <h2 class="upsell-title">Desbloqueie seu mapa<br/><em>completo e personalizado</em></h2>
+  <p class="upsell-body">Seu mapa básico revelou seu Tipo — mas é apenas a superfície. A análise premium decodifica cada camada da sua configuração e entrega um <strong style="color:var(--whole-wheat); font-weight:400;">PDF exclusivo com mais de 60 páginas</strong> explicando exatamente como você foi desenhada para operar, prosperar e obter sucesso na vida.</p>
+
+  <ul class="upsell-benefits">
+    <li><div class="benefit-check">◇</div>Descubra exatamente qual carreira e tipo de trabalho geram energia em vez de esgotamento</li>
+    <li><div class="benefit-check">◇</div>Entenda o que está travando sua prosperidade financeira — e como destravar</li>
+    <li><div class="benefit-check">◇</div>Encontre seu propósito de vida com clareza, sem mais tentativa e erro</li>
+    <li><div class="benefit-check">◇</div>Elimine os bloqueios invisíveis que sabotam seus relacionamentos e decisões</li>
+    <li><div class="benefit-check">◇</div>Aprenda a viver com leveza seguindo seu ritmo natural — sem forçar, sem culpa</li>
+  </ul>
+
+  <div class="upsell-price-row">
+    <div class="upsell-price-current"><sup>R$</sup>97</div>
+    <div class="upsell-price-old">R$297</div>
+    <div class="upsell-price-badge">67% off</div>
+  </div>
+
+  <button class="upsell-btn" id="upsell-btn">
+    <span>Quero meu mapa completo →</span>
+  </button>
+
+  <button class="upsell-skip" id="skip-btn">
+    Não, prefiro ficar com o básico
+  </button>
+
+</div>
 ```
 
   </div>
@@ -1854,171 +1787,22 @@
   }
 
   // ══════════════════════════════════════════════════
-  // TRADUÇÕES — espelho exato do backend (submit.js)
+  // POPULAR RESULTADO COM TIPO SORTEADO
   // ══════════════════════════════════════════════════
-  var T = {
-    'Generator':'Gerador','Manifested Generator':'Gerador Manifestado',
-    'Manifesting Generator':'Geradora Manifestadora',
-    'Manifestor':'Manifestador','Projector':'Projetor','Reflector':'Refletora',
-    'To Respond':'Responder','To Inform':'Informar','To Initiate':'Iniciar',
-    'Wait for the Invitation':'Aguardar o Convite',
-    'Wait for a Lunar Cycle':'Aguardar Ciclo Lunar',
-    'Wait a Lunar Cycle':'Aguardar Ciclo Lunar',
-    'Sacral':'Sacral','Emotional':'Emocional','Splenic':'Esplênica',
-    'Ego':'Ego','Self-Projected':'Projeção do Eu','Mental':'Mental',
-    'No Authority':'Sem Autoridade Interna','Lunar':'Lunar',
-    'Ego Manifestor':'Ego (Manifestador)',
-    'Single Definition':'Definição Única',
-    'Split Definition':'Definição Dividida',
-    'Triple Split Definition':'Tripla Divisão',
-    'Quadruple Split':'Quádrupla Divisão',
-    'No Definition':'Sem Definição',
-  };
-  function tr(v) { return (v && T[v]) || v || '—'; }
-
-  // ══════════════════════════════════════════════════
-  // DESCRIÇÕES — espelho exato do backend
-  // ══════════════════════════════════════════════════
-  var DESC_ESTRATEGIA = {
-    'To Respond':              'Não inicie — reaja. Quando algo de fora acende seu corpo, esse é o sinal. Forçar sem resposta esgota.',
-    'To Inform':               'Responda ao que vem de fora, depois avise quem será impactado. Pular um dos dois cria caos.',
-    'To Initiate':             'Antes de agir, avise quem será impactado. Esse gesto simples transforma resistência em apoio.',
-    'Wait for the Invitation': 'Sua orientação é valiosa demais para ser dada sem pedido. Espere ser reconhecida — então vá fundo.',
-    'Wait for a Lunar Cycle':  'Decisões grandes pedem 28 dias. Fale com pessoas diferentes, observe — a clareza vem com o tempo.',
-    'Wait a Lunar Cycle':      'Decisões grandes pedem 28 dias. Fale com pessoas diferentes, observe — a clareza vem com o tempo.',
-  };
-
-  var DESC_AUTORIDADE = {
-    'Sacral':                   'Sua bússola é o seu corpo. Um "hm-hm" interno significa sim; "uhn-uhn" significa não. Confie sem precisar explicar.',
-    'Emotional':                'Nunca decida no pico da emoção. Sua clareza vem depois que a onda passa — espere a névoa baixar.',
-    'Emotional - Solar Plexus': 'Nunca decida no pico da emoção. Sua clareza vem depois que a onda passa — espere a névoa baixar.',
-    'Splenic':                  'É um sussurro no momento presente. Você sabe, mas não sabe explicar por quê. Confie na primeira impressão.',
-    'Ego':                      'Se não sai do coração de verdade, não vai até o fim. Sua vontade genuína é o guia — não o dever.',
-    'Ego Manifestor':           'Se não sai do coração de verdade, não vai até o fim. Sua vontade genuína é o guia — não o dever.',
-    'Self-Projected':           'Fale em voz alta com alguém neutro. A clareza vem ouvindo a própria voz — não pela mente pensante.',
-    'Mental':                   'Você precisa de tempo e de ambientes diferentes para decidir. Durma, observe, converse — depois escolha.',
-    'No Authority':             'Você precisa de tempo e de ambientes diferentes para decidir. Durma, observe, converse — depois escolha.',
-    'Lunar':                    'Decisões grandes pedem 28 dias. Fale com pessoas diferentes, observe — a clareza vem com o tempo.',
-  };
-
-  var DESC_PERFIL = {
-    '1/3': 'Você aprende estudando fundo e testando na prática — às vezes na marra. Cada erro é um dado valioso.',
-    '1/4': 'Base sólida de conhecimento + rede de confiança. Você influencia quem já conhece.',
-    '2/4': 'Precisa de tempo a sós para recarregar, mas seus dons chamam as pessoas naturalmente.',
-    '2/5': 'Você parece ter a solução que os outros precisam. Sua presença projeta liderança — queira ou não.',
-    '3/5': 'Aprende pela tentativa e erro e vira referência por isso. Seu caminho não precisa ser linear.',
-    '3/6': 'Fase de experiências intensas → sabedoria compartilhada. Você vai se tornar um modelo de vida.',
-    '4/6': 'Rede de relacionamentos de confiança + visão de longo prazo. Você é o modelo que inspira pelo exemplo.',
-    '4/1': 'Você influencia quem está perto com base sólida de conhecimento. Relacionamento é sua alavanca.',
-    '5/1': 'As pessoas projetam em você a solução que precisam. Sua preparação é o que sustenta essa expectativa.',
-    '5/2': 'Você tem genialidade natural e atrai projeções. Hora de recolhimento é essencial para se renovar.',
-    '6/2': 'Três fases: experimentação, observação, sabedoria. Com o tempo, você vira o modelo que outros seguem.',
-    '6/3': 'Você aprende tudo na prática — e essa vivência te transforma em referência autêntica.',
-  };
-
-  var DESC_TIPO = {
-    'Generator':            'Você é a força vital do mundo. Sua energia constrói, sustenta e inspira — mas só quando seu corpo diz sim de verdade.',
-    'Manifested Generator': 'Você é multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
-    'Manifesting Generator':'Você é multipotencial com energia ágil. Você responde, inicia e avança rápido — e seu caminho não precisa ser linear para ser poderoso.',
-    'Manifestor':           'Você nasceu para iniciar movimentos. Seu poder é colocar coisas no mundo — e tudo flui quando você age com coragem e informa antes.',
-    'Projector':            'Você veio para guiar, não para correr. Sua visão de águia enxerga o que ninguém mais vê — e brilha quando é reconhecida e convidada.',
-    'Reflector':            'Você é o espelho do ambiente. Rara e sensível, revela verdades que ninguém mais percebe — e decide melhor com tempo e espaço.',
-  };
-
-  // glyphs por tipo (para o card de tipo)
-  var GLYPH_TIPO = {
-    'Generator':'🔮','Manifested Generator':'✨','Manifesting Generator':'✨',
-    'Manifestor':'⚡','Projector':'🌙','Reflector':'🪞',
-  };
-
-  // SUB por tipo
-  var SUB_TIPO = {
-    'Generator':'Tipo Energético · ~37% da população',
-    'Manifested Generator':'Tipo Energético · ~33% da população',
-    'Manifesting Generator':'Tipo Energético · ~33% da população',
-    'Manifestor':'Tipo Energético · ~9% da população',
-    'Projector':'Tipo Não-Energético · ~21% da população',
-    'Reflector':'Tipo Não-Energético · ~1% da população',
-  };
-
-  // ══════════════════════════════════════════════════
-  // POPULAR RESULTADO COM DADOS REAIS DA API
-  // ══════════════════════════════════════════════════
-  function populateResult(apiData) {
+  function populateResult() {
     var nome = document.getElementById('nome').value.trim();
     var primeiroNome = nome.split(' ')[0];
+    var tipo = hdTypes[Math.floor(Math.random() * hdTypes.length)];
 
-    // Dados brutos da API (campos English, igual ao backend)
-    var props     = (apiData && apiData.properties) || {};
-    var svgRaw    = (apiData && apiData.svg)        || null;
-
-    var tipoRaw   = props.tipo       || 'Generator';
-    var estratRaw = props.estrategia || 'To Respond';
-    var autRaw    = props.autoridade || 'Emotional';
-    var perfilRaw = props.perfil     || '3/5';
-    var portoes   = (apiData && apiData.portoes) || [];
-    var canais    = (apiData && apiData.canais)  || [];
-
-    // Perfil normalizado (remove espaços: "6 / 3" → "6/3")
-    var perfilNorm = perfilRaw.replace(/\s/g, '');
-
-    // ─ Cabeçalho
-    var tipoTraduzido = tr(tipoRaw);
     document.getElementById('result-display-title').innerHTML =
-      primeiroNome + ', você é uma<br/><em>' + tipoTraduzido + '</em>';
-    document.getElementById('result-type-tag-display').textContent =
-      tipoTraduzido + ' · ' + tr(autRaw) + ' · Perfil ' + perfilNorm;
+      primeiroNome + ', você é uma<br/><em>' + tipo.titleSuffix + '</em>';
 
-    // ─ Card de tipo
-    document.getElementById('result-glyph').textContent     = GLYPH_TIPO[tipoRaw] || '✦';
-    document.getElementById('result-type-name').textContent = tipoTraduzido;
-    document.getElementById('result-type-sub').textContent  = SUB_TIPO[tipoRaw] || 'Tipo Energético';
-    document.getElementById('result-type-desc').textContent = DESC_TIPO[tipoRaw] || '';
-
-    // ─ Estratégia
-    document.getElementById('mc-estrategia-valor').textContent   = tr(estratRaw);
-    document.getElementById('mc-estrategia-preview').textContent = DESC_ESTRATEGIA[estratRaw] || '';
-
-    // ─ Autoridade
-    document.getElementById('mc-autoridade-valor').textContent   = tr(autRaw);
-    document.getElementById('mc-autoridade-preview').textContent = DESC_AUTORIDADE[autRaw] || '';
-
-    // ─ Perfil
-    document.getElementById('mc-perfil-valor').textContent   = 'Perfil ' + perfilNorm;
-    document.getElementById('mc-perfil-preview').textContent = DESC_PERFIL[perfilNorm] || '';
-
-    // ─ Portões & Canais
-    var portoesTags = document.getElementById('mc-portoes-tags');
-    portoesTags.innerHTML = '';
-    portoes.slice().sort(function(a,b){return a-b;}).forEach(function(p) {
-      var tag = document.createElement('span');
-      tag.className = 'mapa-tag';
-      tag.textContent = String(p);
-      portoesTags.appendChild(tag);
-    });
-    canais.forEach(function(c) {
-      var tag = document.createElement('span');
-      tag.className = 'mapa-tag mapa-tag-canal';
-      tag.textContent = String(c);
-      portoesTags.appendChild(tag);
-    });
-
-    // ─ Bodygraph SVG da API (mesma estética do PDF)
-    var bgWrap = document.getElementById('bodygraph-svg-wrap');
-    if (bgWrap) {
-      if (svgRaw) {
-        // Garante que o SVG ocupe 100% da largura e mantenha proporção
-        var svg = svgRaw.replace(/<svg([^>]*)>/, function(m, attrs) {
-          attrs = attrs.replace(/\s+width\s*=\s*["'][^"']*["']/gi, '');
-          attrs = attrs.replace(/\s+height\s*=\s*["'][^"']*["']/gi, '');
-          return '<svg' + attrs + ' style="width:100%;height:auto;display:block;">';
-        });
-        bgWrap.innerHTML = svg;
-      } else {
-        // Placeholder se SVG não vier na resposta
-        bgWrap.innerHTML = '<div style="padding:3rem;text-align:center;color:var(--milky-coffee);font-size:0.85rem;letter-spacing:0.1em;">Gráfico disponível no PDF enviado por e-mail</div>';
-      }
-    }
+    document.getElementById('result-type-tag-display').textContent = tipo.tagText;
+    document.getElementById('result-glyph').textContent = tipo.glyph;
+    document.getElementById('result-type-name').textContent = tipo.name;
+    document.getElementById('result-type-sub').textContent = tipo.sub;
+    document.getElementById('result-type-desc').textContent = tipo.desc;
+    document.getElementById('result-strategy-text').textContent = tipo.strategy;
   }
 
   function showResultSection() {
@@ -2084,7 +1868,8 @@
     // Esconde a section do formulário
     document.getElementById('formulario').style.display = 'none';
 
-    var apiData = null;
+    // Popula o resultado antes de mostrar
+    populateResult();
 
     try {
       const res = await fetch('/api/submit', {
@@ -2094,27 +1879,10 @@
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Erro desconhecido');
-      // A API precisa retornar:
-      // {
-      //   ok: true,
-      //   svg: "<svg...>...</svg>",          ← hd.SVG do bodygraph
-      //   properties: {
-      //     tipo:       props.Type.id,        ← ex: "Generator"
-      //     estrategia: props.Strategy.id,    ← ex: "To Respond"
-      //     autoridade: props.InnerAuthority.id, ← ex: "Emotional"
-      //     perfil:     props.Profile.id,     ← ex: "4/6"
-      //   },
-      //   portoes: [5, 8, 34, ...],           ← hd.ActiveGates
-      //   canais:  ["34-10", "17-62", ...]    ← hd.ActiveChannels
-      // }
-      apiData = json;
     } catch (err) {
       console.error('Erro no submit:', err);
-      // Continua mesmo com erro — mostra resultado com mock
+      // Continua mesmo com erro — mostra resultado de qualquer forma
     }
-
-    // Popula o resultado com dados reais (ou mock se API falhou)
-    populateResult(apiData);
 
     // Aguarda loading completo (passos animados) e então mostra resultado
     setTimeout(function() {
