@@ -1228,7 +1228,7 @@
 
     .mapa-header {
       background: linear-gradient(160deg, var(--dark) 0%, #2e1f14 60%);
-      padding: 4rem 2rem 3rem;
+      padding: 2.5rem 2rem 2rem;
       text-align: center;
       border-bottom: 1px solid rgba(155,125,97,0.18);
     }
@@ -1241,7 +1241,7 @@
     }
     .mapa-header-title {
       font-family: 'Aboreto', cursive;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
       color: var(--whole-wheat);
       line-height: 1.2;
       letter-spacing: 0.04em;
@@ -1258,28 +1258,27 @@
 
     /* Layout principal do mapa — grid 3 colunas */
     .mapa-body {
-      max-width: 1300px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 3rem 2rem 2rem;
+      padding: 2rem 3rem 1.5rem;
       display: grid;
-      grid-template-columns: 1fr 300px 300px;
-      gap: 2.5rem;
+      grid-template-columns: 1fr 260px 260px;
+      gap: 2rem;
       align-items: start;
     }
     @media (max-width: 1100px) {
       .mapa-body {
-        grid-template-columns: 1fr 260px 260px;
-        gap: 2rem;
-        padding: 2.5rem 1.5rem 2rem;
+        grid-template-columns: 1fr 230px 230px;
+        gap: 1.5rem;
+        padding: 2rem 2rem 1.5rem;
       }
     }
     @media (max-width: 860px) {
       .mapa-body {
         grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        padding: 2rem 1.2rem 2rem;
+        gap: 1.5rem;
+        padding: 1.5rem 1.2rem;
       }
-      /* bodygraph ocupa as 2 colunas no tablet */
       .mapa-chart-col {
         grid-column: 1 / -1;
       }
@@ -1287,8 +1286,8 @@
     @media (max-width: 580px) {
       .mapa-body {
         grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 2rem 1.2rem 2rem;
+        gap: 1.5rem;
+        padding: 1.5rem 1rem;
       }
       .mapa-chart-col {
         grid-column: auto;
@@ -1315,21 +1314,21 @@
       background: rgba(155,125,97,0.2);
     }
 
-    /* Bodygraph responsivo — ajustado para 3 colunas */
+    /* Bodygraph — menor e mais espaçado */
     .bodygraph-wrap {
       background: #fff;
       border: none;
       padding: 0;
       position: relative;
       overflow: visible;
-      max-width: 80%;
+      max-width: 62%;
       margin: 0 auto;
     }
     @media (max-width: 860px) {
-      .bodygraph-wrap { max-width: 50%; }
+      .bodygraph-wrap { max-width: 42%; }
     }
     @media (max-width: 580px) {
-      .bodygraph-wrap { max-width: 82%; }
+      .bodygraph-wrap { max-width: 75%; }
     }
     .bodygraph-wrap svg {
       width: 100%;
@@ -1350,7 +1349,7 @@
 
     /* Tabela de planetas — melhorada */
     .planetas-wrap {
-      margin-top: 2rem;
+      margin-top: 1.2rem;
     }
     .planetas-label {
       font-size: 0.72rem;
@@ -1421,13 +1420,13 @@
       .planetas-table tbody td { padding: 0.45rem 0.5rem; font-size: 0.82rem; }
     }
 
-    /* ── COLUNA DIREITA: info-sections — TOTALMENTE REVISADA ── */
+    /* ── COLUNAS DE INFO — alinhadas ao topo ── */
     .mapa-info-col {
-      /* Sticky no desktop para acompanhar scroll do bodygraph */
+      align-self: start;
       position: sticky;
-      top: 2rem;
+      top: 1.5rem;
     }
-    @media (max-width: 960px) {
+    @media (max-width: 860px) {
       .mapa-info-col { position: static; }
     }
 
@@ -1451,13 +1450,13 @@
       background: rgba(155,125,97,0.2);
     }
 
-    /* Cards de info — padding e fontes corrigidos */
+    /* Cards de info — compactos com mais respiro */
     .info-section {
       margin-bottom: 0;
       background: #fff;
-      border: 1px solid rgba(155,125,97,0.18);
+      border: 1px solid rgba(155,125,97,0.15);
       border-bottom: none;
-      padding: 1.1rem 1.3rem 0.9rem 1.5rem;
+      padding: 0.75rem 1rem 0.65rem 1.2rem;
       position: relative;
       overflow: hidden;
       transition: background 0.2s;
@@ -1466,63 +1465,62 @@
       border-radius: 6px 6px 0 0;
     }
     .info-section:last-of-type {
-      border-bottom: 1px solid rgba(155,125,97,0.18);
+      border-bottom: 1px solid rgba(155,125,97,0.15);
       border-radius: 0 0 6px 6px;
     }
     .info-section::before {
       content: '';
       position: absolute;
       top: 0; left: 0;
-      width: 3px;
+      width: 2px;
       height: 100%;
       background: linear-gradient(180deg, var(--roasted-peach), var(--milky-coffee));
     }
 
-    /* Labels, valores e descrições — tamanhos CORRIGIDOS */
     .info-section-label {
-      font-size: 0.68rem;
-      letter-spacing: 0.25em;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--milky-coffee);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
     }
     .info-section-value {
       font-family: 'Aboreto', cursive;
-      font-size: 1.05rem;
+      font-size: 0.9rem;
       color: var(--dark);
-      letter-spacing: 0.04em;
-      margin-bottom: 0.45rem;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.3rem;
       line-height: 1.25;
     }
     .info-section-desc {
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       font-weight: 300;
-      line-height: 1.65;
+      line-height: 1.6;
       color: #5a4535;
     }
     .info-frase {
-      margin-top: 0.65rem;
-      padding: 0.55rem 0.85rem;
-      border-left: 2px solid rgba(218,163,143,0.45);
-      font-size: 0.82rem;
+      margin-top: 0.45rem;
+      padding: 0.4rem 0.7rem;
+      border-left: 2px solid rgba(218,163,143,0.4);
+      font-size: 0.75rem;
       font-style: italic;
       color: #7a6050;
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
-    /* Blur teaser — tipografia melhorada */
+    /* Blur teaser — compacto */
     .info-blur-teaser {
-      padding: 0.6rem 1.3rem 0.8rem 1.5rem;
-      border: 1px solid rgba(155,125,97,0.18);
+      padding: 0.4rem 1rem 0.55rem 1.2rem;
+      border: 1px solid rgba(155,125,97,0.15);
       border-top: none;
       border-bottom: none;
-      background: rgba(233,215,192,0.25);
+      background: rgba(233,215,192,0.2);
       overflow: hidden;
     }
     .info-blur-teaser-text {
-      font-size: 0.83rem;
+      font-size: 0.76rem;
       font-weight: 300;
-      line-height: 1.55;
+      line-height: 1.5;
       color: #7a6050;
       filter: blur(4px);
       user-select: none;
@@ -1561,20 +1559,20 @@
       border-radius: 2px;
     }
 
-    /* Mobile — ajustes específicos */
-    @media (max-width: 960px) {
+    /* Mobile — ajustes */
+    @media (max-width: 860px) {
       .info-section {
-        padding: 1.3rem 1.4rem 1.1rem 1.6rem;
+        padding: 0.9rem 1.1rem 0.8rem 1.3rem;
       }
-      .info-section-label { font-size: 0.7rem; margin-bottom: 0.35rem; }
-      .info-section-value { font-size: 1.1rem; margin-bottom: 0.5rem; }
-      .info-section-desc  { font-size: 0.88rem; line-height: 1.7; }
-      .info-frase { font-size: 0.84rem; }
-      .info-blur-teaser { padding: 0.65rem 1.4rem 0.85rem 1.6rem; }
-      .info-blur-teaser-text { font-size: 0.85rem; }
-      .gate-pill  { font-size: 0.82rem; padding: 0.28rem 0.6rem; }
-      .canal-pill { font-size: 0.84rem; padding: 0.28rem 0.7rem; }
-      .gates-wrap { gap: 0.45rem; margin-top: 0.65rem; }
+      .info-section-label { font-size: 0.65rem; margin-bottom: 0.25rem; }
+      .info-section-value { font-size: 1rem; margin-bottom: 0.35rem; }
+      .info-section-desc  { font-size: 0.82rem; line-height: 1.65; }
+      .info-frase { font-size: 0.78rem; }
+      .info-blur-teaser { padding: 0.45rem 1.1rem 0.6rem 1.3rem; }
+      .info-blur-teaser-text { font-size: 0.8rem; }
+      .gate-pill  { font-size: 0.78rem; padding: 0.22rem 0.5rem; }
+      .canal-pill { font-size: 0.8rem; padding: 0.22rem 0.6rem; }
+      .gates-wrap { gap: 0.4rem; margin-top: 0.5rem; }
     }
 
     /* Divisor */
@@ -1582,13 +1580,13 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(155,125,97,0.3), transparent);
       max-width: 1200px;
-      margin: 3rem auto;
+      margin: 1.5rem auto;
     }
 
     /* CTA do mapa */
     .mapa-cta-wrap {
       text-align: center;
-      padding: 0 1.5rem 5rem;
+      padding: 0 1.5rem 3rem;
     }
     .mapa-cta-btn {
       display: inline-block;
