@@ -1892,7 +1892,7 @@
 
     </div>
 
-    <!-- Coluna direita: Definição, Assinatura, Cruz, Canais, Portões -->
+    <!-- Coluna direita: Definição, Assinatura, Desalinhamento, Cruz, Canais, Portões -->
     <div class="mapa-info-col">
 
       <div class="info-col-header">
@@ -1909,14 +1909,24 @@
         <div class="info-blur-teaser-text">A definição do seu gráfico explica por que você se sente completa com certas pessoas e esvaziada com outras. Este padrão afeta seus relacionamentos, parcerias e até onde você escolhe trabalhar.</div>
       </div>
 
-      <!-- ASSINATURA / NÃO-SELF -->
+      <!-- ASSINATURA -->
       <div class="info-section" id="info-assinatura">
-        <p class="info-section-label">Assinatura / Não-Self</p>
+        <p class="info-section-label">Assinatura</p>
         <p class="info-section-value" id="info-assinatura-value">—</p>
         <p class="info-section-desc" id="info-assinatura-desc"></p>
       </div>
       <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Reconhecer seu estado de não-self é como ter um GPS interno que avisa quando você saiu do caminho. Seu mapa completo traz os sinais específicos que aparecem na sua vida quando você está desalinhada.</div>
+        <div class="info-blur-teaser-text">Sua assinatura é o sentimento que confirma que você está vivendo de forma alinhada com seu design. Quando ela está presente, tudo flui — e as pessoas ao redor também sentem.</div>
+      </div>
+
+      <!-- SINAL DE DESALINHAMENTO -->
+      <div class="info-section" id="info-desalinhamento">
+        <p class="info-section-label">Sinal de Desalinhamento</p>
+        <p class="info-section-value" id="info-desalinhamento-value">—</p>
+        <p class="info-section-desc" id="info-desalinhamento-desc"></p>
+      </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">Reconhecer seu sinal de desalinhamento é como ter um GPS interno que avisa quando você saiu do caminho. Seu mapa completo traz os sinais específicos que aparecem na sua vida quando você está desalinhada.</div>
       </div>
 
       <!-- CRUZ DE ENCARNAÇÃO -->
@@ -2431,12 +2441,13 @@
     var d = mapa.definicao || {};
     setInfo('definicao', d.label, d.desc);
 
-    // Assinatura + Não-Self juntos
+    // Assinatura (card próprio)
     var as = mapa.assinatura || {};
-    var ns = mapa.naoself || {};
-    var asLabel = [as.label, ns.label].filter(Boolean).join(' · ');
-    var asDesc = [as.desc, ns.desc ? 'Não-Self: ' + ns.desc : ''].filter(Boolean).join(' ');
-    setInfo('assinatura', asLabel, asDesc);
+    setInfo('assinatura', as.label, as.desc);
+
+    // Sinal de Desalinhamento (card próprio)
+    var ds = mapa.desalinhamento || mapa.naoself || {};
+    setInfo('desalinhamento', ds.label, ds.desc);
 
     document.getElementById('info-cruz-value').textContent = mapa.cruz || '—';
 
