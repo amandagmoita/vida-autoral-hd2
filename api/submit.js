@@ -769,7 +769,10 @@ const props = hd.Properties || {};
 function extractStr(prop) {
   if (!prop) return null;
   if (typeof prop === 'string') return prop;
-  if (typeof prop === 'object') return prop.id || prop.label || prop.name || String(prop) || null;
+  if (typeof prop === 'object') {
+    // tenta as chaves mais comuns em ordem de prioridade
+    return prop.id || prop.label || prop.name || prop.value || prop.type || null;
+  }
   return String(prop);
 }
 
@@ -785,6 +788,9 @@ const cruzRaw      = props.IncarnationCross
       ? props.IncarnationCross
       : (props.IncarnationCross.label || props.IncarnationCross.id || ''))
   : '';
+
+console.log('[payload] tipo:', tipoId, '| estrategia:', estrategiaId, '| autoridade:', autoridadeId, '| perfil:', perfilId);
+console.log('[payload] props.Authority raw:', JSON.stringify(props.Authority));
 
 // SVG colorido com centros definidos/abertos
 const svgColorido = colorirCentrosSVG(hd.SVG || '', hd.DefinedCenters || [], hd.OpenCenters || []);
