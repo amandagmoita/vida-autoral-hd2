@@ -781,6 +781,124 @@
       font-size: 0.9rem;
     }
 
+    /* ── MAPA CARDS (dados reais com blur parcial) ──── */
+    .mapa-cards-section {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 2rem 2rem;
+    }
+
+    .mapa-cards-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--milky-coffee);
+      margin-bottom: 1.2rem;
+    }
+
+    .mapa-card {
+      background: var(--white);
+      border: 1px solid rgba(155,125,97,0.2);
+      padding: 1.6rem 1.6rem 0;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .mapa-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--roasted-peach), var(--milky-coffee));
+    }
+
+    .mapa-card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.7rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .mapa-card-topic {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--milky-coffee);
+    }
+
+    .mapa-card-value {
+      font-family: 'Aboreto', cursive;
+      font-size: 1.05rem;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .mapa-card-preview {
+      font-size: 0.87rem;
+      line-height: 1.75;
+      color: #5a4535;
+      padding-bottom: 0.8rem;
+    }
+
+    .mapa-card-locked {
+      position: relative;
+      padding-bottom: 1.4rem;
+      margin-top: -0.2rem;
+    }
+
+    .mapa-card-locked-text {
+      font-size: 0.87rem;
+      line-height: 1.75;
+      color: #5a4535;
+      filter: blur(4.5px);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .mapa-card-lock-bar {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.88) 45%);
+    }
+
+    .mapa-card-lock-bar span {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--milky-coffee);
+    }
+
+    .mapa-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding-bottom: 1rem;
+    }
+
+    .mapa-tag {
+      padding: 0.25rem 0.6rem;
+      border: 1px solid rgba(155,125,97,0.3);
+      font-size: 0.75rem;
+      color: var(--milky-coffee);
+      font-weight: 300;
+    }
+
+    .mapa-tags-locked {
+      position: relative;
+      padding-bottom: 1.2rem;
+      margin-top: 0.4rem;
+    }
+
+    .mapa-tags-locked .mapa-tags {
+      filter: blur(4px);
+      user-select: none;
+      pointer-events: none;
+    }
+
     /* ── UPSELL CARD ─────────────────────────────────── */
     .upsell-wrapper {
       max-width: 640px;
@@ -1405,25 +1523,60 @@
 
 <!-- Preview parcial de outros itens -->
 <p class="result-free-label result-reveal result-reveal-4" style="margin-bottom:0.8rem;">Seu mapa também contém</p>
-<div class="result-preview-grid result-reveal result-reveal-4">
-  <div class="preview-card">
-    <p class="preview-card-label">Estratégia de Vida</p>
-    <p class="preview-card-content" id="result-strategy-text">Informar antes de agir elimina a resistência e abre espaço para seu impacto real no mundo.</p>
+```
+
   </div>
-  <div class="preview-card locked">
-    <p class="preview-card-label">Autoridade Interior</p>
-    <p class="preview-card-content">Seu processo de decisão ideal envolve aguardar a clareza emocional antes de comprometer.</p>
-    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+
+  <!-- MAPA CARDS com dados reais + blur -->
+
+  <div class="mapa-cards-section result-reveal result-reveal-4">
+
+```
+<!-- Estratégia -->
+<div class="mapa-card">
+  <p class="mapa-card-topic">Estratégia</p>
+  <p class="mapa-card-value" id="mc-estrategia-valor">—</p>
+  <p class="mapa-card-preview" id="mc-estrategia-preview">—</p>
+  <div class="mapa-card-locked">
+    <p class="mapa-card-locked-text" id="mc-estrategia-locked">Seguir sua estratégia elimina a resistência da sua vida e abre espaço para que tudo flua com naturalidade — nas finanças, nos relacionamentos e na carreira.</p>
+    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
   </div>
-  <div class="preview-card locked">
-    <p class="preview-card-label">Centros Definidos</p>
-    <p class="preview-card-content">5 centros definidos indicam energia consistente em áreas específicas da sua vida.</p>
-    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+</div>
+
+<!-- Autoridade -->
+<div class="mapa-card">
+  <p class="mapa-card-topic">Autoridade Interior</p>
+  <p class="mapa-card-value" id="mc-autoridade-valor">—</p>
+  <p class="mapa-card-preview" id="mc-autoridade-preview">—</p>
+  <div class="mapa-card-locked">
+    <p class="mapa-card-locked-text" id="mc-autoridade-locked">Quando você ignora sua autoridade, as decisões custam energia e geram arrependimento. O PDF explica passo a passo como ativar esse guia interno em cada área da sua vida.</p>
+    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
   </div>
-  <div class="preview-card locked">
-    <p class="preview-card-label">Perfil &amp; Propósito</p>
-    <p class="preview-card-content">Perfil 3/5 traz o papel de mártir e herético — aprendizado pelo experimento e por ser modelo.</p>
-    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+</div>
+
+<!-- Perfil -->
+<div class="mapa-card">
+  <p class="mapa-card-topic">Perfil de Vida</p>
+  <p class="mapa-card-value" id="mc-perfil-valor">—</p>
+  <p class="mapa-card-preview" id="mc-perfil-preview">—</p>
+  <div class="mapa-card-locked">
+    <p class="mapa-card-locked-text" id="mc-perfil-locked">Seu perfil revela o papel que você veio desempenhar — e por que certos padrões se repetem na sua vida. Entender isso muda tudo sobre como você constrói sua trajetória e relações.</p>
+    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
+  </div>
+</div>
+
+<!-- Portões e Canais -->
+<div class="mapa-card">
+  <p class="mapa-card-topic">Portões &amp; Canais Ativados</p>
+  <p class="mapa-card-preview" style="padding-bottom:0.4rem;">Estes são os portões e canais que compõem sua assinatura energética única:</p>
+  <div class="mapa-tags" id="mc-portoes-tags">
+    <!-- preenchido via JS -->
+  </div>
+  <div class="mapa-tags-locked">
+    <div class="mapa-tags" id="mc-portoes-locked-tags">
+      <!-- tags desfocadas geradas via JS -->
+    </div>
+    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
   </div>
 </div>
 ```
@@ -1443,7 +1596,7 @@
 
   <p class="upsell-eyebrow">Análise Premium</p>
   <h2 class="upsell-title">Desbloqueie seu mapa<br/><em>completo e personalizado</em></h2>
-  <p class="upsell-body">Seu mapa básico revelou seu Tipo — mas é apenas a superfície. A análise premium decodifica cada camada da sua configuração e entrega um <strong style="color:var(--whole-wheat); font-weight:400;">PDF exclusivo com mais de 60 páginas</strong> explicando exatamente como você foi desenhada para operar, prosperar e obter sucesso na vida.</p>
+  <p class="upsell-body">Cada dado acima é apenas o rótulo. O <strong style="color:var(--whole-wheat); font-weight:400;">PDF exclusivo com mais de 60 páginas</strong> explica exatamente o que cada elemento significa para <em style="font-style:italic;">você</em> — como prosperar, destravar sua vida financeira e viver com leveza no seu ritmo natural.</p>
 
   <ul class="upsell-benefits">
     <li><div class="benefit-check">◇</div>Descubra exatamente qual carreira e tipo de trabalho geram energia em vez de esgotamento</li>
@@ -1787,22 +1940,114 @@
   }
 
   // ══════════════════════════════════════════════════
-  // POPULAR RESULTADO COM TIPO SORTEADO
+  // POPULAR RESULTADO COM DADOS DA API
   // ══════════════════════════════════════════════════
-  function populateResult() {
+
+  // Textos de preview por tipo (primeira linha visível)
+  var estrategiaPreview = {
+    'Manifestadora':          'Informe antes de agir — comunicar sua intenção elimina a resistência ao seu redor.',
+    'Geradora':               'Responda ao que acende seu sacral — não inicie, reaja ao que a vida apresenta.',
+    'Geradora Manifestadora': 'Responda primeiro, depois informe — sua velocidade é um dom que pede comunicação.',
+    'Projetora':              'Aguarde o convite genuíno — sua sabedoria é poderosa quando reconhecida.',
+    'Refletora':              'Aguarde um ciclo lunar — 28 dias de discernimento antes de grandes decisões.'
+  };
+
+  var autoridadePreview = {
+    'Emocional':   'Nunca decida no pico da emoção. Sua clareza vem depois que a onda passa.',
+    'Sacral':      'Seu corpo responde antes da mente. O "uh-huh" ou "un-un" é sua bússola.',
+    'Esplênico':   'Sinais suaves e instantâneos — sua intuição fala uma vez e não repete.',
+    'Ego':         'Você precisa querer de verdade. Se não sente vontade, não é para você.',
+    'Self':        'Pergunte: "isso me leva ao lugar que quero estar?" — e confie na resposta.',
+    'Projetada':   'Fale sobre o que decide — o ato de verbalizar traz a clareza que precisa.',
+    'Lunar':       'Um ciclo completo de 28 dias revela o que é certo para você.'
+  };
+
+  var perfilPreview = {
+    '1/3': 'Pesquisadora e mártir — você aprende pela investigação e pelo experimento.',
+    '1/4': 'Pesquisadora e oportunista — sua base sólida abre portas via relacionamentos.',
+    '2/4': 'Eremita e oportunista — você precisa de recolhimento para depois impactar sua rede.',
+    '2/5': 'Eremita e herética — você é vista como solução para os outros mesmo sem perceber.',
+    '3/5': 'Mártir e herética — você aprende pelo experimento e é vista como modelo prático.',
+    '3/6': 'Mártir e modelo de papel — três fases de vida distintas, cada uma mais profunda.',
+    '4/6': 'Oportunista e modelo de papel — rede de confiança é sua maior riqueza.',
+    '4/1': 'Oportunista e investigadora — fundação sólida + relacionamentos = seu caminho.',
+    '5/1': 'Herética e investigadora — você resolve os problemas das pessoas com autoridade prática.',
+    '5/2': 'Herética e eremita — grande potencial de impacto que precisa ser protegido.',
+    '6/2': 'Modelo de papel e eremita — três fases: experimento, recolhimento e sabedoria.',
+    '6/3': 'Modelo de papel e mártir — você vive intensamente para depois guiar pelo exemplo.'
+  };
+
+  // Dados mockados de portões/canais (substituir pelo retorno real da API)
+  var portoesMock  = ['5','8','9','10','14','17','22','25','26','34'];
+  var canaisMock   = ['34-10','17-62','9-52'];
+  var portoesBloqueados = ['36','37','39','40','41','42','45','47','48','62','63','64'];
+
+  function populateResult(apiData) {
     var nome = document.getElementById('nome').value.trim();
     var primeiroNome = nome.split(' ')[0];
-    var tipo = hdTypes[Math.floor(Math.random() * hdTypes.length)];
 
+    // Usa dados reais da API se disponíveis, senão cai no mock
+    var tipo      = (apiData && apiData.tipo)      || hdTypes[0].name;
+    var autoridade= (apiData && apiData.autoridade)|| 'Emocional';
+    var perfil    = (apiData && apiData.perfil)    || '3/5';
+    var estrategia= (apiData && apiData.estrategia)|| tipo;
+    var portoes   = (apiData && apiData.portoes)   || portoesMock;
+    var canais    = (apiData && apiData.canais)    || canaisMock;
+
+    // Busca dados do tipo nos hdTypes
+    var tipoData = hdTypes.find(function(t) { return t.name === tipo; }) || hdTypes[0];
+
+    // ─ Cabeçalho
     document.getElementById('result-display-title').innerHTML =
-      primeiroNome + ', você é uma<br/><em>' + tipo.titleSuffix + '</em>';
+      primeiroNome + ', você é uma<br/><em>' + tipoData.titleSuffix + '</em>';
+    document.getElementById('result-type-tag-display').textContent =
+      'Tipo ' + tipo + ' · Autoridade ' + autoridade + ' · Perfil ' + perfil;
 
-    document.getElementById('result-type-tag-display').textContent = tipo.tagText;
-    document.getElementById('result-glyph').textContent = tipo.glyph;
-    document.getElementById('result-type-name').textContent = tipo.name;
-    document.getElementById('result-type-sub').textContent = tipo.sub;
-    document.getElementById('result-type-desc').textContent = tipo.desc;
-    document.getElementById('result-strategy-text').textContent = tipo.strategy;
+    // ─ Card de tipo
+    document.getElementById('result-glyph').textContent     = tipoData.glyph;
+    document.getElementById('result-type-name').textContent = tipoData.name;
+    document.getElementById('result-type-sub').textContent  = tipoData.sub;
+    document.getElementById('result-type-desc').textContent = tipoData.desc;
+
+    // ─ Mapa cards
+    // Estratégia
+    document.getElementById('mc-estrategia-valor').textContent   = estrategia;
+    document.getElementById('mc-estrategia-preview').textContent = estrategiaPreview[tipo] || estrategiaPreview['Geradora'];
+
+    // Autoridade
+    document.getElementById('mc-autoridade-valor').textContent   = autoridade;
+    document.getElementById('mc-autoridade-preview').textContent = autoridadePreview[autoridade] || 'Sua autoridade é o seu guia interno mais confiável.';
+
+    // Perfil
+    document.getElementById('mc-perfil-valor').textContent   = 'Perfil ' + perfil;
+    document.getElementById('mc-perfil-preview').textContent = perfilPreview[perfil] || 'Seu perfil revela o papel único que você veio desempenhar no mundo.';
+
+    // Portões visíveis (primeiros 5)
+    var portoesTags = document.getElementById('mc-portoes-tags');
+    portoesTags.innerHTML = '';
+    portoes.slice(0, 5).forEach(function(p) {
+      var tag = document.createElement('span');
+      tag.className = 'mapa-tag';
+      tag.textContent = 'Portão ' + p;
+      portoesTags.appendChild(tag);
+    });
+    canais.forEach(function(c) {
+      var tag = document.createElement('span');
+      tag.className = 'mapa-tag';
+      tag.textContent = 'Canal ' + c;
+      portoesTags.appendChild(tag);
+    });
+
+    // Portões bloqueados (restantes + mock)
+    var portoesBloqTags = document.getElementById('mc-portoes-locked-tags');
+    portoesBloqTags.innerHTML = '';
+    var restantes = portoes.slice(5).concat(portoesBloqueados);
+    restantes.forEach(function(p) {
+      var tag = document.createElement('span');
+      tag.className = 'mapa-tag';
+      tag.textContent = 'Portão ' + p;
+      portoesBloqTags.appendChild(tag);
+    });
   }
 
   function showResultSection() {
@@ -1868,8 +2113,7 @@
     // Esconde a section do formulário
     document.getElementById('formulario').style.display = 'none';
 
-    // Popula o resultado antes de mostrar
-    populateResult();
+    var apiData = null;
 
     try {
       const res = await fetch('/api/submit', {
@@ -1879,10 +2123,16 @@
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Erro desconhecido');
+      // Captura dados do mapa retornados pela API
+      // Espera: { tipo, autoridade, perfil, estrategia, portoes[], canais[] }
+      apiData = json;
     } catch (err) {
       console.error('Erro no submit:', err);
-      // Continua mesmo com erro — mostra resultado de qualquer forma
+      // Continua mesmo com erro — mostra resultado com mock
     }
+
+    // Popula o resultado com dados reais (ou mock se API falhou)
+    populateResult(apiData);
 
     // Aguarda loading completo (passos animados) e então mostra resultado
     setTimeout(function() {
