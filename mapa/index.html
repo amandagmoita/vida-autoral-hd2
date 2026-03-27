@@ -1222,7 +1222,7 @@
     ═══════════════════════════════════════════════════ */
     #mapa-section {
       display: none;
-      background: #faf6f0;
+      background: #ffffff;
     }
     #mapa-section.visible { display: block; }
 
@@ -1256,21 +1256,42 @@
       margin-top: 0.8rem;
     }
 
-    /* Layout principal do mapa — grid revisado */
+    /* Layout principal do mapa — grid 3 colunas */
     .mapa-body {
-      max-width: 1200px;
+      max-width: 1300px;
       margin: 0 auto;
       padding: 3rem 2rem 2rem;
       display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 3rem;
+      grid-template-columns: 1fr 300px 300px;
+      gap: 2.5rem;
       align-items: start;
     }
-    @media (max-width: 960px) {
+    @media (max-width: 1100px) {
+      .mapa-body {
+        grid-template-columns: 1fr 260px 260px;
+        gap: 2rem;
+        padding: 2.5rem 1.5rem 2rem;
+      }
+    }
+    @media (max-width: 860px) {
+      .mapa-body {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 2rem 1.2rem 2rem;
+      }
+      /* bodygraph ocupa as 2 colunas no tablet */
+      .mapa-chart-col {
+        grid-column: 1 / -1;
+      }
+    }
+    @media (max-width: 580px) {
       .mapa-body {
         grid-template-columns: 1fr;
-        gap: 2.5rem;
+        gap: 2rem;
         padding: 2rem 1.2rem 2rem;
+      }
+      .mapa-chart-col {
+        grid-column: auto;
       }
     }
 
@@ -1294,21 +1315,21 @@
       background: rgba(155,125,97,0.2);
     }
 
-    /* Bodygraph responsivo — corrigido */
+    /* Bodygraph responsivo — ajustado para 3 colunas */
     .bodygraph-wrap {
       background: #fff;
       border: none;
       padding: 0;
       position: relative;
       overflow: visible;
-      max-width: 55%;
+      max-width: 80%;
       margin: 0 auto;
     }
-    @media (max-width: 960px) {
-      .bodygraph-wrap { max-width: 72%; }
+    @media (max-width: 860px) {
+      .bodygraph-wrap { max-width: 50%; }
     }
-    @media (max-width: 480px) {
-      .bodygraph-wrap { max-width: 88%; }
+    @media (max-width: 580px) {
+      .bodygraph-wrap { max-width: 82%; }
     }
     .bodygraph-wrap svg {
       width: 100%;
@@ -1759,7 +1780,7 @@
 
   <div class="mapa-header">
     <p class="mapa-header-eyebrow">Vida Autoral · Desenho Humano</p>
-    <h2 class="mapa-header-title" id="mapa-nome-titulo">Você é uma<br/><em id="mapa-tipo-display">Geradora</em></h2>
+    <h2 class="mapa-header-title" id="mapa-nome-titulo"><em id="mapa-nome-display">Você</em>,<br/>você é <span id="mapa-artigo-display">uma</span> <em id="mapa-tipo-display">Geradora</em></h2>
     <p class="mapa-header-sub" id="mapa-subtitulo">Gerado com base nos seus dados de nascimento</p>
   </div>
 
@@ -1789,11 +1810,11 @@
 
     </div>
 
-    <!-- Coluna direita: informações do mapa -->
+    <!-- Coluna do meio: Tipo, Estratégia, Autoridade, Perfil -->
     <div class="mapa-info-col">
 
       <div class="info-col-header">
-        <span class="info-col-title">Seu perfil energético</span>
+        <span class="info-col-title">Perfil energético</span>
       </div>
 
       <!-- TIPO -->
@@ -1835,6 +1856,15 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">Seu perfil revela o papel que você veio desempenhar nesta vida e como as pessoas naturalmente te percebem. Há uma missão específica codificada na combinação dos seus números que vai além do que você já imaginou.</div>
+      </div>
+
+    </div>
+
+    <!-- Coluna direita: Definição, Assinatura, Cruz, Canais, Portões -->
+    <div class="mapa-info-col">
+
+      <div class="info-col-header">
+        <span class="info-col-title">Centros e canais</span>
       </div>
 
       <!-- DEFINIÇÃO -->
@@ -2289,8 +2319,22 @@
     // Cabeçalho
     var primeiroNome = mapa.nome ? mapa.nome.split(' ')[0] : '';
     var tipoLabel = mapa.tipo && mapa.tipo.label ? mapa.tipo.label : 'Geradora';
-    document.getElementById('mapa-nome-titulo').innerHTML =
-      primeiroNome + ', você é uma<br/><em>' + tipoLabel + '</em>';
+
+    // Artigo correto baseado no tipo
+    var tipoLower = tipoLabel.toLowerCase();
+    var artigo = 'um';
+    if (tipoLower === 'geradora' || tipoLower === 'geradora pura' || tipoLower === 'manifestadora' || tipoLower === 'refletora' || tipoLower === 'projetora') {
+      artigo = 'uma';
+    }
+
+    // Preenche os elementos individuais
+    var nomeEl = document.getElementById('mapa-nome-display');
+    var artigoEl = document.getElementById('mapa-artigo-display');
+    var tipoEl = document.getElementById('mapa-tipo-display');
+    if (nomeEl) nomeEl.textContent = primeiroNome || 'Você';
+    if (artigoEl) artigoEl.textContent = artigo;
+    if (tipoEl) tipoEl.textContent = tipoLabel;
+
     document.getElementById('mapa-subtitulo').textContent =
       mapa.data + ' · ' + mapa.hora + ' · ' + mapa.local;
     // Bodygraph SVG + setas
