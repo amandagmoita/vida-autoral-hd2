@@ -1212,6 +1212,259 @@
     .result-reveal-3 { transition-delay: 0.35s; }
     .result-reveal-4 { transition-delay: 0.5s; }
     .result-reveal-5 { transition-delay: 0.65s; }
+
+    /* ═══════════════════════════════════════════════════
+       ── MAPA COMPLETO (bodygraph + dados) ────────────
+    ═══════════════════════════════════════════════════ */
+    #mapa-section {
+      display: none;
+      background: linear-gradient(170deg, #1a1410 0%, #2e1f14 100%);
+    }
+    #mapa-section.visible { display: block; }
+
+    .mapa-header {
+      background: linear-gradient(160deg, var(--dark) 0%, #2e1f14 60%);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(155,125,97,0.18);
+    }
+    .mapa-header-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--roasted-peach);
+      margin-bottom: 1rem;
+    }
+    .mapa-header-title {
+      font-family: 'Aboreto', cursive;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--whole-wheat);
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    .mapa-header-title em { font-style: normal; color: var(--roasted-peach); }
+    .mapa-header-sub {
+      font-size: 0.85rem;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      color: rgba(233,215,192,0.5);
+      margin-top: 0.8rem;
+    }
+
+    /* Layout principal do mapa */
+    .mapa-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .mapa-body { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    /* Coluna esquerda — bodygraph */
+    .mapa-chart-col {}
+
+    .mapa-chart-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--roasted-peach);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .mapa-chart-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(155,125,97,0.2);
+    }
+
+    .bodygraph-wrap {
+      background: #fff;
+      border: 1px solid rgba(155,125,97,0.25);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .bodygraph-wrap svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Tabela de planetas */
+    .planetas-wrap {
+      margin-top: 1.5rem;
+    }
+    .planetas-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--roasted-peach);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .planetas-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(155,125,97,0.2);
+    }
+    .planetas-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .planetas-table thead tr {
+      border-bottom: 1px solid rgba(155,125,97,0.25);
+    }
+    .planetas-table thead th {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(233,215,192,0.45);
+      text-align: center;
+    }
+    .planetas-table thead th:first-child { text-align: left; }
+    .planetas-table tbody tr {
+      border-bottom: 1px solid rgba(155,125,97,0.08);
+    }
+    .planetas-table tbody tr:last-child { border-bottom: none; }
+    .planetas-table tbody td {
+      padding: 0.45rem 0.6rem;
+      color: rgba(233,215,192,0.75);
+      font-weight: 300;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .planetas-table tbody td:first-child {
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .planet-sym {
+      width: 22px;
+      text-align: center;
+      color: var(--roasted-peach);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .col-design { color: #C7826F; }
+    .col-pers   { color: #7DAAA0; }
+
+    /* Coluna direita — informações */
+    .mapa-info-col {}
+
+    .info-section {
+      margin-bottom: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(155,125,97,0.18);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--roasted-peach), transparent);
+    }
+    .info-section-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--roasted-peach);
+      margin-bottom: 0.4rem;
+    }
+    .info-section-value {
+      font-family: 'Aboreto', cursive;
+      font-size: 1.1rem;
+      color: var(--whole-wheat);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+    .info-section-desc {
+      font-size: 0.83rem;
+      font-weight: 200;
+      line-height: 1.75;
+      color: rgba(233,215,192,0.65);
+    }
+    .info-frase {
+      margin-top: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-left: 2px solid rgba(218,163,143,0.35);
+      font-size: 0.8rem;
+      font-style: italic;
+      color: rgba(233,215,192,0.5);
+      line-height: 1.7;
+    }
+
+    /* Portões e Canais */
+    .portoes-canais {
+      margin-top: 0;
+    }
+    .gates-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+    .gate-pill {
+      background: rgba(155,125,97,0.15);
+      border: 1px solid rgba(155,125,97,0.25);
+      padding: 0.2rem 0.55rem;
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: rgba(233,215,192,0.7);
+      letter-spacing: 0.04em;
+    }
+    .canal-pill {
+      background: rgba(146,173,164,0.1);
+      border: 1px solid rgba(146,173,164,0.25);
+      padding: 0.2rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: rgba(146,173,164,0.8);
+      letter-spacing: 0.06em;
+    }
+
+    /* Email CTA dentro do mapa */
+    .mapa-email-note {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem 1.5rem;
+      text-align: center;
+    }
+    .mapa-email-note p {
+      font-size: 0.82rem;
+      font-weight: 200;
+      color: rgba(233,215,192,0.4);
+      letter-spacing: 0.06em;
+    }
+    .mapa-email-note strong { color: rgba(233,215,192,0.65); font-weight: 400; }
+
+    /* Divisor para upsell dentro do mapa */
+    .mapa-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(155,125,97,0.3), transparent);
+      margin: 0 1.5rem 0;
+      max-width: 1100px;
+      margin: 2rem auto;
+    }
   </style>
 
 </head>
@@ -1372,6 +1625,115 @@
 </div>
 
 <!-- ═══ RESULTADO + UPSELL ═════════════════════════════ -->
+
+<!-- ═══ MAPA DO DESENHO HUMANO (bodygraph + dados completos) ══════ -->
+
+<section id="mapa-section">
+
+  <div class="mapa-header">
+    <p class="mapa-header-eyebrow">Vida Autoral · Desenho Humano</p>
+    <h2 class="mapa-header-title" id="mapa-nome-titulo">Seu<br/><em>Mapa do Desenho Humano</em></h2>
+    <p class="mapa-header-sub" id="mapa-subtitulo">Gerado com base nos seus dados de nascimento</p>
+  </div>
+
+  <div class="mapa-body">
+
+    <!-- Coluna esquerda: gráfico + planetas -->
+    <div class="mapa-chart-col">
+
+      <p class="mapa-chart-label">Gráfico Bodygraph</p>
+      <div class="bodygraph-wrap" id="bodygraph-container">
+        <!-- SVG injetado via JS -->
+      </div>
+
+      <div class="planetas-wrap">
+        <p class="planetas-label">Planetas</p>
+        <table class="planetas-table" id="planetas-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Planeta</th>
+              <th class="col-design">Design</th>
+              <th class="col-pers">Personalidade</th>
+            </tr>
+          </thead>
+          <tbody id="planetas-body">
+            <!-- linhas injetadas via JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Coluna direita: informações do mapa -->
+    <div class="mapa-info-col">
+
+      <div class="info-section" id="info-tipo">
+        <p class="info-section-label">Tipo</p>
+        <p class="info-section-value" id="info-tipo-value">—</p>
+        <p class="info-section-desc" id="info-tipo-desc"></p>
+        <p class="info-frase" id="info-tipo-frase" style="display:none;"></p>
+      </div>
+
+      <div class="info-section" id="info-estrategia">
+        <p class="info-section-label">Estratégia</p>
+        <p class="info-section-value" id="info-estrategia-value">—</p>
+        <p class="info-section-desc" id="info-estrategia-desc"></p>
+      </div>
+
+      <div class="info-section" id="info-autoridade">
+        <p class="info-section-label">Autoridade</p>
+        <p class="info-section-value" id="info-autoridade-value">—</p>
+        <p class="info-section-desc" id="info-autoridade-desc"></p>
+      </div>
+
+      <div class="info-section" id="info-perfil">
+        <p class="info-section-label">Perfil</p>
+        <p class="info-section-value" id="info-perfil-value">—</p>
+        <p class="info-section-desc" id="info-perfil-desc"></p>
+      </div>
+
+      <div class="info-section" id="info-definicao">
+        <p class="info-section-label">Definição</p>
+        <p class="info-section-value" id="info-definicao-value">—</p>
+        <p class="info-section-desc" id="info-definicao-desc"></p>
+      </div>
+
+      <div class="info-section" id="info-assinatura">
+        <p class="info-section-label">Assinatura / Não-Self</p>
+        <p class="info-section-value" id="info-assinatura-value">—</p>
+        <p class="info-section-desc" id="info-assinatura-desc"></p>
+      </div>
+
+      <div class="info-section" id="info-cruz">
+        <p class="info-section-label">Cruz de Encarnação</p>
+        <p class="info-section-value" id="info-cruz-value">—</p>
+      </div>
+
+      <div class="info-section portoes-canais" id="info-canais">
+        <p class="info-section-label">Canais Ativados</p>
+        <div class="gates-wrap" id="canais-list">
+          <!-- canal pills injetados via JS -->
+        </div>
+      </div>
+
+      <div class="info-section portoes-canais" id="info-portoes">
+        <p class="info-section-label">Portões Ativados</p>
+        <div class="gates-wrap" id="portoes-list">
+          <!-- gate pills injetados via JS -->
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="mapa-email-note">
+    <p>📩 Seu mapa completo em PDF foi enviado para <strong id="mapa-email-destino">seu e-mail</strong></p>
+  </div>
+
+  <div class="mapa-divider"></div>
+
+</section>
 
 <section id="result-section">
 
@@ -1787,22 +2149,142 @@
   }
 
   // ══════════════════════════════════════════════════
-  // POPULAR RESULTADO COM TIPO SORTEADO
+  // POPULAR MAPA COM DADOS REAIS DO HD
   // ══════════════════════════════════════════════════
-  function populateResult() {
+  function popularMapaReal(mapa, email) {
+    // Cabeçalho
+    var primeiroNome = mapa.nome ? mapa.nome.split(' ')[0] : '';
+    document.getElementById('mapa-nome-titulo').innerHTML =
+      primeiroNome + ', este é o seu<br/><em>Mapa do Desenho Humano</em>';
+    document.getElementById('mapa-subtitulo').textContent =
+      mapa.data + ' · ' + mapa.hora + ' · ' + mapa.local;
+    document.getElementById('mapa-email-destino').textContent = email;
+
+    // Bodygraph SVG
+    var container = document.getElementById('bodygraph-container');
+    if (mapa.svg && mapa.svg.length > 100) {
+      container.innerHTML = mapa.svg;
+    } else {
+      container.innerHTML = '<p style="color:#9B7D61;text-align:center;padding:2rem;font-size:.85rem;">Gráfico não disponível.</p>';
+    }
+
+    // Tabela de planetas
+    var tbody = document.getElementById('planetas-body');
+    tbody.innerHTML = '';
+    if (mapa.planetas && mapa.planetas.length) {
+      mapa.planetas.forEach(function(p) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td><span class="planet-sym">' + (p.sym||'') + '</span>' + (p.pt||p.name) + '</td>'
+          + '<td class="col-design">' + (p.design||'-') + '</td>'
+          + '<td class="col-pers">' + (p.pers||'-') + '</td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Informações
+    function setInfo(id, value, desc, frase) {
+      var el = document.getElementById('info-' + id + '-value');
+      if (el) el.textContent = value || '—';
+      var descEl = document.getElementById('info-' + id + '-desc');
+      if (descEl) descEl.textContent = desc || '';
+      if (frase !== undefined) {
+        var fraseEl = document.getElementById('info-' + id + '-frase');
+        if (fraseEl) {
+          if (frase) {
+            fraseEl.textContent = '"' + frase + '"';
+            fraseEl.style.display = '';
+          } else {
+            fraseEl.style.display = 'none';
+          }
+        }
+      }
+    }
+
+    var t = mapa.tipo || {};
+    setInfo('tipo', t.label, t.desc, t.frase);
+
+    var e = mapa.estrategia || {};
+    setInfo('estrategia', e.label, e.desc);
+
+    var a = mapa.autoridade || {};
+    setInfo('autoridade', a.label, a.desc);
+
+    var p = mapa.perfil || {};
+    setInfo('perfil', p.label || p.id, p.desc);
+
+    var d = mapa.definicao || {};
+    setInfo('definicao', d.label, d.desc);
+
+    // Assinatura + Não-Self juntos
+    var as = mapa.assinatura || {};
+    var ns = mapa.naoself || {};
+    var asLabel = [as.label, ns.label].filter(Boolean).join(' · ');
+    var asDesc = [as.desc, ns.desc ? 'Não-Self: ' + ns.desc : ''].filter(Boolean).join(' ');
+    setInfo('assinatura', asLabel, asDesc);
+
+    document.getElementById('info-cruz-value').textContent = mapa.cruz || '—';
+
+    // Canais
+    var canaisList = document.getElementById('canais-list');
+    canaisList.innerHTML = '';
+    if (mapa.canais && mapa.canais.length) {
+      mapa.canais.forEach(function(c) {
+        var span = document.createElement('span');
+        span.className = 'canal-pill';
+        span.textContent = c;
+        canaisList.appendChild(span);
+      });
+    } else {
+      canaisList.innerHTML = '<span style="color:rgba(233,215,192,.35);font-size:.8rem;">—</span>';
+    }
+
+    // Portões
+    var portoesList = document.getElementById('portoes-list');
+    portoesList.innerHTML = '';
+    if (mapa.portoes && mapa.portoes.length) {
+      mapa.portoes.forEach(function(g) {
+        var span = document.createElement('span');
+        span.className = 'gate-pill';
+        span.textContent = g;
+        portoesList.appendChild(span);
+      });
+    } else {
+      portoesList.innerHTML = '<span style="color:rgba(233,215,192,.35);font-size:.8rem;">—</span>';
+    }
+  }
+
+  // ══════════════════════════════════════════════════
+  // POPULAR RESULTADO COM TIPO SORTEADO (fallback)
+  // ══════════════════════════════════════════════════
+  function populateResult(mapaReal) {
     var nome = document.getElementById('nome').value.trim();
     var primeiroNome = nome.split(' ')[0];
-    var tipo = hdTypes[Math.floor(Math.random() * hdTypes.length)];
+
+    var tipo, estrategia;
+    if (mapaReal && mapaReal.tipo && mapaReal.tipo.label) {
+      tipo = mapaReal.tipo;
+      estrategia = mapaReal.estrategia;
+    } else {
+      tipo = hdTypes[Math.floor(Math.random() * hdTypes.length)];
+    }
 
     document.getElementById('result-display-title').innerHTML =
-      primeiroNome + ', você é uma<br/><em>' + tipo.titleSuffix + '</em>';
+      primeiroNome + ', você é uma<br/><em>' + (tipo.titleSuffix || tipo.label) + '</em>';
 
-    document.getElementById('result-type-tag-display').textContent = tipo.tagText;
-    document.getElementById('result-glyph').textContent = tipo.glyph;
-    document.getElementById('result-type-name').textContent = tipo.name;
-    document.getElementById('result-type-sub').textContent = tipo.sub;
-    document.getElementById('result-type-desc').textContent = tipo.desc;
-    document.getElementById('result-strategy-text').textContent = tipo.strategy;
+    document.getElementById('result-type-tag-display').textContent = tipo.tagText || (tipo.label + ' · ' + (estrategia && estrategia.label || ''));
+    document.getElementById('result-glyph').textContent = tipo.glyph || '✦';
+    document.getElementById('result-type-name').textContent = tipo.name || tipo.label;
+    document.getElementById('result-type-sub').textContent = tipo.sub || 'Tipo Energético';
+    document.getElementById('result-type-desc').textContent = tipo.desc || (mapaReal && mapaReal.tipo && mapaReal.tipo.desc) || '';
+    document.getElementById('result-strategy-text').textContent = tipo.strategy || (mapaReal && mapaReal.estrategia && mapaReal.estrategia.desc) || '';
+  }
+
+  function showMapaSection() {
+    var sec = document.getElementById('mapa-section');
+    sec.classList.add('visible');
+    setTimeout(function() {
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
 
   function showResultSection() {
@@ -1868,8 +2350,7 @@
     // Esconde a section do formulário
     document.getElementById('formulario').style.display = 'none';
 
-    // Popula o resultado antes de mostrar
-    populateResult();
+    var mapaReal = null;
 
     try {
       const res = await fetch('/api/submit', {
@@ -1879,15 +2360,32 @@
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Erro desconhecido');
+      if (json.mapa) mapaReal = json.mapa;
     } catch (err) {
       console.error('Erro no submit:', err);
-      // Continua mesmo com erro — mostra resultado de qualquer forma
+      // Continua mesmo com erro
     }
 
-    // Aguarda loading completo (passos animados) e então mostra resultado
+    // Popula o resultado (com dados reais se disponíveis, fallback aleatório caso contrário)
+    populateResult(mapaReal);
+
+    // Aguarda loading completo e então mostra mapa + resultado
     setTimeout(function() {
       hideLoadingOverlay();
-      setTimeout(showResultSection, 600);
+      setTimeout(function() {
+        // Exibe o mapa bodygraph completo primeiro (se temos dados reais)
+        if (mapaReal && mapaReal.svg) {
+          popularMapaReal(mapaReal, email);
+          showMapaSection();
+          // Depois de rolar pro mapa, exibe o upsell
+          setTimeout(function() {
+            showResultSection();
+          }, 1200);
+        } else {
+          // Sem dados reais — vai direto pro upsell
+          showResultSection();
+        }
+      }, 600);
     }, 4000);
   });
 
