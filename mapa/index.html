@@ -1292,6 +1292,8 @@
       padding: 1.5rem;
       position: relative;
       overflow: hidden;
+      max-width: 70%;
+      margin: 0 auto;
     }
     .bodygraph-wrap svg {
       width: 100%;
@@ -1733,105 +1735,35 @@
 
   <div class="mapa-divider"></div>
 
-</section>
-
-<section id="result-section">
-
-  <!-- Cabeçalho escuro com o tipo -->
-
-  <div class="result-hero">
-    <p class="result-eyebrow result-reveal">Seu Desenho Humano</p>
-    <h2 class="result-name-display result-reveal result-reveal-1" id="result-display-title">
-      Você é uma<br/><em id="result-type-name-display">Manifestadora Pura</em>
-    </h2>
-    <div class="result-type-tag result-reveal result-reveal-2" id="result-type-tag-display">Tipo · Autoridade · Perfil</div>
-  </div>
-
-  <!-- O que está incluído no gratuito -->
-
-  <div class="result-free">
-    <p class="result-free-label result-reveal result-reveal-2">O que você descobriu</p>
-    <h3 class="result-free-title result-reveal result-reveal-3">Seu tipo energético</h3>
-
-```
-<div class="result-type-card result-reveal result-reveal-3">
-  <div class="result-type-header">
-    <div class="result-type-glyph" id="result-glyph">⚡</div>
-    <div class="result-type-info">
-      <h3 id="result-type-name">Manifestadora</h3>
-      <small id="result-type-sub">Tipo Energético · ~9% da população</small>
+  <!-- UPSELL dentro do mapa -->
+  <div class="upsell-wrapper" id="mapa-upsell" style="display:none;">
+    <div class="upsell-card">
+      <div class="upsell-urgency">
+        <div class="urgency-dot"></div>
+        <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
+      </div>
+      <p class="upsell-eyebrow">Análise Premium</p>
+      <h2 class="upsell-title">Desbloqueie seu mapa<br/><em>completo e personalizado</em></h2>
+      <p class="upsell-body">Seu mapa revelou o essencial — mas é apenas a superfície. A análise premium decodifica cada camada da sua configuração e entrega um <strong style="color:var(--whole-wheat); font-weight:400;">PDF exclusivo com mais de 60 páginas</strong> explicando exatamente como você foi desenhada para operar, prosperar e obter sucesso na vida.</p>
+      <ul class="upsell-benefits">
+        <li><div class="benefit-check">◇</div>Descubra exatamente qual carreira e tipo de trabalho geram energia em vez de esgotamento</li>
+        <li><div class="benefit-check">◇</div>Entenda o que está travando sua prosperidade financeira — e como destravar</li>
+        <li><div class="benefit-check">◇</div>Encontre seu propósito de vida com clareza, sem mais tentativa e erro</li>
+        <li><div class="benefit-check">◇</div>Elimine os bloqueios invisíveis que sabotam seus relacionamentos e decisões</li>
+        <li><div class="benefit-check">◇</div>Aprenda a viver com leveza seguindo seu ritmo natural — sem forçar, sem culpa</li>
+      </ul>
+      <div class="upsell-price-row">
+        <div class="upsell-price-current"><sup>R$</sup>97</div>
+        <div class="upsell-price-old">R$297</div>
+        <div class="upsell-price-badge">67% off</div>
+      </div>
+      <button class="upsell-btn" id="upsell-btn">
+        <span>Quero meu mapa completo →</span>
+      </button>
+      <button class="upsell-skip" id="skip-btn">
+        Não, prefiro ficar com o básico
+      </button>
     </div>
-  </div>
-  <p class="result-type-desc" id="result-type-desc">Você nasceu para iniciar e impactar. Sua energia é independente e poderosa — quando age a partir da sua verdade interior, abre caminhos que outros não conseguem ver.</p>
-</div>
-
-<!-- Preview parcial de outros itens -->
-<p class="result-free-label result-reveal result-reveal-4" style="margin-bottom:0.8rem;">Seu mapa também contém</p>
-<div class="result-preview-grid result-reveal result-reveal-4">
-  <div class="preview-card">
-    <p class="preview-card-label">Estratégia de Vida</p>
-    <p class="preview-card-content" id="result-strategy-text">Informar antes de agir elimina a resistência e abre espaço para seu impacto real no mundo.</p>
-  </div>
-  <div class="preview-card locked">
-    <p class="preview-card-label">Autoridade Interior</p>
-    <p class="preview-card-content">Seu processo de decisão ideal envolve aguardar a clareza emocional antes de comprometer.</p>
-    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
-  </div>
-  <div class="preview-card locked">
-    <p class="preview-card-label">Centros Definidos</p>
-    <p class="preview-card-content">5 centros definidos indicam energia consistente em áreas específicas da sua vida.</p>
-    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
-  </div>
-  <div class="preview-card locked">
-    <p class="preview-card-label">Perfil &amp; Propósito</p>
-    <p class="preview-card-content">Perfil 3/5 traz o papel de mártir e herético — aprendizado pelo experimento e por ser modelo.</p>
-    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
-  </div>
-</div>
-```
-
-  </div>
-
-  <!-- UPSELL -->
-
-  <div class="upsell-wrapper">
-    <div class="upsell-card result-reveal result-reveal-5">
-
-```
-  <div class="upsell-urgency">
-    <div class="urgency-dot"></div>
-    <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
-  </div>
-
-  <p class="upsell-eyebrow">Análise Premium</p>
-  <h2 class="upsell-title">Desbloqueie seu mapa<br/><em>completo e personalizado</em></h2>
-  <p class="upsell-body">Seu mapa básico revelou seu Tipo — mas é apenas a superfície. A análise premium decodifica cada camada da sua configuração e entrega um <strong style="color:var(--whole-wheat); font-weight:400;">PDF exclusivo com mais de 60 páginas</strong> explicando exatamente como você foi desenhada para operar, prosperar e obter sucesso na vida.</p>
-
-  <ul class="upsell-benefits">
-    <li><div class="benefit-check">◇</div>Descubra exatamente qual carreira e tipo de trabalho geram energia em vez de esgotamento</li>
-    <li><div class="benefit-check">◇</div>Entenda o que está travando sua prosperidade financeira — e como destravar</li>
-    <li><div class="benefit-check">◇</div>Encontre seu propósito de vida com clareza, sem mais tentativa e erro</li>
-    <li><div class="benefit-check">◇</div>Elimine os bloqueios invisíveis que sabotam seus relacionamentos e decisões</li>
-    <li><div class="benefit-check">◇</div>Aprenda a viver com leveza seguindo seu ritmo natural — sem forçar, sem culpa</li>
-  </ul>
-
-  <div class="upsell-price-row">
-    <div class="upsell-price-current"><sup>R$</sup>97</div>
-    <div class="upsell-price-old">R$297</div>
-    <div class="upsell-price-badge">67% off</div>
-  </div>
-
-  <button class="upsell-btn" id="upsell-btn">
-    <span>Quero meu mapa completo →</span>
-  </button>
-
-  <button class="upsell-skip" id="skip-btn">
-    Não, prefiro ficar com o básico
-  </button>
-
-</div>
-```
-
   </div>
 
 </section>
@@ -2182,16 +2114,23 @@
     }
 
     // Informações
+    function safeStr(v) {
+      if (!v) return '';
+      if (typeof v === 'string') return v;
+      if (typeof v === 'object') return v.descricao || v.label || v.id || v.name || '';
+      return String(v);
+    }
     function setInfo(id, value, desc, frase) {
       var el = document.getElementById('info-' + id + '-value');
-      if (el) el.textContent = value || '—';
+      if (el) el.textContent = safeStr(value) || '—';
       var descEl = document.getElementById('info-' + id + '-desc');
-      if (descEl) descEl.textContent = desc || '';
+      if (descEl) descEl.textContent = safeStr(desc) || '';
       if (frase !== undefined) {
         var fraseEl = document.getElementById('info-' + id + '-frase');
         if (fraseEl) {
-          if (frase) {
-            fraseEl.textContent = '"' + frase + '"';
+          var fraseStr = safeStr(frase);
+          if (fraseStr) {
+            fraseEl.textContent = '"' + fraseStr + '"';
             fraseEl.style.display = '';
           } else {
             fraseEl.style.display = 'none';
@@ -2253,57 +2192,21 @@
     }
   }
 
-  // ══════════════════════════════════════════════════
-  // POPULAR RESULTADO COM TIPO SORTEADO (fallback)
-  // ══════════════════════════════════════════════════
-  function populateResult(mapaReal) {
-    var nome = document.getElementById('nome').value.trim();
-    var primeiroNome = nome.split(' ')[0];
-
-    var tipo, estrategia;
-    if (mapaReal && mapaReal.tipo && mapaReal.tipo.label) {
-      tipo = mapaReal.tipo;
-      estrategia = mapaReal.estrategia;
-    } else {
-      tipo = hdTypes[Math.floor(Math.random() * hdTypes.length)];
-    }
-
-    document.getElementById('result-display-title').innerHTML =
-      primeiroNome + ', você é uma<br/><em>' + (tipo.titleSuffix || tipo.label) + '</em>';
-
-    document.getElementById('result-type-tag-display').textContent = tipo.tagText || (tipo.label + ' · ' + (estrategia && estrategia.label || ''));
-    document.getElementById('result-glyph').textContent = tipo.glyph || '✦';
-    document.getElementById('result-type-name').textContent = tipo.name || tipo.label;
-    document.getElementById('result-type-sub').textContent = tipo.sub || 'Tipo Energético';
-    document.getElementById('result-type-desc').textContent = tipo.desc || (mapaReal && mapaReal.tipo && mapaReal.tipo.desc) || '';
-    document.getElementById('result-strategy-text').textContent = tipo.strategy || (mapaReal && mapaReal.estrategia && mapaReal.estrategia.desc) || '';
-  }
-
   function showMapaSection() {
     var sec = document.getElementById('mapa-section');
     sec.classList.add('visible');
     setTimeout(function() {
       sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
-  }
-
-  function showResultSection() {
-    var sec = document.getElementById('result-section');
-    sec.classList.add('visible');
-
-    // Rola suavemente até o resultado
+    // Exibe o upsell dentro do mapa após 1.5s
     setTimeout(function() {
-      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-
-    // Ativa animações de reveal do resultado
-    setTimeout(function() {
-      document.querySelectorAll('.result-reveal').forEach(function(el) {
-        el.classList.add('visible');
-      });
-    }, 300);
-
-    startUpsellTimer();
+      var upsell = document.getElementById('mapa-upsell');
+      if (upsell) {
+        upsell.style.display = '';
+        startUpsellTimer();
+        upsell.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 1500);
   }
 
   // ══════════════════════════════════════════════════
@@ -2363,27 +2266,18 @@
       if (json.mapa) mapaReal = json.mapa;
     } catch (err) {
       console.error('Erro no submit:', err);
-      // Continua mesmo com erro
     }
 
-    // Popula o resultado (com dados reais se disponíveis, fallback aleatório caso contrário)
-    populateResult(mapaReal);
-
-    // Aguarda loading completo e então mostra mapa + resultado
+    // Aguarda loading completo e então mostra mapa
     setTimeout(function() {
       hideLoadingOverlay();
       setTimeout(function() {
-        // Exibe o mapa bodygraph completo primeiro (se temos dados reais)
         if (mapaReal && mapaReal.svg) {
           popularMapaReal(mapaReal, email);
           showMapaSection();
-          // Depois de rolar pro mapa, exibe o upsell
-          setTimeout(function() {
-            showResultSection();
-          }, 1200);
         } else {
-          // Sem dados reais — vai direto pro upsell
-          showResultSection();
+          // Fallback: mostra a seção do mapa sem bodygraph
+          showMapaSection();
         }
       }, 600);
     }, 4000);
