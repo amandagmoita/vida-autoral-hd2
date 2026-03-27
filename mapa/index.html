@@ -781,7 +781,39 @@
       font-size: 0.9rem;
     }
 
-    /* ── MAPA CARDS (dados reais com blur parcial) ──── */
+    /* ── BODYGRAPH SECTION ───────────────────────────── */
+    .bodygraph-section {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 3rem 2rem 1rem;
+    }
+
+    .bodygraph-embed-wrap {
+      background: var(--white);
+      border: 1px solid rgba(155,125,97,0.2);
+      padding: 1.5rem;
+    }
+
+    .bodygraph-embed-wrap bodygraph-embed {
+      display: block;
+      width: 100%;
+    }
+
+    /* ── UPSELL WRAPPER (botão solto, sem card escuro) ── */
+    .upsell-wrapper {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 2rem 5rem;
+    }
+
+    .upsell-wrapper .upsell-urgency {
+      background: rgba(155,125,97,0.08);
+      border: 1px solid rgba(155,125,97,0.2);
+      margin-bottom: 1.4rem;
+    }
+
+    .upsell-wrapper .upsell-urgency span { color: #5a4535; }
+    .upsell-wrapper .upsell-urgency strong { color: var(--milky-coffee); }
     .mapa-cards-section {
       max-width: 640px;
       margin: 0 auto;
@@ -840,97 +872,11 @@
       padding-bottom: 0.8rem;
     }
 
-    .mapa-card-locked {
-      position: relative;
-      padding-bottom: 1.4rem;
-      margin-top: -0.2rem;
-    }
+    .mapa-card-locked { display: none; }
+    .mapa-tags-locked { display: none; }
 
-    .mapa-card-locked-text {
-      font-size: 0.87rem;
-      line-height: 1.75;
-      color: #5a4535;
-      filter: blur(4.5px);
-      user-select: none;
-      pointer-events: none;
-    }
-
-    .mapa-card-lock-bar {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.88) 45%);
-    }
-
-    .mapa-card-lock-bar span {
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--milky-coffee);
-    }
-
-    .mapa-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      padding-bottom: 1rem;
-    }
-
-    .mapa-tag {
-      padding: 0.25rem 0.6rem;
-      border: 1px solid rgba(155,125,97,0.3);
-      font-size: 0.75rem;
-      color: var(--milky-coffee);
-      font-weight: 300;
-    }
-
-    .mapa-tags-locked {
-      position: relative;
-      padding-bottom: 1.2rem;
-      margin-top: 0.4rem;
-    }
-
-    .mapa-tags-locked .mapa-tags {
-      filter: blur(4px);
-      user-select: none;
-      pointer-events: none;
-    }
-
-    /* ── UPSELL CARD ─────────────────────────────────── */
-    .upsell-wrapper {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 0 2rem 5rem;
-    }
-
-    .upsell-card {
-      background: var(--dark);
-      padding: 3rem 2.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .upsell-card::before {
-      content: '';
-      position: absolute;
-      top: -80px; right: -60px;
-      width: 240px; height: 240px;
-      border: 1px solid rgba(218,163,143,0.1);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .upsell-card::after {
-      content: '';
-      position: absolute;
-      bottom: -100px; left: -70px;
-      width: 300px; height: 300px;
-      border: 1px solid rgba(155,125,97,0.07);
-      border-radius: 50%;
-      pointer-events: none;
-    }
+    /* ── UPSELL CARD (mantido para referência, não usado na página) ── */
+    .upsell-card { display: none; }
 
     /* urgência */
     .upsell-urgency {
@@ -938,11 +884,9 @@
       align-items: center;
       gap: 0.7rem;
       padding: 0.7rem 1.1rem;
-      border: 1px solid rgba(218,163,143,0.2);
-      background: rgba(218,163,143,0.06);
-      margin-bottom: 1.8rem;
-      position: relative;
-      z-index: 1;
+      border: 1px solid rgba(155,125,97,0.2);
+      background: rgba(155,125,97,0.08);
+      margin-bottom: 1.4rem;
     }
 
     .urgency-dot {
@@ -962,10 +906,10 @@
       font-size: 0.78rem;
       font-weight: 200;
       letter-spacing: 0.08em;
-      color: rgba(233,215,192,0.7);
+      color: #5a4535;
     }
     .upsell-urgency strong {
-      color: var(--roasted-peach);
+      color: var(--milky-coffee);
       font-weight: 400;
     }
 
@@ -1527,9 +1471,19 @@
 
   </div>
 
-  <!-- MAPA CARDS com dados reais + blur -->
+  <!-- BODYGRAPH EMBED -->
 
-  <div class="mapa-cards-section result-reveal result-reveal-4">
+  <div class="bodygraph-section result-reveal result-reveal-4">
+    <p class="result-free-label" style="margin-bottom:1rem;">Seu gráfico Bodygraph</p>
+    <div class="bodygraph-embed-wrap">
+      <bodygraph-embed id="bodygraph-chart"></bodygraph-embed>
+    </div>
+  </div>
+
+  <!-- MAPA CARDS — dados reais, sem blur -->
+
+  <div class="mapa-cards-section result-reveal result-reveal-5">
+    <p class="result-free-label" style="margin-bottom:1.2rem;">Sua configuração energética</p>
 
 ```
 <!-- Estratégia -->
@@ -1537,10 +1491,6 @@
   <p class="mapa-card-topic">Estratégia</p>
   <p class="mapa-card-value" id="mc-estrategia-valor">—</p>
   <p class="mapa-card-preview" id="mc-estrategia-preview">—</p>
-  <div class="mapa-card-locked">
-    <p class="mapa-card-locked-text" id="mc-estrategia-locked">Seguir sua estratégia elimina a resistência da sua vida e abre espaço para que tudo flua com naturalidade — nas finanças, nos relacionamentos e na carreira.</p>
-    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
-  </div>
 </div>
 
 <!-- Autoridade -->
@@ -1548,10 +1498,6 @@
   <p class="mapa-card-topic">Autoridade Interior</p>
   <p class="mapa-card-value" id="mc-autoridade-valor">—</p>
   <p class="mapa-card-preview" id="mc-autoridade-preview">—</p>
-  <div class="mapa-card-locked">
-    <p class="mapa-card-locked-text" id="mc-autoridade-locked">Quando você ignora sua autoridade, as decisões custam energia e geram arrependimento. O PDF explica passo a passo como ativar esse guia interno em cada área da sua vida.</p>
-    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
-  </div>
 </div>
 
 <!-- Perfil -->
@@ -1559,68 +1505,34 @@
   <p class="mapa-card-topic">Perfil de Vida</p>
   <p class="mapa-card-value" id="mc-perfil-valor">—</p>
   <p class="mapa-card-preview" id="mc-perfil-preview">—</p>
-  <div class="mapa-card-locked">
-    <p class="mapa-card-locked-text" id="mc-perfil-locked">Seu perfil revela o papel que você veio desempenhar — e por que certos padrões se repetem na sua vida. Entender isso muda tudo sobre como você constrói sua trajetória e relações.</p>
-    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
-  </div>
 </div>
 
 <!-- Portões e Canais -->
 <div class="mapa-card">
   <p class="mapa-card-topic">Portões &amp; Canais Ativados</p>
-  <p class="mapa-card-preview" style="padding-bottom:0.4rem;">Estes são os portões e canais que compõem sua assinatura energética única:</p>
-  <div class="mapa-tags" id="mc-portoes-tags">
-    <!-- preenchido via JS -->
+  <p class="mapa-card-preview" style="padding-bottom:0.6rem;">Sua assinatura energética única:</p>
+  <div class="mapa-tags" id="mc-portoes-tags"></div>
+</div>
+```
+
   </div>
-  <div class="mapa-tags-locked">
-    <div class="mapa-tags" id="mc-portoes-locked-tags">
-      <!-- tags desfocadas geradas via JS -->
+
+  <!-- BOTÃO ÚNICO DE UPSELL -->
+
+  <div class="upsell-wrapper result-reveal result-reveal-5">
+    <div class="upsell-urgency" style="margin-bottom:1.4rem;">
+      <div class="urgency-dot"></div>
+      <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
     </div>
-    <div class="mapa-card-lock-bar"><span>🔒 desbloqueie para ler mais</span></div>
-  </div>
-</div>
-```
-
-  </div>
-
-  <!-- UPSELL -->
-
-  <div class="upsell-wrapper">
-    <div class="upsell-card result-reveal result-reveal-5">
 
 ```
-  <div class="upsell-urgency">
-    <div class="urgency-dot"></div>
-    <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
-  </div>
+<button class="upsell-btn" id="upsell-btn">
+  <span>Quero desbloquear meu mapa completo →</span>
+</button>
 
-  <p class="upsell-eyebrow">Análise Premium</p>
-  <h2 class="upsell-title">Desbloqueie seu mapa<br/><em>completo e personalizado</em></h2>
-  <p class="upsell-body">Cada dado acima é apenas o rótulo. O <strong style="color:var(--whole-wheat); font-weight:400;">PDF exclusivo com mais de 60 páginas</strong> explica exatamente o que cada elemento significa para <em style="font-style:italic;">você</em> — como prosperar, destravar sua vida financeira e viver com leveza no seu ritmo natural.</p>
-
-  <ul class="upsell-benefits">
-    <li><div class="benefit-check">◇</div>Descubra exatamente qual carreira e tipo de trabalho geram energia em vez de esgotamento</li>
-    <li><div class="benefit-check">◇</div>Entenda o que está travando sua prosperidade financeira — e como destravar</li>
-    <li><div class="benefit-check">◇</div>Encontre seu propósito de vida com clareza, sem mais tentativa e erro</li>
-    <li><div class="benefit-check">◇</div>Elimine os bloqueios invisíveis que sabotam seus relacionamentos e decisões</li>
-    <li><div class="benefit-check">◇</div>Aprenda a viver com leveza seguindo seu ritmo natural — sem forçar, sem culpa</li>
-  </ul>
-
-  <div class="upsell-price-row">
-    <div class="upsell-price-current"><sup>R$</sup>97</div>
-    <div class="upsell-price-old">R$297</div>
-    <div class="upsell-price-badge">67% off</div>
-  </div>
-
-  <button class="upsell-btn" id="upsell-btn">
-    <span>Quero meu mapa completo →</span>
-  </button>
-
-  <button class="upsell-skip" id="skip-btn">
-    Não, prefiro ficar com o básico
-  </button>
-
-</div>
+<button class="upsell-skip" id="skip-btn">
+  Não, prefiro ficar com o básico
+</button>
 ```
 
   </div>
@@ -2022,10 +1934,10 @@
     document.getElementById('mc-perfil-valor').textContent   = 'Perfil ' + perfil;
     document.getElementById('mc-perfil-preview').textContent = perfilPreview[perfil] || 'Seu perfil revela o papel único que você veio desempenhar no mundo.';
 
-    // Portões visíveis (primeiros 5)
+    // Portões visíveis — todos
     var portoesTags = document.getElementById('mc-portoes-tags');
     portoesTags.innerHTML = '';
-    portoes.slice(0, 5).forEach(function(p) {
+    portoes.forEach(function(p) {
       var tag = document.createElement('span');
       tag.className = 'mapa-tag';
       tag.textContent = 'Portão ' + p;
@@ -2038,16 +1950,16 @@
       portoesTags.appendChild(tag);
     });
 
-    // Portões bloqueados (restantes + mock)
-    var portoesBloqTags = document.getElementById('mc-portoes-locked-tags');
-    portoesBloqTags.innerHTML = '';
-    var restantes = portoes.slice(5).concat(portoesBloqueados);
-    restantes.forEach(function(p) {
-      var tag = document.createElement('span');
-      tag.className = 'mapa-tag';
-      tag.textContent = 'Portão ' + p;
-      portoesBloqTags.appendChild(tag);
-    });
+    // Bodygraph embed — passa os dados de nascimento para o componente
+    var bgEl = document.getElementById('bodygraph-chart');
+    if (bgEl) {
+      var dataNasc = document.getElementById('data').value;   // YYYY-MM-DD
+      var horaNasc = document.getElementById('hora').value;   // HH:MM
+      var localNasc = document.getElementById('local').value; // cidade
+      if (dataNasc) bgEl.setAttribute('date', dataNasc);
+      if (horaNasc) bgEl.setAttribute('time', horaNasc);
+      if (localNasc) bgEl.setAttribute('location', localNasc);
+    }
   }
 
   function showResultSection() {
