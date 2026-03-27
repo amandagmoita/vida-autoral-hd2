@@ -708,7 +708,7 @@ var LABELS = [
   ['Perfil',            rawPerfilRaw || '-',   getDesc('perfil', rawPerfil)],
   ['Defini\u00e7\u00e3o', tr(rawDefinicao), getDesc('definicao',  rawDefinicao)],
   ['Assinatura',        tr(rawAssinatura),  getDesc('assinatura', rawAssinatura)],
-  ['N\u00e3o-Self / Frustra\u00e7\u00e3o', tr(rawNaoSelf), getDesc('naoself', rawNaoSelf)],
+  ['Sinal de Desalinhamento', tr(rawNaoSelf), getDesc('naoself', rawNaoSelf)],
 ];
 
 var GRID_START_Y = tipoY + TIPO_H + 9;
@@ -933,7 +933,7 @@ var mapaPayload = {
   perfil:    { id: perfilId, label: perfilId, desc: getDesc('perfil', perfilId) },
   definicao: { id: definicaoId, label: tr(definicaoId), desc: getDesc('definicao', definicaoId) },
   assinatura:{ id: assinaturaId, label: tr(assinaturaId), desc: getDesc('assinatura', assinaturaId) },
-  naoself:   { id: naoselfId, label: tr(naoselfId), desc: getDesc('naoself', naoselfId) },
+  desalinhamento: { id: naoselfId, label: tr(naoselfId), desc: getDesc('naoself', naoselfId) },
   cruz:      traduzirCruz(cruzRawPayload),
   planetas:  planetas,
   portoes:   portoes.sort(function(a,b) { return a-b; }),
