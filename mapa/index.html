@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -9,6 +10,7 @@
   <script src="https://app.bodygraph.com/integrate-chart/js" defer></script>
 
   <!-- Microsoft Clarity -->
+
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -63,7 +65,6 @@
       pointer-events: none;
     }
 
-    /* geometric triangle — brand logo hint */
     .hero-triangle {
       width: 80px;
       height: 80px;
@@ -470,6 +471,548 @@
       margin: 0 auto;
     }
 
+    /* ═══════════════════════════════════════════════════
+       ── LOADING OVERLAY ─────────────────────────────────
+    ═══════════════════════════════════════════════════ */
+    #loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, var(--dark) 0%, #2e1f14 55%, #4a2e1e 100%);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem;
+    }
+    #loading-overlay.active {
+      display: flex;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .loading-triangle {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 2.5rem;
+      opacity: 0.7;
+      animation: rotateSlow 8s linear infinite;
+    }
+    .loading-triangle svg { width: 100%; height: 100%; }
+
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .loading-ring {
+      width: 56px;
+      height: 56px;
+      border: 1.5px solid rgba(218,163,143,0.2);
+      border-top-color: var(--roasted-peach);
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+      margin-bottom: 2.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-title {
+      font-family: 'Aboreto', cursive;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      color: var(--whole-wheat);
+      text-align: center;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.8rem;
+    }
+
+    .loading-subtitle {
+      font-size: 0.8rem;
+      font-weight: 200;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(218,163,143,0.6);
+      margin-bottom: 3rem;
+    }
+
+    .loading-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .loading-step.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .loading-step-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1px solid rgba(155,125,97,0.5);
+      background: transparent;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .loading-step.done .loading-step-dot {
+      background: var(--eucalyptus);
+      border-color: var(--eucalyptus);
+    }
+
+    .loading-step span {
+      font-size: 0.82rem;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      color: rgba(233,215,192,0.6);
+      transition: color 0.3s;
+    }
+    .loading-step.done span {
+      color: rgba(233,215,192,0.9);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       ── RESULTADO + UPSELL SECTION ──────────────────────
+    ═══════════════════════════════════════════════════ */
+    #result-section {
+      display: none;
+      background: linear-gradient(170deg, var(--whole-wheat) 0%, var(--cream) 60%);
+    }
+    #result-section.visible { display: block; }
+
+    /* Cabeçalho do resultado */
+    .result-hero {
+      background: linear-gradient(160deg, var(--dark) 0%, #2e1f14 55%, #4a2e1e 100%);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(155,125,97,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(146,173,164,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .result-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--roasted-peach);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-name-display {
+      font-family: 'Aboreto', cursive;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--whole-wheat);
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-name-display em {
+      font-style: normal;
+      color: var(--roasted-peach);
+    }
+
+    .result-type-tag {
+      display: inline-block;
+      border: 1px solid rgba(218,163,143,0.35);
+      padding: 0.4rem 1.2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(218,163,143,0.8);
+      margin-top: 0.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Bloco "o que você descobriu" (gratuito) */
+    .result-free {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2rem;
+    }
+
+    .result-free-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--milky-coffee);
+      margin-bottom: 1rem;
+    }
+
+    .result-free-title {
+      font-family: 'Aboreto', cursive;
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      color: var(--dark);
+      margin-bottom: 0.8rem;
+      line-height: 1.3;
+    }
+
+    .result-type-card {
+      background: var(--white);
+      border: 1px solid rgba(155,125,97,0.2);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-type-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--roasted-peach), var(--milky-coffee));
+    }
+
+    .result-type-header {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .result-type-glyph {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, rgba(218,163,143,0.2), rgba(155,125,97,0.15));
+      border: 1px solid rgba(155,125,97,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .result-type-info h3 {
+      font-family: 'Aboreto', cursive;
+      font-size: 1.1rem;
+      color: var(--dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .result-type-info small {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--eucalyptus);
+    }
+
+    .result-type-desc {
+      font-size: 0.92rem;
+      line-height: 1.85;
+      color: #5a4535;
+    }
+
+    /* Grade de preview (items bloqueados) */
+    .result-preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    @media (max-width: 480px) {
+      .result-preview-grid { grid-template-columns: 1fr; }
+    }
+
+    .preview-card {
+      background: var(--white);
+      border: 1px solid rgba(155,125,97,0.2);
+      padding: 1.4rem 1.4rem 1.2rem;
+      position: relative;
+    }
+
+    .preview-card-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--milky-coffee);
+      margin-bottom: 0.6rem;
+    }
+
+    .preview-card-content {
+      font-size: 0.87rem;
+      line-height: 1.7;
+      color: #5a4535;
+    }
+
+    .preview-card.locked .preview-card-content {
+      filter: blur(5px);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(233,215,192,0.55);
+      backdrop-filter: blur(1px);
+    }
+
+    .lock-badge {
+      width: 34px;
+      height: 34px;
+      background: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* ── UPSELL CARD ─────────────────────────────────── */
+    .upsell-wrapper {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .upsell-card {
+      background: var(--dark);
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upsell-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -60px;
+      width: 240px; height: 240px;
+      border: 1px solid rgba(218,163,143,0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .upsell-card::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -70px;
+      width: 300px; height: 300px;
+      border: 1px solid rgba(155,125,97,0.07);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* urgência */
+    .upsell-urgency {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.7rem 1.1rem;
+      border: 1px solid rgba(218,163,143,0.2);
+      background: rgba(218,163,143,0.06);
+      margin-bottom: 1.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .urgency-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--roasted-peach);
+      flex-shrink: 0;
+      animation: pulseGlow 1.5s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .upsell-urgency span {
+      font-size: 0.78rem;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      color: rgba(233,215,192,0.7);
+    }
+    .upsell-urgency strong {
+      color: var(--roasted-peach);
+      font-weight: 400;
+    }
+
+    .upsell-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--roasted-peach);
+      margin-bottom: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .upsell-title {
+      font-family: 'Aboreto', cursive;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      color: var(--whole-wheat);
+      line-height: 1.25;
+      margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .upsell-title em {
+      font-style: normal;
+      color: var(--roasted-peach);
+    }
+
+    .upsell-body {
+      font-size: 0.9rem;
+      font-weight: 200;
+      line-height: 1.85;
+      color: rgba(233,215,192,0.65);
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* lista de benefícios */
+    .upsell-benefits {
+      list-style: none;
+      margin-bottom: 2.2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .upsell-benefits li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(155,125,97,0.12);
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(233,215,192,0.82);
+    }
+    .upsell-benefits li:last-child { border-bottom: none; }
+
+    .benefit-check {
+      width: 20px;
+      height: 20px;
+      border: 1px solid rgba(146,173,164,0.4);
+      background: rgba(146,173,164,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 0.65rem;
+      color: var(--eucalyptus);
+    }
+
+    /* preço */
+    .upsell-price-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .upsell-price-current {
+      font-family: 'Aboreto', cursive;
+      font-size: 2.8rem;
+      color: var(--whole-wheat);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .upsell-price-current sup {
+      font-size: 1.2rem;
+      vertical-align: super;
+      letter-spacing: 0;
+    }
+
+    .upsell-price-old {
+      font-size: 1.1rem;
+      font-weight: 200;
+      color: rgba(233,215,192,0.3);
+      text-decoration: line-through;
+    }
+
+    .upsell-price-badge {
+      padding: 0.3rem 0.8rem;
+      border: 1px solid rgba(146,173,164,0.35);
+      background: rgba(146,173,164,0.1);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--eucalyptus);
+    }
+
+    /* botão de upsell */
+    .upsell-btn {
+      width: 100%;
+      background: var(--milky-coffee);
+      color: var(--white);
+      border: none;
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 1.2rem 2rem;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .upsell-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #7d6249;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .upsell-btn:hover::after { transform: scaleX(1); }
+    .upsell-btn span { position: relative; z-index: 1; }
+
+    /* skip */
+    .upsell-skip {
+      display: block;
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: 0.75rem;
+      font-weight: 200;
+      letter-spacing: 0.1em;
+      color: rgba(233,215,192,0.3);
+      cursor: pointer;
+      transition: color 0.2s;
+      position: relative;
+      z-index: 1;
+      background: none;
+      border: none;
+      width: 100%;
+      text-decoration: none;
+    }
+    .upsell-skip:hover { color: rgba(233,215,192,0.6); }
+
     /* ── DEPOIMENTOS ─────────────────────────────────── */
     .testimonials {
       padding: 6rem 2rem;
@@ -512,7 +1055,7 @@
       letter-spacing: 0.15em;
       opacity: 0.85;
       margin-bottom: 1.1rem;
-      padding-top: 1.2rem; /* empurra abaixo da aspa mas bem no topo */
+      padding-top: 1.2rem;
     }
 
     .testimonial-text {
@@ -631,12 +1174,15 @@
       from { opacity: 0; transform: translateY(-18px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
     @keyframes pulse {
       0%, 100% { opacity: 0.45; transform: translateX(-50%) translateY(0); }
       50%       { opacity: 0.7;  transform: translateX(-50%) translateY(6px); }
     }
 
-    /* intersection observer reveals */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
@@ -650,15 +1196,33 @@
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* resultado reveal */
+    .result-reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .result-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .result-reveal-1 { transition-delay: 0.1s; }
+    .result-reveal-2 { transition-delay: 0.2s; }
+    .result-reveal-3 { transition-delay: 0.35s; }
+    .result-reveal-4 { transition-delay: 0.5s; }
+    .result-reveal-5 { transition-delay: 0.65s; }
   </style>
+
 </head>
 <body>
 
 <!-- ═══ HERO ═══════════════════════════════════════════ -->
+
 <section class="hero" id="top">
 
   <div class="hero-triangle">
-    <?xml version="1.0" encoding="utf-8" ?><svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
+    <svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
   </div>
 
   <p class="hero-eyebrow">Vida Autoral · Desenho Humano</p>
@@ -673,7 +1237,7 @@
     Seu Desenho Humano revela como você foi desenhada para tomar decisões, usar sua energia e viver com autenticidade. Receba seu gráfico personalizado — gratuitamente.
   </p>
 
-  <a href="#formulario" class="hero-cta">Quero meu mapa</a>
+<a href="#formulario" class="hero-cta">Quero meu mapa</a>
 
   <div class="hero-scroll">
     <span>Rolar</span>
@@ -682,6 +1246,7 @@
 </section>
 
 <!-- ═══ PROMISE STRIP ══════════════════════════════════ -->
+
 <div class="strip">
   <div class="strip-item">Gratuito</div>
   <div class="strip-item">Personalizado</div>
@@ -689,6 +1254,7 @@
 </div>
 
 <!-- ═══ FORMULÁRIO ═══════════════════════════════════ -->
+
 <section class="form-section" id="formulario">
   <div class="form-inner">
     <p class="section-label reveal">Seu gráfico personalizado</p>
@@ -697,87 +1263,220 @@
       Preencha os dados abaixo com atenção — especialmente o horário de nascimento, pois ele define sua Autoridade e centros de energia.
     </p>
 
-    <form id="hd-form" novalidate>
+```
+<form id="hd-form" novalidate>
 
-      <!-- ── ETAPA 1: Dados pessoais ── -->
-      <div id="step-1">
-        <div class="form-steps-indicator">
-          <div class="step-dot active"></div>
-          <div class="step-line"></div>
-          <div class="step-dot"></div>
-        </div>
-
-        <div class="form-group reveal">
-          <label for="nome">Nome completo</label>
-          <input type="text" id="nome" name="nome" placeholder="Como você prefere ser chamada" required />
-        </div>
-
-        <div class="form-group reveal reveal-delay-1">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="seu@email.com" required />
-        </div>
-
-        <div class="form-group reveal reveal-delay-2">
-          <label for="telefone">WhatsApp</label>
-          <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" required />
-        </div>
-
-        <button type="button" class="form-submit reveal reveal-delay-3" id="next-btn">
-          <span>Continuar →</span>
-        </button>
-      </div>
-
-      <!-- ── ETAPA 2: Dados de nascimento ── -->
-      <div id="step-2" style="display:none;">
-        <div class="form-steps-indicator">
-          <div class="step-dot done"></div>
-          <div class="step-line filled"></div>
-          <div class="step-dot active"></div>
-        </div>
-
-        <p class="step-2-greeting" id="step-2-greeting"></p>
-
-        <div class="form-row reveal">
-          <div class="form-group">
-            <label for="data">Data de nascimento</label>
-            <input type="date" id="data" name="data" required />
-          </div>
-          <div class="form-group">
-            <label for="hora">Horário de nascimento</label>
-            <input type="time" id="hora" name="hora" required />
-          </div>
-        </div>
-
-        <div class="form-group city-autocomplete-wrapper reveal reveal-delay-1">
-          <label for="local-input">Cidade de nascimento</label>
-          <input type="text" id="local-input" autocomplete="off" placeholder="Comece a digitar sua cidade…" required />
-          <input type="hidden" id="local" name="local" />
-          <ul id="city-dropdown" class="city-dropdown"></ul>
-        </div>
-
-        <div class="step-2-buttons reveal reveal-delay-2">
-          <button type="button" class="form-back" id="back-btn">← Voltar</button>
-          <button type="submit" class="form-submit" id="submit-btn" style="flex:1;">
-            <span id="submit-label">Gerar meu mapa →</span>
-          </button>
-        </div>
-      </div>
-
-      <p class="form-privacy reveal">
-        Seus dados são usados exclusivamente para gerar seu gráfico de Desenho Humano.<br/>
-        Não compartilhamos com terceiros.
-      </p>
-    </form>
-
-    <!-- success message -->
-    <div id="form-success" style="display:none; margin-top:2rem; padding:1.5rem 2rem; background:var(--white); border-left:3px solid var(--eucalyptus);">
-      <p style="font-family:'Aboreto',cursive; color:var(--milky-coffee); margin-bottom:0.5rem;">Mapa enviado ✦</p>
-      <p style="font-size:0.9rem; color:#5a4535; line-height:1.7;">Seu gráfico de Desenho Humano foi enviado para o seu e-mail. Verifique também a caixa de spam.</p>
+  <!-- ── ETAPA 1: Dados pessoais ── -->
+  <div id="step-1">
+    <div class="form-steps-indicator">
+      <div class="step-dot active"></div>
+      <div class="step-line"></div>
+      <div class="step-dot"></div>
     </div>
+
+    <div class="form-group reveal">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" name="nome" placeholder="Como você prefere ser chamada" required />
+    </div>
+
+    <div class="form-group reveal reveal-delay-1">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" placeholder="seu@email.com" required />
+    </div>
+
+    <div class="form-group reveal reveal-delay-2">
+      <label for="telefone">WhatsApp</label>
+      <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" required />
+    </div>
+
+    <button type="button" class="form-submit reveal reveal-delay-3" id="next-btn">
+      <span>Continuar →</span>
+    </button>
+  </div>
+
+  <!-- ── ETAPA 2: Dados de nascimento ── -->
+  <div id="step-2" style="display:none;">
+    <div class="form-steps-indicator">
+      <div class="step-dot done"></div>
+      <div class="step-line filled"></div>
+      <div class="step-dot active"></div>
+    </div>
+
+    <p class="step-2-greeting" id="step-2-greeting"></p>
+
+    <div class="form-row reveal">
+      <div class="form-group">
+        <label for="data">Data de nascimento</label>
+        <input type="date" id="data" name="data" required />
+      </div>
+      <div class="form-group">
+        <label for="hora">Horário de nascimento</label>
+        <input type="time" id="hora" name="hora" required />
+      </div>
+    </div>
+
+    <div class="form-group city-autocomplete-wrapper reveal reveal-delay-1">
+      <label for="local-input">Cidade de nascimento</label>
+      <input type="text" id="local-input" autocomplete="off" placeholder="Comece a digitar sua cidade…" required />
+      <input type="hidden" id="local" name="local" />
+      <ul id="city-dropdown" class="city-dropdown"></ul>
+    </div>
+
+    <div class="step-2-buttons reveal reveal-delay-2">
+      <button type="button" class="form-back" id="back-btn">← Voltar</button>
+      <button type="submit" class="form-submit" id="submit-btn" style="flex:1;">
+        <span id="submit-label">Gerar meu mapa →</span>
+      </button>
+    </div>
+  </div>
+
+  <p class="form-privacy reveal">
+    Seus dados são usados exclusivamente para gerar seu gráfico de Desenho Humano.<br/>
+    Não compartilhamos com terceiros.
+  </p>
+</form>
+```
+
   </div>
 </section>
 
+<!-- ═══ LOADING OVERLAY (fullscreen) ══════════════════ -->
+
+<div id="loading-overlay">
+  <div class="loading-ring"></div>
+  <h2 class="loading-title">Mapeando sua configuração</h2>
+  <p class="loading-subtitle">Isso leva apenas alguns segundos</p>
+
+  <div class="loading-steps">
+    <div class="loading-step" id="lstep-1">
+      <div class="loading-step-dot"></div>
+      <span>Localizando posição dos planetas…</span>
+    </div>
+    <div class="loading-step" id="lstep-2">
+      <div class="loading-step-dot"></div>
+      <span>Calculando seus centros de energia…</span>
+    </div>
+    <div class="loading-step" id="lstep-3">
+      <div class="loading-step-dot"></div>
+      <span>Identificando canais e portões…</span>
+    </div>
+    <div class="loading-step" id="lstep-4">
+      <div class="loading-step-dot"></div>
+      <span>Determinando sua Autoridade…</span>
+    </div>
+    <div class="loading-step" id="lstep-5">
+      <div class="loading-step-dot"></div>
+      <span>Mapa pronto ✦</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESULTADO + UPSELL ═════════════════════════════ -->
+
+<section id="result-section">
+
+  <!-- Cabeçalho escuro com o tipo -->
+
+  <div class="result-hero">
+    <p class="result-eyebrow result-reveal">Seu Desenho Humano</p>
+    <h2 class="result-name-display result-reveal result-reveal-1" id="result-display-title">
+      Você é uma<br/><em id="result-type-name-display">Manifestadora Pura</em>
+    </h2>
+    <div class="result-type-tag result-reveal result-reveal-2" id="result-type-tag-display">Tipo · Autoridade · Perfil</div>
+  </div>
+
+  <!-- O que está incluído no gratuito -->
+
+  <div class="result-free">
+    <p class="result-free-label result-reveal result-reveal-2">O que você descobriu</p>
+    <h3 class="result-free-title result-reveal result-reveal-3">Seu tipo energético</h3>
+
+```
+<div class="result-type-card result-reveal result-reveal-3">
+  <div class="result-type-header">
+    <div class="result-type-glyph" id="result-glyph">⚡</div>
+    <div class="result-type-info">
+      <h3 id="result-type-name">Manifestadora</h3>
+      <small id="result-type-sub">Tipo Energético · ~9% da população</small>
+    </div>
+  </div>
+  <p class="result-type-desc" id="result-type-desc">Você nasceu para iniciar e impactar. Sua energia é independente e poderosa — quando age a partir da sua verdade interior, abre caminhos que outros não conseguem ver.</p>
+</div>
+
+<!-- Preview parcial de outros itens -->
+<p class="result-free-label result-reveal result-reveal-4" style="margin-bottom:0.8rem;">Seu mapa também contém</p>
+<div class="result-preview-grid result-reveal result-reveal-4">
+  <div class="preview-card">
+    <p class="preview-card-label">Estratégia de Vida</p>
+    <p class="preview-card-content" id="result-strategy-text">Informar antes de agir elimina a resistência e abre espaço para seu impacto real no mundo.</p>
+  </div>
+  <div class="preview-card locked">
+    <p class="preview-card-label">Autoridade Interior</p>
+    <p class="preview-card-content">Seu processo de decisão ideal envolve aguardar a clareza emocional antes de comprometer.</p>
+    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+  </div>
+  <div class="preview-card locked">
+    <p class="preview-card-label">Centros Definidos</p>
+    <p class="preview-card-content">5 centros definidos indicam energia consistente em áreas específicas da sua vida.</p>
+    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+  </div>
+  <div class="preview-card locked">
+    <p class="preview-card-label">Perfil &amp; Propósito</p>
+    <p class="preview-card-content">Perfil 3/5 traz o papel de mártir e herético — aprendizado pelo experimento e por ser modelo.</p>
+    <div class="lock-overlay"><div class="lock-badge">🔒</div></div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- UPSELL -->
+
+  <div class="upsell-wrapper">
+    <div class="upsell-card result-reveal result-reveal-5">
+
+```
+  <div class="upsell-urgency">
+    <div class="urgency-dot"></div>
+    <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
+  </div>
+
+  <p class="upsell-eyebrow">Análise Premium</p>
+  <h2 class="upsell-title">Desbloqueie seu mapa<br/><em>completo e personalizado</em></h2>
+  <p class="upsell-body">Seu mapa básico revelou seu Tipo — mas é apenas a superfície. A análise premium decodifica cada camada da sua configuração e entrega um guia prático para viver alinhada ao seu design.</p>
+
+  <ul class="upsell-benefits">
+    <li><div class="benefit-check">◇</div>Autoridade interior detalhada + como tomar decisões sem ansiedade</li>
+    <li><div class="benefit-check">◇</div>Todos os seus Centros Definidos e Indefinidos explicados</li>
+    <li><div class="benefit-check">◇</div>Seus Canais e Portões — talentos inatos e pontos de crescimento</li>
+    <li><div class="benefit-check">◇</div>Perfil de vida e sua missão nesta encarnação</li>
+    <li><div class="benefit-check">◇</div>Guia prático: carreira, relacionamentos e energia no dia a dia</li>
+    <li><div class="benefit-check">◇</div>PDF completo personalizado com seu nome + gráfico Bodygraph</li>
+  </ul>
+
+  <div class="upsell-price-row">
+    <div class="upsell-price-current"><sup>R$</sup>47</div>
+    <div class="upsell-price-old">R$197</div>
+    <div class="upsell-price-badge">76% off</div>
+  </div>
+
+  <button class="upsell-btn" id="upsell-btn">
+    <span>Quero meu mapa completo →</span>
+  </button>
+
+  <button class="upsell-skip" id="skip-btn">
+    Não, prefiro ficar com o básico
+  </button>
+
+</div>
+```
+
+  </div>
+
+</section>
+
 <!-- ═══ O QUE É HUMAN DESIGN ══════════════════════════ -->
+
 <section class="what">
   <div>
     <p class="what-label reveal">O que é</p>
@@ -797,47 +1496,52 @@
 </section>
 
 <!-- ═══ BENEFÍCIOS ═══════════════════════════════════ -->
+
 <section class="benefits">
   <div class="benefits-inner">
     <p class="section-label reveal">O que você vai descobrir</p>
     <h2 class="section-title reveal reveal-delay-1">Seu gráfico revela</h2>
 
-    <div class="benefits-grid">
-      <div class="benefit-card reveal reveal-delay-1">
-        <div class="benefit-icon">✦</div>
-        <h3 class="benefit-title">Seu Tipo</h3>
-        <p class="benefit-text">Manifestador, Gerador, Projetor ou Refletor — cada tipo tem uma estratégia de vida que, quando seguida, elimina resistência e aumenta fluxo.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-2">
-        <div class="benefit-icon">◇</div>
-        <h3 class="benefit-title">Sua Autoridade</h3>
-        <p class="benefit-text">Como você foi desenhada para tomar decisões. Sacral, Emocional, Esplênico — cada autoridade tem seu ritmo e sinal único.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-3">
-        <div class="benefit-icon">○</div>
-        <h3 class="benefit-title">Seus Centros</h3>
-        <p class="benefit-text">Onde está sua energia consistente e onde você absorve influências externas. Compreender isso muda como você usa — e preserva — sua energia.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-4">
-        <div class="benefit-icon">△</div>
-        <h3 class="benefit-title">Seu Perfil</h3>
-        <p class="benefit-text">A combinação que revela seu papel no mundo e como você aprende, cresce e contribui com autenticidade ao longo da vida.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-1">
-        <div class="benefit-icon">✧</div>
-        <h3 class="benefit-title">Seus Dons Naturais</h3>
-        <p class="benefit-text">As qualidades inatas que você carrega desde o nascimento — aquelas que parecem fáceis para você, mas impressionam as pessoas ao redor. Seu gráfico revela onde sua genialidade natural mora e como usá-la a seu favor.</p>
-      </div>
-      <div class="benefit-card reveal reveal-delay-2">
-        <div class="benefit-icon">⬡</div>
-        <h3 class="benefit-title">Seus Talentos Únicos</h3>
-        <p class="benefit-text">Os talentos específicos moldados pela sua combinação de Gates e Canais — sua assinatura energética no mundo. Compreendê-los é o primeiro passo para construir uma vida e um negócio verdadeiramente alinhados com quem você é.</p>
-      </div>
-    </div>
+```
+<div class="benefits-grid">
+  <div class="benefit-card reveal reveal-delay-1">
+    <div class="benefit-icon">✦</div>
+    <h3 class="benefit-title">Seu Tipo</h3>
+    <p class="benefit-text">Manifestador, Gerador, Projetor ou Refletor — cada tipo tem uma estratégia de vida que, quando seguida, elimina resistência e aumenta fluxo.</p>
+  </div>
+  <div class="benefit-card reveal reveal-delay-2">
+    <div class="benefit-icon">◇</div>
+    <h3 class="benefit-title">Sua Autoridade</h3>
+    <p class="benefit-text">Como você foi desenhada para tomar decisões. Sacral, Emocional, Esplênico — cada autoridade tem seu ritmo e sinal único.</p>
+  </div>
+  <div class="benefit-card reveal reveal-delay-3">
+    <div class="benefit-icon">○</div>
+    <h3 class="benefit-title">Seus Centros</h3>
+    <p class="benefit-text">Onde está sua energia consistente e onde você absorve influências externas. Compreender isso muda como você usa — e preserva — sua energia.</p>
+  </div>
+  <div class="benefit-card reveal reveal-delay-4">
+    <div class="benefit-icon">△</div>
+    <h3 class="benefit-title">Seu Perfil</h3>
+    <p class="benefit-text">A combinação que revela seu papel no mundo e como você aprende, cresce e contribui com autenticidade ao longo da vida.</p>
+  </div>
+  <div class="benefit-card reveal reveal-delay-1">
+    <div class="benefit-icon">✧</div>
+    <h3 class="benefit-title">Seus Dons Naturais</h3>
+    <p class="benefit-text">As qualidades inatas que você carrega desde o nascimento — aquelas que parecem fáceis para você, mas impressionam as pessoas ao redor. Seu gráfico revela onde sua genialidade natural mora e como usá-la a seu favor.</p>
+  </div>
+  <div class="benefit-card reveal reveal-delay-2">
+    <div class="benefit-icon">⬡</div>
+    <h3 class="benefit-title">Seus Talentos Únicos</h3>
+    <p class="benefit-text">Os talentos específicos moldados pela sua combinação de Gates e Canais — sua assinatura energética no mundo. Compreendê-los é o primeiro passo para construir uma vida e um negócio verdadeiramente alinhados com quem você é.</p>
+  </div>
+</div>
+```
+
   </div>
 </section>
 
 <!-- ═══ DEPOIMENTOS ══════════════════════════════════ -->
+
 <section class="testimonials">
   <div style="max-width:900px; margin:0 auto; text-align:center;">
     <p class="section-label reveal">O que dizem as mulheres</p>
@@ -845,7 +1549,6 @@
   </div>
 
   <div class="testimonials-grid">
-
     <div class="testimonial-card reveal reveal-delay-1">
       <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
       <p class="testimonial-text">Recebi meu mapa e fiquei impressionada com a precisão. Finalmente entendi por que me sinto tão diferente das pessoas ao meu redor — e aprendi a parar de me forçar a agir como elas.</p>
@@ -858,74 +1561,77 @@
       </div>
     </div>
 
-    <div class="testimonial-card reveal reveal-delay-2">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">O gráfico chegou lindo e super detalhado. Entender minha Autoridade Sacral mudou completamente a forma como tomo decisões no meu negócio. Recomendo de olhos fechados!</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">RF</div>
-        <div>
-          <div class="testimonial-name">Rafaela F.</div>
-          <div class="testimonial-role">Belo Horizonte, MG</div>
-        </div>
-      </div>
+```
+<div class="testimonial-card reveal reveal-delay-2">
+  <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+  <p class="testimonial-text">O gráfico chegou lindo e super detalhado. Entender minha Autoridade Sacral mudou completamente a forma como tomo decisões no meu negócio. Recomendo de olhos fechados!</p>
+  <div class="testimonial-author">
+    <div class="testimonial-avatar">RF</div>
+    <div>
+      <div class="testimonial-name">Rafaela F.</div>
+      <div class="testimonial-role">Belo Horizonte, MG</div>
     </div>
+  </div>
+</div>
 
-    <div class="testimonial-card reveal reveal-delay-3">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Sempre tive dificuldade de me posicionar profissionalmente. Depois de entender meu Perfil e meu Tipo, tudo fez sentido. Parece que me deram um manual de instrução da minha própria vida.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">JL</div>
-        <div>
-          <div class="testimonial-name">Juliana L.</div>
-          <div class="testimonial-role">Curitiba, PR</div>
-        </div>
-      </div>
+<div class="testimonial-card reveal reveal-delay-3">
+  <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+  <p class="testimonial-text">Sempre tive dificuldade de me posicionar profissionalmente. Depois de entender meu Perfil e meu Tipo, tudo fez sentido. Parece que me deram um manual de instrução da minha própria vida.</p>
+  <div class="testimonial-author">
+    <div class="testimonial-avatar">JL</div>
+    <div>
+      <div class="testimonial-name">Juliana L.</div>
+      <div class="testimonial-role">Curitiba, PR</div>
     </div>
+  </div>
+</div>
 
-    <div class="testimonial-card reveal reveal-delay-4">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Nunca tinha ouvido falar em Desenho Humano antes. Recebi o mapa com o coração aberto e saí completamente diferente — com clareza sobre minha energia, meus limites e meu propósito. Foi um presente.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">TA</div>
-        <div>
-          <div class="testimonial-name">Tatiana A.</div>
-          <div class="testimonial-role">Fortaleza, CE</div>
-        </div>
-      </div>
+<div class="testimonial-card reveal reveal-delay-4">
+  <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+  <p class="testimonial-text">Nunca tinha ouvido falar em Desenho Humano antes. Recebi o mapa com o coração aberto e saí completamente diferente — com clareza sobre minha energia, meus limites e meu propósito. Foi um presente.</p>
+  <div class="testimonial-author">
+    <div class="testimonial-avatar">TA</div>
+    <div>
+      <div class="testimonial-name">Tatiana A.</div>
+      <div class="testimonial-role">Fortaleza, CE</div>
     </div>
+  </div>
+</div>
 
-    <div class="testimonial-card reveal reveal-delay-1">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Sou terapeuta, então já fiz MBTI, Eneagrama, tudo que existe. Achei que seria mais do mesmo. Me enganei. O Desenho Humano foi o único sistema que não só me descreveu — me mostrou o <em style="font-style:italic; color:var(--roasted-peach);">porquê</em> de cada padrão e o que fazer com isso. É completamente diferente.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">PS</div>
-        <div>
-          <div class="testimonial-name">Priscila S.</div>
-          <div class="testimonial-role">Florianópolis, SC</div>
-        </div>
-      </div>
+<div class="testimonial-card reveal reveal-delay-1">
+  <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+  <p class="testimonial-text">Sou terapeuta, então já fiz MBTI, Eneagrama, tudo que existe. Achei que seria mais do mesmo. Me enganei. O Desenho Humano foi o único sistema que não só me descreveu — me mostrou o <em style="font-style:italic; color:var(--roasted-peach);">porquê</em> de cada padrão e o que fazer com isso. É completamente diferente.</p>
+  <div class="testimonial-author">
+    <div class="testimonial-avatar">PS</div>
+    <div>
+      <div class="testimonial-name">Priscila S.</div>
+      <div class="testimonial-role">Florianópolis, SC</div>
     </div>
+  </div>
+</div>
 
-    <div class="testimonial-card reveal reveal-delay-2">
-      <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
-      <p class="testimonial-text">Fiquei com medo de tentar porque não sabia meu horário exato de nascimento. Coloquei um aproximado e o mapa ainda assim fez sentido absurdo. A orientação sobre isso é muito boa. Vale tentar mesmo com a informação que você tem.</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">BN</div>
-        <div>
-          <div class="testimonial-name">Beatriz N.</div>
-          <div class="testimonial-role">Recife, PE</div>
-        </div>
-      </div>
+<div class="testimonial-card reveal reveal-delay-2">
+  <div class="testimonial-stars">✦ ✦ ✦ ✦ ✦</div>
+  <p class="testimonial-text">Fiquei com medo de tentar porque não sabia meu horário exato de nascimento. Coloquei um aproximado e o mapa ainda assim fez sentido absurdo. A orientação sobre isso é muito boa. Vale tentar mesmo com a informação que você tem.</p>
+  <div class="testimonial-author">
+    <div class="testimonial-avatar">BN</div>
+    <div>
+      <div class="testimonial-name">Beatriz N.</div>
+      <div class="testimonial-role">Recife, PE</div>
     </div>
+  </div>
+</div>
+```
 
   </div>
 </section>
 
 <!-- ═══ FOOTER ═══════════════════════════════════════ -->
+
 <footer>
-    <div class="footer-logo">
+  <div class="footer-logo">
     <div style="width:44px;height:38px;display:flex;align-items:center;justify-content:center;">
-      <?xml version="1.0" encoding="utf-8" ?><svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
+      <svg fill="#9B7D61" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 2000 2000"><path fill="none" d="M0 0L2000 0L2000 2000L0 2000L0 0Z"/><path d="M495.008 541.153C532.838 540.453 572.702 541.02 610.683 541.009L835.063 540.986L1456.93 541.046C1452.5 550.534 1441.44 568.389 1435.88 577.988L1396.86 645.615L1268.67 866.177L1077.79 1196.82C1052.94 1239.79 1026.8 1286.99 1001.12 1329.18L994.755 1318.27L1016.44 1280.76C1042.45 1233.01 1073.89 1182.25 1101.12 1134.79L1313.87 766.311L1388.74 636.178C1402.02 613.342 1425.51 575.523 1436.72 552.474L514.426 552.506C523.03 570.276 536.867 591.461 546.571 609.749L535.211 612.319C526.893 597.837 518.483 583.408 509.981 569.034C505.249 560.95 498.114 549.693 495.008 541.153Z"/><path d="M555.399 640.08C604.571 639.723 653.744 639.78 702.914 640.251L919.63 640.254L1358.05 639.898C1355.7 643.703 1353.11 647.593 1350.68 651.372C1316.3 652.596 1273.66 651.416 1238.76 651.4L1017.04 651.408L456.756 653.341C462.072 664.311 471.807 680.157 478.072 691.12L523.976 770.694L672.956 1028.47L844.102 1323.84L888.012 1400.27C895.624 1413.69 909.736 1439.81 918.442 1450.84C925.488 1441.64 944.045 1407.75 950.819 1395.92L957.106 1406.67C946.814 1425.98 929.942 1454.89 918.364 1473.23C912.509 1465.48 895.622 1434.5 889.821 1424.51L828.691 1319.39L638.202 989.146L494.516 741.641L456.968 677.577C451.239 667.791 441.618 652.376 437.434 642.357C462.149 641.127 489.779 642.684 514.806 641.958C529.622 641.528 540.135 642.556 555.399 640.08Z"/><path d="M1431.47 640.059C1457.67 639.918 1485.49 639.647 1511.61 640.344C1502.37 658.63 1486.3 684.696 1475.63 702.693L1431.35 779.026L1267.16 1062.6L1114.24 1327.39L1061.83 1417.41C1051.84 1434.75 1041.05 1455.34 1030.32 1471.88C1019.8 1455.81 1010.36 1436.09 1000.46 1419.42L897.1 1241.59L591.619 714.378C587.134 706.851 582.773 699.249 578.539 691.577L591.334 691.22L896.992 1219.93L982.889 1367.62C993.498 1386.15 1018.41 1433.32 1030.62 1449.27C1036.14 1441.63 1043.73 1427.37 1048.76 1418.81L1093.57 1340.95L1253.6 1064.06C1326.66 937.665 1400.05 811.451 1472.73 684.838C1478.97 673.957 1486.05 662.885 1491.21 651.488L1423.36 651.469C1425.67 647.521 1428 642.862 1431.47 640.059Z"/></svg>
     </div>
     <span class="footer-logo-text">Vida Autoral</span>
   </div>
@@ -933,17 +1639,72 @@
 </footer>
 
 <script>
-  // ── Intersection Observer (reveal animations) ──
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
+  // ══════════════════════════════════════════════════
+  // DADOS DOS TIPOS (base de conteúdo para exibição)
+  // ══════════════════════════════════════════════════
+  var hdTypes = [
+    {
+      glyph: "⚡",
+      name: "Manifestadora",
+      sub: "Tipo Energético · ~9% da população",
+      titleSuffix: "Manifestadora Pura",
+      tagText: "Tipo Manifestadora · Autoridade Emocional · Perfil 3/5",
+      desc: "Você nasceu para iniciar e impactar. Sua energia é independente e poderosa — quando age a partir da sua verdade interior, abre caminhos que outros não conseguem ver.",
+      strategy: "Informar antes de agir elimina a resistência e abre espaço para seu impacto real no mundo."
+    },
+    {
+      glyph: "🔮",
+      name: "Geradora",
+      sub: "Tipo Energético · ~37% da população",
+      titleSuffix: "Geradora Pura",
+      tagText: "Tipo Geradora · Autoridade Sacral · Perfil 2/4",
+      desc: "Você é a força vital do planeta. Sua energia sustentada e poderosa floresce quando você responde ao que realmente acende seu sacral — e sabe dizer não ao que drena.",
+      strategy: "Responder — espere o que a vida lhe apresenta antes de agir. Seu sacral sabe a resposta."
+    },
+    {
+      glyph: "✨",
+      name: "Geradora Manifesta",
+      sub: "Tipo Energético · ~33% da população",
+      titleSuffix: "Geradora Manifesta",
+      tagText: "Tipo Geradora Manifesta · Autoridade Emocional · Perfil 1/3",
+      desc: "Você combina a energia geradora com a capacidade de manifestar. Rápida, multifacetada e poderosa — seu design pede que você responda primeiro e então informe antes de agir.",
+      strategy: "Responder e informar — sua velocidade é um dom, mas comunicar o que está em movimento evita resistência."
+    },
+    {
+      glyph: "🌙",
+      name: "Projetora",
+      sub: "Tipo Não-Energético · ~21% da população",
+      titleSuffix: "Projetora Visionária",
+      tagText: "Tipo Projetora · Autoridade Projetada · Perfil 6/2",
+      desc: "Você nasceu para guiar e ver o que os outros não veem. Sua energia é focada e penetrante — funciona melhor quando há reconhecimento e convite genuíno antes de se envolver.",
+      strategy: "Aguardar o convite — sua sabedoria é preciosa quando reconhecida. Não force, espere ser chamada."
+    },
+    {
+      glyph: "🪞",
+      name: "Refletora",
+      sub: "Tipo Não-Energético · ~1% da população",
+      titleSuffix: "Refletora Lunar",
+      tagText: "Tipo Refletora · Autoridade Lunar · Perfil 4/6",
+      desc: "Você é o espelho da comunidade. Completamente aberta e sábia, você reflete a saúde do ambiente ao redor. Decisões importantes pedem um ciclo lunar completo de discernimento.",
+      strategy: "Aguardar um ciclo lunar — 28 dias de discernimento antes de grandes decisões é seu presente, não um obstáculo."
+    }
+  ];
+
+  // ══════════════════════════════════════════════════
+  // REVEAL OBSERVER (seções da página)
+  // ══════════════════════════════════════════════════
+  var revealEls = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
       if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
     });
   }, { threshold: 0.12 });
-  revealEls.forEach(el => observer.observe(el));
+  revealEls.forEach(function(el) { observer.observe(el); });
 
-  // ── Máscara de telefone ──
-  document.getElementById('telefone').addEventListener('input', function(e) {
+  // ══════════════════════════════════════════════════
+  // MÁSCARA DE TELEFONE
+  // ══════════════════════════════════════════════════
+  document.getElementById('telefone').addEventListener('input', function() {
     var v = this.value.replace(/\D/g, '').slice(0, 11);
     if (v.length > 6) {
       this.value = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
@@ -954,7 +1715,9 @@
     }
   });
 
-  // ── Navegação entre etapas ──
+  // ══════════════════════════════════════════════════
+  // NAVEGAÇÃO ENTRE ETAPAS
+  // ══════════════════════════════════════════════════
   document.getElementById('next-btn').addEventListener('click', function() {
     var nome     = document.getElementById('nome').value.trim();
     var email    = document.getElementById('email').value.trim();
@@ -964,35 +1727,27 @@
       alert('Por favor, preencha todos os campos para continuar.');
       return;
     }
-
-    // Validação simples de email
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       alert('Por favor, insira um e-mail válido.');
       document.getElementById('email').focus();
       return;
     }
-
-    // Validação telefone (mínimo 10 dígitos)
     if (telefone.replace(/\D/g, '').length < 10) {
       alert('Por favor, insira um número de WhatsApp válido.');
       document.getElementById('telefone').focus();
       return;
     }
 
-    // Mostrar etapa 2
     document.getElementById('step-1').style.display = 'none';
     document.getElementById('step-2').style.display = 'block';
 
-    // Saudação personalizada
     var primeiroNome = nome.split(' ')[0];
-    document.getElementById('step-2-greeting').textContent = primeiroNome + ', agora precisamos dos seus dados de nascimento \u2728';
+    document.getElementById('step-2-greeting').textContent = primeiroNome + ', agora precisamos dos seus dados de nascimento ✨';
 
-    // Ativar reveal nos novos elementos
     document.querySelectorAll('#step-2 .reveal').forEach(function(el) {
       setTimeout(function() { el.classList.add('visible'); }, 100);
     });
 
-    // Scroll suave para o topo do formulário
     document.getElementById('formulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
@@ -1002,26 +1757,120 @@
     document.getElementById('formulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // ── Form submit → chama a Vercel API (api/submit.js) ──
+  // ══════════════════════════════════════════════════
+  // LOADING SEQUENCE
+  // ══════════════════════════════════════════════════
+  function showLoadingOverlay() {
+    var overlay = document.getElementById('loading-overlay');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    var steps = ['lstep-1','lstep-2','lstep-3','lstep-4','lstep-5'];
+    steps.forEach(function(id, i) {
+      setTimeout(function() {
+        var el = document.getElementById(id);
+        el.classList.add('visible');
+        setTimeout(function() { el.classList.add('done'); }, 350);
+      }, i * 700);
+    });
+  }
+
+  function hideLoadingOverlay() {
+    var overlay = document.getElementById('loading-overlay');
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.5s ease';
+    setTimeout(function() {
+      overlay.classList.remove('active');
+      overlay.style.opacity = '';
+      overlay.style.transition = '';
+      document.body.style.overflow = '';
+    }, 500);
+  }
+
+  // ══════════════════════════════════════════════════
+  // POPULAR RESULTADO COM TIPO SORTEADO
+  // ══════════════════════════════════════════════════
+  function populateResult() {
+    var nome = document.getElementById('nome').value.trim();
+    var primeiroNome = nome.split(' ')[0];
+    var tipo = hdTypes[Math.floor(Math.random() * hdTypes.length)];
+
+    document.getElementById('result-display-title').innerHTML =
+      primeiroNome + ', você é uma<br/><em>' + tipo.titleSuffix + '</em>';
+
+    document.getElementById('result-type-tag-display').textContent = tipo.tagText;
+    document.getElementById('result-glyph').textContent = tipo.glyph;
+    document.getElementById('result-type-name').textContent = tipo.name;
+    document.getElementById('result-type-sub').textContent = tipo.sub;
+    document.getElementById('result-type-desc').textContent = tipo.desc;
+    document.getElementById('result-strategy-text').textContent = tipo.strategy;
+  }
+
+  function showResultSection() {
+    var sec = document.getElementById('result-section');
+    sec.classList.add('visible');
+
+    // Rola suavemente até o resultado
+    setTimeout(function() {
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+
+    // Ativa animações de reveal do resultado
+    setTimeout(function() {
+      document.querySelectorAll('.result-reveal').forEach(function(el) {
+        el.classList.add('visible');
+      });
+    }, 300);
+
+    startUpsellTimer();
+  }
+
+  // ══════════════════════════════════════════════════
+  // TIMER DO UPSELL
+  // ══════════════════════════════════════════════════
+  function startUpsellTimer() {
+    var seconds = 14 * 60 + 58;
+    var el = document.getElementById('upsell-timer');
+    var interval = setInterval(function() {
+      if (seconds <= 0) { clearInterval(interval); el.textContent = 'Expirado'; return; }
+      seconds--;
+      var m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      var s = (seconds % 60).toString().padStart(2, '0');
+      el.textContent = m + ':' + s;
+    }, 1000);
+  }
+
+  // ══════════════════════════════════════════════════
+  // SUBMIT DO FORM
+  // ══════════════════════════════════════════════════
   document.getElementById('hd-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const nome     = document.getElementById('nome').value.trim();
-    const email    = document.getElementById('email').value.trim();
-    const telefone = document.getElementById('telefone').value.trim();
-    const data     = document.getElementById('data').value;
-    const hora     = document.getElementById('hora').value;
-    const local    = document.getElementById('local').value.trim();
+    var nome     = document.getElementById('nome').value.trim();
+    var email    = document.getElementById('email').value.trim();
+    var telefone = document.getElementById('telefone').value.trim();
+    var data     = document.getElementById('data').value;
+    var hora     = document.getElementById('hora').value;
+    var local    = document.getElementById('local').value.trim();
 
     if (!nome || !email || !telefone || !data || !hora || !local) {
       alert('Por favor, preencha todos os campos para gerar seu mapa.');
       return;
     }
 
-    const btn   = document.getElementById('submit-btn');
-    const label = document.getElementById('submit-label');
+    var btn   = document.getElementById('submit-btn');
+    var label = document.getElementById('submit-label');
     btn.disabled = true;
-    label.textContent = 'Enviando\u2026';
+    label.textContent = 'Enviando…';
+
+    // Mostra loading overlay imediatamente
+    showLoadingOverlay();
+
+    // Esconde a section do formulário
+    document.getElementById('formulario').style.display = 'none';
+
+    // Popula o resultado antes de mostrar
+    populateResult();
 
     try {
       const res = await fetch('/api/submit', {
@@ -1029,40 +1878,48 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, email, telefone, data, hora, local })
       });
-
       const json = await res.json();
-
       if (!res.ok) throw new Error(json.error || 'Erro desconhecido');
-
-      // Sucesso — esconde form, exibe confirmação
-      document.getElementById('hd-form').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-
     } catch (err) {
-      console.error(err);
-      label.textContent = 'Erro ao enviar \u2014 tente novamente';
-      btn.disabled = false;
+      console.error('Erro no submit:', err);
+      // Continua mesmo com erro — mostra resultado de qualquer forma
     }
+
+    // Aguarda loading completo (passos animados) e então mostra resultado
+    setTimeout(function() {
+      hideLoadingOverlay();
+      setTimeout(showResultSection, 600);
+    }, 4000);
   });
 
-  // ── City autocomplete via GeoNames ──
+  // ══════════════════════════════════════════════════
+  // BOTÕES DO UPSELL
+  // ══════════════════════════════════════════════════
+  document.getElementById('upsell-btn').addEventListener('click', function() {
+    // Substitua pela URL do seu checkout
+    window.location.href = 'https://vidaautoral.com.br/checkout-premium';
+  });
+
+  document.getElementById('skip-btn').addEventListener('click', function() {
+    // Scroll suave para os depoimentos (mantém na página)
+    document.querySelector('.testimonials').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // ══════════════════════════════════════════════════
+  // CITY AUTOCOMPLETE
+  // ══════════════════════════════════════════════════
   (function() {
-    const input    = document.getElementById('local-input');
-    const hidden   = document.getElementById('local');
-    const dropdown = document.getElementById('city-dropdown');
-    let debounceTimer = null;
-    let selectedIndex = -1;
+    var input    = document.getElementById('local-input');
+    var hidden   = document.getElementById('local');
+    var dropdown = document.getElementById('city-dropdown');
+    var debounceTimer = null;
+    var selectedIndex = -1;
 
     input.addEventListener('input', function() {
-      const q = this.value.trim();
+      var q = this.value.trim();
       hidden.value = '';
       input.classList.remove('city-selected');
-
-      if (q.length < 3) {
-        closeDropdown();
-        return;
-      }
-
+      if (q.length < 3) { closeDropdown(); return; }
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(function() { fetchCities(q); }, 350);
     });
@@ -1073,7 +1930,6 @@
           + encodeURIComponent(query)
           + '&featureClass=P&orderby=population&lang=pt&username=vidaautoral';
 
-        // Busca Brasil e mundial em paralelo
         var [resBR, resAll] = await Promise.all([
           fetch(base + '&maxRows=8&country=BR'),
           fetch(base + '&maxRows=8')
@@ -1081,25 +1937,15 @@
 
         var dataBR  = await resBR.json();
         var dataAll = await resAll.json();
-
-        var brCities    = (dataBR.geonames || []);
-        var allCities   = (dataAll.geonames || []);
-
-        // Filtra internacionais que não sejam BR (evita duplicatas)
+        var brCities  = dataBR.geonames || [];
+        var allCities = dataAll.geonames || [];
         var brIds = new Set(brCities.map(function(c) { return c.geonameId; }));
-        var intlCities = allCities.filter(function(c) {
+        var intl  = allCities.filter(function(c) {
           return c.countryCode !== 'BR' && !brIds.has(c.geonameId);
         });
-
-        // Monta lista: todas as BR primeiro, depois completa com internacionais até 8
-        var slotsLeft = Math.max(0, 8 - brCities.length);
-        var combined = brCities.concat(intlCities.slice(0, slotsLeft));
-
-        if (combined.length === 0) {
-          closeDropdown();
-          return;
-        }
-
+        var slots    = Math.max(0, 8 - brCities.length);
+        var combined = brCities.concat(intl.slice(0, slots));
+        if (!combined.length) { closeDropdown(); return; }
         renderDropdown(combined);
       } catch (err) {
         console.error('Erro ao buscar cidades:', err);
@@ -1110,27 +1956,22 @@
     function renderDropdown(cities) {
       dropdown.innerHTML = '';
       selectedIndex = -1;
-
-      cities.forEach(function(city, i) {
-        const li = document.createElement('li');
-        const region = city.adminName1 ? ', ' + city.adminName1 : '';
-        const display = city.name + region + ' \u2014 ' + city.countryName;
-
-        li.innerHTML = city.name + '<span class="city-country">' + region + ' \u2014 ' + city.countryName + '</span>';
-        li.dataset.value = display;
+      cities.forEach(function(city) {
+        var li = document.createElement('li');
+        var region  = city.adminName1 ? ', ' + city.adminName1 : '';
+        var display = city.name + region + ' — ' + city.countryName;
+        li.innerHTML = city.name + '<span class="city-country">' + region + ' — ' + city.countryName + '</span>';
+        li.dataset.value    = display;
         li.dataset.cityName = city.name;
-        li.dataset.index = i;
-
         li.addEventListener('click', function() { selectCity(display, city.name); });
         dropdown.appendChild(li);
       });
-
       dropdown.classList.add('open');
     }
 
     function selectCity(display, cityName) {
-      input.value = display;
-      hidden.value = cityName;
+      input.value   = display;
+      hidden.value  = cityName;
       input.classList.add('city-selected');
       closeDropdown();
     }
@@ -1144,19 +1985,9 @@
     input.addEventListener('keydown', function(e) {
       var items = dropdown.querySelectorAll('li');
       if (!items.length) return;
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
-        updateActive(items);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        selectedIndex = Math.max(selectedIndex - 1, 0);
-        updateActive(items);
-      } else if (e.key === 'Enter' && selectedIndex >= 0) {
-        e.preventDefault();
-        selectCity(items[selectedIndex].dataset.value, items[selectedIndex].dataset.cityName);
-      }
+      if (e.key === 'ArrowDown') { e.preventDefault(); selectedIndex = Math.min(selectedIndex + 1, items.length - 1); updateActive(items); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIndex = Math.max(selectedIndex - 1, 0); updateActive(items); }
+      else if (e.key === 'Enter' && selectedIndex >= 0) { e.preventDefault(); selectCity(items[selectedIndex].dataset.value, items[selectedIndex].dataset.cityName); }
     });
 
     function updateActive(items) {
@@ -1171,7 +2002,7 @@
       if (!e.target.closest('.form-group')) closeDropdown();
     });
 
-    // Validação: impede envio sem cidade selecionada do dropdown
+    // Validação: impede submit sem cidade selecionada
     document.getElementById('hd-form').addEventListener('submit', function(e) {
       if (!hidden.value) {
         e.preventDefault();
@@ -1181,11 +2012,12 @@
         input.setAttribute('placeholder', 'Selecione uma cidade da lista');
         setTimeout(function() {
           input.style.borderColor = '';
-          input.setAttribute('placeholder', 'Comece a digitar sua cidade\u2026');
+          input.setAttribute('placeholder', 'Comece a digitar sua cidade…');
         }, 3000);
       }
     }, true);
   })();
 </script>
+
 </body>
 </html>
