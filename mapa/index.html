@@ -1423,48 +1423,25 @@
       line-height: 1.7;
     }
 
-    /* Faixa blur de curiosidade após cada card */
+    /* Faixa blur de curiosidade — duas linhas simples */
     .info-blur-teaser {
-      background: linear-gradient(135deg, #fdf8f4 0%, #f5ede3 100%);
-      border: 1px solid rgba(155,125,97,0.15);
-      border-top: none;
-      border-bottom: none;
-      padding: 0.9rem 1.5rem;
-      position: relative;
-      overflow: hidden;
+      padding: 0.35rem 1.5rem 0.7rem;
+      border-left: 3px solid rgba(155,125,97,0.15);
       margin-bottom: 0;
-    }
-    .info-blur-teaser::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      background: linear-gradient(90deg, rgba(253,248,244,0.3) 0%, rgba(253,248,244,0.85) 100%);
-      pointer-events: none;
+      overflow: hidden;
     }
     .info-blur-teaser-text {
       font-size: 0.8rem;
       font-weight: 300;
-      line-height: 1.65;
+      line-height: 1.55;
       color: #7a6050;
-      filter: blur(4px);
+      filter: blur(5px);
       user-select: none;
       pointer-events: none;
-    }
-    .info-blur-lock {
-      position: absolute;
-      top: 50%;
-      right: 1.2rem;
-      transform: translateY(-50%);
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--milky-coffee);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     /* Portões e Canais */
@@ -1689,7 +1666,7 @@
 
   <div class="mapa-header">
     <p class="mapa-header-eyebrow">Vida Autoral · Desenho Humano</p>
-    <h2 class="mapa-header-title" id="mapa-nome-titulo">Seu<br/><em>Mapa do Desenho Humano</em></h2>
+    <h2 class="mapa-header-title" id="mapa-nome-titulo">Você é uma<br/><em id="mapa-tipo-display">Geradora</em></h2>
     <p class="mapa-header-sub" id="mapa-subtitulo">Gerado com base nos seus dados de nascimento</p>
   </div>
 
@@ -1698,7 +1675,6 @@
     <!-- Coluna esquerda: gráfico + planetas -->
     <div class="mapa-chart-col">
 
-      <p class="mapa-chart-label">Gráfico Bodygraph</p>
       <div class="bodygraph-wrap" id="bodygraph-container">
         <!-- SVG injetado via JS -->
       </div>
@@ -1732,7 +1708,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">Seu tipo define como você interage com o mundo e qual é a melhor forma de usar sua energia sem se esgotar. Existem padrões únicos no seu gráfico que revelam seus talentos ocultos e onde você perde energia desnecessariamente.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- ESTRATÉGIA -->
@@ -1743,7 +1718,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">Quando você ignora sua estratégia, a resistência aparece em forma de cansaço, frustração ou sensação de estar sempre lutando contra a correnteza. Seu mapa completo mostra os momentos exatos em que sua estratégia se ativa.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- AUTORIDADE -->
@@ -1754,7 +1728,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">A sua autoridade é o motivo pelo qual certas decisões te custam energia e outras fluem naturalmente. Entender isso em profundidade muda completamente como você toma decisões no trabalho e nos relacionamentos.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- PERFIL -->
@@ -1765,7 +1738,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">Seu perfil revela o papel que você veio desempenhar nesta vida e como as pessoas naturalmente te percebem. Há uma missão específica codificada na combinação dos seus números que vai além do que você já imaginou.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- DEFINIÇÃO -->
@@ -1776,7 +1748,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">A definição do seu gráfico explica por que você se sente completa com certas pessoas e esvaziada com outras. Este padrão afeta seus relacionamentos, parcerias e até onde você escolhe trabalhar.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- ASSINATURA / NÃO-SELF -->
@@ -1787,7 +1758,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">Reconhecer seu estado de não-self é como ter um GPS interno que avisa quando você saiu do caminho. Seu mapa completo traz os sinais específicos que aparecem na sua vida quando você está desalinhada.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- CRUZ DE ENCARNAÇÃO -->
@@ -1797,7 +1767,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">Sua Cruz de Encarnação é a sua missão de vida — o tema central que atravessa tudo que você faz. Compreendê-la é o que transforma confusão em clareza de propósito e direção.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- CANAIS -->
@@ -1807,7 +1776,6 @@
       </div>
       <div class="info-blur-teaser">
         <div class="info-blur-teaser-text">Cada canal ativado é um dom consistente que você carrega — uma qualidade que flui sem esforço. Seu mapa completo descreve o que cada canal significa especificamente para sua vida e trabalho.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
       <!-- PORTÕES -->
@@ -1817,7 +1785,6 @@
       </div>
       <div class="info-blur-teaser" style="border-bottom: 1px solid rgba(155,125,97,0.15);">
         <div class="info-blur-teaser-text">Seus portões ativados revelam os temas recorrentes da sua vida — padrões que aparecem uma e outra vez em diferentes contextos. Entender cada um é como ganhar um manual de instruções da sua própria mente.</div>
-        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
     </div>
@@ -2151,8 +2118,9 @@
   function popularMapaReal(mapa, email) {
     // Cabeçalho
     var primeiroNome = mapa.nome ? mapa.nome.split(' ')[0] : '';
+    var tipoLabel = mapa.tipo && mapa.tipo.label ? mapa.tipo.label : 'Geradora';
     document.getElementById('mapa-nome-titulo').innerHTML =
-      primeiroNome + ', este é o seu<br/><em>Mapa do Desenho Humano</em>';
+      primeiroNome + ', você é uma<br/><em>' + tipoLabel + '</em>';
     document.getElementById('mapa-subtitulo').textContent =
       mapa.data + ' · ' + mapa.hora + ' · ' + mapa.local;
     // Bodygraph SVG
