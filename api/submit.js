@@ -116,10 +116,10 @@ const DESC = {
     'Surprise':     'Quando está alinhada, a vida te surpreende de formas que não planejou. Se a surpresa sumiu, algo precisa mudar.',
   },
   naoself: {
-    'Frustration':    'Frustrada? Não é "não ser boa o suficiente". É ter dito sim quando seu corpo dizia não. É GPS, não sentença.',
-    'Anger':          'Raiva frequente não é defeito — é aviso. Você agiu sem comunicar. Ajuste a comunicação, não a si mesma.',
-    'Bitterness':     'Sente que ninguém valoriza o que faz? Observe: ofereceu sem ser convidada? Seu valor é real — espere o convite.',
-    'Disappointment': 'Decepção frequente? Pergunte: decidi rápido demais? Estou no lugar certo? Seu design pede mais tempo.',
+    'Frustration':    'Frustrada? Isso não é falha sua. É sinal de que você disse sim quando seu corpo dizia não. Pare e redirecione.',
+     'Anger':          'Se a raiva aparece muito, preste atenção: você agiu sem avisar quem seria impactado. Avise antes — e a raiva some.',
+    'Bitterness':     'Amargura aparece quando você dá seu melhor sem ninguém ter pedido. Seu dom é valioso — mas brilha quando é convidado.',
+    'Disappointment': 'Decepção é sinal de decisão apressada ou ambiente errado. Dê mais tempo a si mesma — a clareza vem devagar.',
   },
   cruz: {},
 };
