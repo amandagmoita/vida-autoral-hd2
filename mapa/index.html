@@ -1258,7 +1258,7 @@
       margin: 0 auto;
       padding: 3rem 1.5rem 2rem;
       display: grid;
-      grid-template-columns: 1fr 380px;
+      grid-template-columns: 1fr 340px;
       gap: 3rem;
       align-items: start;
     }
@@ -1291,7 +1291,7 @@
       border: 1px solid rgba(155,125,97,0.2);
       padding: 1.5rem;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       max-width: 70%;
       margin: 0 auto;
     }
@@ -1299,6 +1299,18 @@
       width: 100%;
       height: auto;
       display: block;
+    }
+    /* Container para bodygraph + setas sobrepostas */
+    .bodygraph-arrows-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .bodygraph-arrows-overlay svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
     }
 
     /* Tabela de planetas */
@@ -2113,6 +2125,79 @@
   }
 
   // ══════════════════════════════════════════════════
+  // SETAS DO VARIABLE (4 cantos do bodygraph)
+  // ══════════════════════════════════════════════════
+  function injetarSetas(container, sv) {
+    // Aguarda o SVG estar no DOM para pegar dimensões reais
+    requestAnimationFrame(function() {
+      var bgSvg = container.querySelector('svg');
+      if (!bgSvg) return;
+
+      var rect  = bgSvg.getBoundingClientRect();
+      var cRect = container.getBoundingClientRect();
+      var W = rect.width;
+      var H = rect.height;
+      var offX = rect.left - cRect.left;
+      var offY = rect.top  - cRect.top;
+
+      // Remove overlay anterior se existir
+      var old = container.querySelector('.bodygraph-arrows-overlay');
+      if (old) old.remove();
+
+      // Posições relativas ao SVG (proporcionais ao tamanho original ~400×694)
+      // Setas ficam nos "cantos" do cabeçalho, acima do corpo do bodygraph
+      // tl = topo-esquerdo (Design), tr = topo-direito (Personalidade)
+      // bl = baixo-esquerdo, br = baixo-direito
+      var topY   = offY + H * 0.055;
+      var botY   = offY + H * 0.105;
+      var leftX  = offX + W * 0.12;
+      var rightX = offX + W * 0.88;
+
+      var COLOR_D = '#C7826F'; // design  (salmão)
+      var COLOR_P = '#4a9a8e'; // personalidade (verde)
+
+      function arrowPath(x, y, dir, color, id) {
+        var size = Math.max(10, W * 0.055);
+        var headW = size * 0.45;
+        var shaft = size * 0.7;
+        // dir: 'right' = aponta para direita, 'left' = aponta para esquerda
+        var tip, base, w1x, w1y, w2x, w2y;
+        if (dir === 'right') {
+          tip  = x + size / 2;
+          base = tip - shaft;
+          w1x = tip - headW; w1y = y - headW * 0.7;
+          w2x = tip - headW; w2y = y + headW * 0.7;
+        } else {
+          tip  = x - size / 2;
+          base = tip + shaft;
+          w1x = tip + headW; w1y = y - headW * 0.7;
+          w2x = tip + headW; w2y = y + headW * 0.7;
+        }
+        return '<g>'
+          + '<line x1="' + base + '" y1="' + y + '" x2="' + tip + '" y2="' + y + '" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
+          + '<line x1="' + tip + '" y1="' + y + '" x2="' + w1x + '" y2="' + w1y + '" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
+          + '<line x1="' + tip + '" y1="' + y + '" x2="' + w2x + '" y2="' + w2y + '" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
+          + '</g>';
+      }
+
+      var svgOverlay = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svgOverlay.setAttribute('style',
+        'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;');
+      svgOverlay.innerHTML =
+        arrowPath(leftX,  topY, sv.tl || 'left',  COLOR_D, 'tl') +
+        arrowPath(rightX, topY, sv.tr || 'right', COLOR_P, 'tr') +
+        arrowPath(leftX,  botY, sv.bl || 'left',  COLOR_D, 'bl') +
+        arrowPath(rightX, botY, sv.br || 'right', COLOR_P, 'br');
+
+      var overlay = document.createElement('div');
+      overlay.className = 'bodygraph-arrows-overlay';
+      overlay.appendChild(svgOverlay);
+      container.style.position = 'relative';
+      container.appendChild(overlay);
+    });
+  }
+
+  // ══════════════════════════════════════════════════
   // POPULAR MAPA COM DADOS REAIS DO HD
   // ══════════════════════════════════════════════════
   function popularMapaReal(mapa, email) {
@@ -2123,10 +2208,13 @@
       primeiroNome + ', você é uma<br/><em>' + tipoLabel + '</em>';
     document.getElementById('mapa-subtitulo').textContent =
       mapa.data + ' · ' + mapa.hora + ' · ' + mapa.local;
-    // Bodygraph SVG
+    // Bodygraph SVG + setas
     var container = document.getElementById('bodygraph-container');
     if (mapa.svg && mapa.svg.length > 100) {
       container.innerHTML = mapa.svg;
+      // Injetar overlay com as 4 setas após o SVG carregar
+      var sv = mapa.setas || { tl:'left', tr:'left', bl:'left', br:'left' };
+      injetarSetas(container, sv);
     } else {
       container.innerHTML = '<p style="color:#9B7D61;text-align:center;padding:2rem;font-size:.85rem;">Gráfico não disponível.</p>';
     }
