@@ -762,7 +762,40 @@ await sendEmail(
 );
 console.log('[6] PDF enviado com sucesso');
 
-return res.status(200).json({ ok: true, mapa: mapaPayload });
+// — MONTAR PAYLOAD PARA A PÁGINA DE RESULTADO ————————
+const props = hd.Properties || {};
+const tipoId = props.Type && props.Type.id;
+const autoridadeId = props.Authority && props.Authority.id;
+const perfilId = props.Profile && props.Profile.id;
+const definicaoId = props.Definition && props.Definition.id;
+const assinaturaId = props.Signature && props.Signature.id;
+const naoselfId = props.NotSelf && props.NotSelf.id;
+const cruzRaw = props.IncarnationCross && (props.IncarnationCross.label || props.IncarnationCross.id || '');
+
+// SVG colorido com centros definidos/abertos
+const svgColorido = colorirCentrosSVG(hd.SVG || '', hd.DefinedCenters || [], hd.OpenCenters || []);
+
+const mapaPayload = {
+  nome,
+  data,
+  hora,
+  local,
+  svg: svgColorido,
+  tipo:      { id: tipoId, label: tr(tipoId), desc: getDesc('tipo', tipoId), frase: (getTipoObj(tipoId)||{}).fraseIdentidade || '' },
+  estrategia:{ id: props.Strategy && props.Strategy.id, label: tr(props.Strategy && props.Strategy.id), desc: getDesc('estrategia', props.Strategy && props.Strategy.id) },
+  autoridade:{ id: autoridadeId, label: tr(autoridadeId), desc: getDesc('autoridade', autoridadeId) },
+  perfil:    { id: perfilId, label: perfilId, desc: getDesc('perfil', perfilId) },
+  definicao: { id: definicaoId, label: tr(definicaoId), desc: getDesc('definicao', definicaoId) },
+  assinatura:{ id: assinaturaId, label: tr(assinaturaId), desc: getDesc('assinatura', assinaturaId) },
+  naoself:   { id: naoselfId, label: tr(naoselfId), desc: getDesc('naoself', naoselfId) },
+  cruz:      traduzirCruz(cruzRaw),
+  planetas,
+  portoes:   portoes.sort((a,b) => a-b),
+  canais,
+  setas:     sv,
+};
+
+return res.status(200).json({ ok:true, mapa: mapaPayload });
 
 } catch(err) {
 console.error('[Erro]', err.message);
