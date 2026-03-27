@@ -764,13 +764,27 @@ console.log('[6] PDF enviado com sucesso');
 
 // — MONTAR PAYLOAD PARA A PÁGINA DE RESULTADO ————————
 const props = hd.Properties || {};
-const tipoId = props.Type && props.Type.id;
-const autoridadeId = props.Authority && props.Authority.id;
-const perfilId = props.Profile && props.Profile.id;
-const definicaoId = props.Definition && props.Definition.id;
-const assinaturaId = props.Signature && props.Signature.id;
-const naoselfId = props.NotSelf && props.NotSelf.id;
-const cruzRaw = props.IncarnationCross && (props.IncarnationCross.label || props.IncarnationCross.id || '');
+
+// Helper: extrai string de uma propriedade que pode ser string, objeto com .id, ou objeto com .label
+function extractStr(prop) {
+  if (!prop) return null;
+  if (typeof prop === 'string') return prop;
+  if (typeof prop === 'object') return prop.id || prop.label || prop.name || String(prop) || null;
+  return String(prop);
+}
+
+const tipoId       = extractStr(props.Type);
+const estrategiaId = extractStr(props.Strategy);
+const autoridadeId = extractStr(props.Authority);
+const perfilId     = extractStr(props.Profile);
+const definicaoId  = extractStr(props.Definition);
+const assinaturaId = extractStr(props.Signature);
+const naoselfId    = extractStr(props.NotSelf);
+const cruzRaw      = props.IncarnationCross
+  ? (typeof props.IncarnationCross === 'string'
+      ? props.IncarnationCross
+      : (props.IncarnationCross.label || props.IncarnationCross.id || ''))
+  : '';
 
 // SVG colorido com centros definidos/abertos
 const svgColorido = colorirCentrosSVG(hd.SVG || '', hd.DefinedCenters || [], hd.OpenCenters || []);
@@ -782,7 +796,7 @@ const mapaPayload = {
   local,
   svg: svgColorido,
   tipo:      { id: tipoId, label: tr(tipoId), desc: getDesc('tipo', tipoId), frase: (getTipoObj(tipoId)||{}).fraseIdentidade || '' },
-  estrategia:{ id: props.Strategy && props.Strategy.id, label: tr(props.Strategy && props.Strategy.id), desc: getDesc('estrategia', props.Strategy && props.Strategy.id) },
+  estrategia:{ id: estrategiaId, label: tr(estrategiaId), desc: getDesc('estrategia', estrategiaId) },
   autoridade:{ id: autoridadeId, label: tr(autoridadeId), desc: getDesc('autoridade', autoridadeId) },
   perfil:    { id: perfilId, label: perfilId, desc: getDesc('perfil', perfilId) },
   definicao: { id: definicaoId, label: tr(definicaoId), desc: getDesc('definicao', definicaoId) },
