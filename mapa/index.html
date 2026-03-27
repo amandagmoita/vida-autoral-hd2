@@ -180,7 +180,7 @@
     }
 
     @media (max-width: 600px) {
-      .strip { flex-direction: column; align-items: center; gap: 0.8rem; }
+      .strip { flex-direction: column; align-items: center; gap: 0.8rem; padding: 2rem 2.5rem; }
       .strip-item { display: block; text-align: center; }
     }
     .what {
@@ -1825,151 +1825,154 @@
 
   <div class="mapa-body">
 
-    <!-- Coluna esquerda: gráfico + planetas -->
-    <div class="mapa-chart-col">
+```
+<!-- Coluna esquerda: gráfico + planetas -->
+<div class="mapa-chart-col">
 
-      <div class="bodygraph-wrap" id="bodygraph-container">
-        <!-- SVG injetado via JS -->
-      </div>
+  <div class="bodygraph-wrap" id="bodygraph-container">
+    <!-- SVG injetado via JS -->
+  </div>
 
-      <div class="planetas-wrap">
-        <p class="planetas-label">Planetas</p>
-        <table class="planetas-table" id="planetas-table">
-          <thead>
-            <tr>
-              <th style="text-align:left;">Planeta</th>
-              <th class="col-design">Design</th>
-              <th class="col-pers">Personalidade</th>
-            </tr>
-          </thead>
-          <tbody id="planetas-body">
-          </tbody>
-        </table>
-      </div>
+  <div class="planetas-wrap">
+    <p class="planetas-label">Planetas</p>
+    <table class="planetas-table" id="planetas-table">
+      <thead>
+        <tr>
+          <th style="text-align:left;">Planeta</th>
+          <th class="col-design">Design</th>
+          <th class="col-pers">Personalidade</th>
+        </tr>
+      </thead>
+      <tbody id="planetas-body">
+      </tbody>
+    </table>
+  </div>
 
-    </div>
+</div>
 
-    <!-- Coluna do meio: Tipo, Estratégia, Autoridade, Perfil -->
-    <div class="mapa-info-col">
+<!-- Coluna do meio: Tipo, Estratégia, Autoridade, Perfil -->
+<div class="mapa-info-col">
 
-      <div class="info-col-header">
-        <span class="info-col-title">Perfil energético</span>
-      </div>
+  <div class="info-col-header">
+    <span class="info-col-title">Perfil energético</span>
+  </div>
 
-      <!-- TIPO -->
-      <div class="info-section" id="info-tipo">
-        <p class="info-section-label">Tipo</p>
-        <p class="info-section-value" id="info-tipo-value">—</p>
-        <p class="info-section-desc" id="info-tipo-desc"></p>
-        <p class="info-frase" id="info-tipo-frase" style="display:none;"></p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Seu tipo define como você interage com o mundo e qual é a melhor forma de usar sua energia sem se esgotar. Existem padrões únicos no seu gráfico que revelam seus talentos ocultos e onde você perde energia desnecessariamente.</div>
-      </div>
+  <!-- TIPO -->
+  <div class="info-section" id="info-tipo">
+    <p class="info-section-label">Tipo</p>
+    <p class="info-section-value" id="info-tipo-value">—</p>
+    <p class="info-section-desc" id="info-tipo-desc"></p>
+    <p class="info-frase" id="info-tipo-frase" style="display:none;"></p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">Seu tipo define como você interage com o mundo e qual é a melhor forma de usar sua energia sem se esgotar. Existem padrões únicos no seu gráfico que revelam seus talentos ocultos e onde você perde energia desnecessariamente.</div>
+  </div>
 
-      <!-- ESTRATÉGIA -->
-      <div class="info-section" id="info-estrategia">
-        <p class="info-section-label">Estratégia</p>
-        <p class="info-section-value" id="info-estrategia-value">—</p>
-        <p class="info-section-desc" id="info-estrategia-desc"></p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Quando você ignora sua estratégia, a resistência aparece em forma de cansaço, frustração ou sensação de estar sempre lutando contra a correnteza. Seu mapa completo mostra os momentos exatos em que sua estratégia se ativa.</div>
-      </div>
+  <!-- ESTRATÉGIA -->
+  <div class="info-section" id="info-estrategia">
+    <p class="info-section-label">Estratégia</p>
+    <p class="info-section-value" id="info-estrategia-value">—</p>
+    <p class="info-section-desc" id="info-estrategia-desc"></p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">Quando você ignora sua estratégia, a resistência aparece em forma de cansaço, frustração ou sensação de estar sempre lutando contra a correnteza. Seu mapa completo mostra os momentos exatos em que sua estratégia se ativa.</div>
+  </div>
 
-      <!-- AUTORIDADE -->
-      <div class="info-section" id="info-autoridade">
-        <p class="info-section-label">Autoridade</p>
-        <p class="info-section-value" id="info-autoridade-value">—</p>
-        <p class="info-section-desc" id="info-autoridade-desc"></p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">A sua autoridade é o motivo pelo qual certas decisões te custam energia e outras fluem naturalmente. Entender isso em profundidade muda completamente como você toma decisões no trabalho e nos relacionamentos.</div>
-      </div>
+  <!-- AUTORIDADE -->
+  <div class="info-section" id="info-autoridade">
+    <p class="info-section-label">Autoridade</p>
+    <p class="info-section-value" id="info-autoridade-value">—</p>
+    <p class="info-section-desc" id="info-autoridade-desc"></p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">A sua autoridade é o motivo pelo qual certas decisões te custam energia e outras fluem naturalmente. Entender isso em profundidade muda completamente como você toma decisões no trabalho e nos relacionamentos.</div>
+  </div>
 
-      <!-- PERFIL -->
-      <div class="info-section" id="info-perfil">
-        <p class="info-section-label">Perfil</p>
-        <p class="info-section-value" id="info-perfil-value">—</p>
-        <p class="info-section-desc" id="info-perfil-desc"></p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Seu perfil revela o papel que você veio desempenhar nesta vida e como as pessoas naturalmente te percebem. Há uma missão específica codificada na combinação dos seus números que vai além do que você já imaginou.</div>
-      </div>
+  <!-- PERFIL -->
+  <div class="info-section" id="info-perfil">
+    <p class="info-section-label">Perfil</p>
+    <p class="info-section-value" id="info-perfil-value">—</p>
+    <p class="info-section-desc" id="info-perfil-desc"></p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">Seu perfil revela o papel que você veio desempenhar nesta vida e como as pessoas naturalmente te percebem. Há uma missão específica codificada na combinação dos seus números que vai além do que você já imaginou.</div>
+  </div>
 
-    </div>
+</div>
 
-    <!-- Coluna direita: Definição, Assinatura, Desalinhamento, Cruz, Canais, Portões -->
-    <div class="mapa-info-col">
+<!-- Coluna direita: Definição, Assinatura, Desalinhamento, Cruz, Canais, Portões -->
+<div class="mapa-info-col">
 
-      <div class="info-col-header">
-        <span class="info-col-title">Centros e canais</span>
-      </div>
+  <div class="info-col-header">
+    <span class="info-col-title">Centros e canais</span>
+  </div>
 
-      <!-- DEFINIÇÃO -->
-      <div class="info-section" id="info-definicao">
-        <p class="info-section-label">Definição</p>
-        <p class="info-section-value" id="info-definicao-value">—</p>
-        <p class="info-section-desc" id="info-definicao-desc"></p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">A definição do seu gráfico explica por que você se sente completa com certas pessoas e esvaziada com outras. Este padrão afeta seus relacionamentos, parcerias e até onde você escolhe trabalhar.</div>
-      </div>
+  <!-- DEFINIÇÃO -->
+  <div class="info-section" id="info-definicao">
+    <p class="info-section-label">Definição</p>
+    <p class="info-section-value" id="info-definicao-value">—</p>
+    <p class="info-section-desc" id="info-definicao-desc"></p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">A definição do seu gráfico explica por que você se sente completa com certas pessoas e esvaziada com outras. Este padrão afeta seus relacionamentos, parcerias e até onde você escolhe trabalhar.</div>
+  </div>
 
-      <!-- ASSINATURA -->
-      <div class="info-section" id="info-assinatura">
-        <p class="info-section-label">Assinatura</p>
-        <p class="info-section-value" id="info-assinatura-value">—</p>
-        <p class="info-section-desc" id="info-assinatura-desc"></p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Sua assinatura é o sentimento que confirma que você está vivendo de forma alinhada com seu design. Quando ela está presente, tudo flui — e as pessoas ao redor também sentem.</div>
-      </div>
+  <!-- ASSINATURA -->
+  <div class="info-section" id="info-assinatura">
+    <p class="info-section-label">Assinatura</p>
+    <p class="info-section-value" id="info-assinatura-value">—</p>
+    <p class="info-section-desc" id="info-assinatura-desc"></p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">Sua assinatura é o sentimento que confirma que você está vivendo de forma alinhada com seu design. Quando ela está presente, tudo flui — e as pessoas ao redor também sentem.</div>
+  </div>
 
-      <!-- SINAL DE DESALINHAMENTO -->
-      <div class="info-section" id="info-desalinhamento">
-        <p class="info-section-label">Sinal de Desalinhamento</p>
-        <p class="info-section-value" id="info-desalinhamento-value">—</p>
-        <p class="info-section-desc" id="info-desalinhamento-desc"></p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Reconhecer seu sinal de desalinhamento é como ter um GPS interno que avisa quando você saiu do caminho. Seu mapa completo traz os sinais específicos que aparecem na sua vida quando você está desalinhada.</div>
-      </div>
+  <!-- SINAL DE DESALINHAMENTO -->
+  <div class="info-section" id="info-desalinhamento">
+    <p class="info-section-label">Sinal de Desalinhamento</p>
+    <p class="info-section-value" id="info-desalinhamento-value">—</p>
+    <p class="info-section-desc" id="info-desalinhamento-desc"></p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">Reconhecer seu sinal de desalinhamento é como ter um GPS interno que avisa quando você saiu do caminho. Seu mapa completo traz os sinais específicos que aparecem na sua vida quando você está desalinhada.</div>
+  </div>
 
-      <!-- CRUZ DE ENCARNAÇÃO -->
-      <div class="info-section" id="info-cruz">
-        <p class="info-section-label">Cruz de Encarnação</p>
-        <p class="info-section-value" id="info-cruz-value">—</p>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Sua Cruz de Encarnação é a sua missão de vida — o tema central que atravessa tudo que você faz. Compreendê-la é o que transforma confusão em clareza de propósito e direção.</div>
-      </div>
+  <!-- CRUZ DE ENCARNAÇÃO -->
+  <div class="info-section" id="info-cruz">
+    <p class="info-section-label">Cruz de Encarnação</p>
+    <p class="info-section-value" id="info-cruz-value">—</p>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">Sua Cruz de Encarnação é a sua missão de vida — o tema central que atravessa tudo que você faz. Compreendê-la é o que transforma confusão em clareza de propósito e direção.</div>
+  </div>
 
-      <!-- CANAIS -->
-      <div class="info-section" id="info-canais">
-        <p class="info-section-label">Canais Ativados</p>
-        <div class="gates-wrap" id="canais-list"></div>
-      </div>
-      <div class="info-blur-teaser">
-        <div class="info-blur-teaser-text">Cada canal ativado é um dom consistente que você carrega — uma qualidade que flui sem esforço. Seu mapa completo descreve o que cada canal significa especificamente para sua vida e trabalho.</div>
-      </div>
+  <!-- CANAIS -->
+  <div class="info-section" id="info-canais">
+    <p class="info-section-label">Canais Ativados</p>
+    <div class="gates-wrap" id="canais-list"></div>
+  </div>
+  <div class="info-blur-teaser">
+    <div class="info-blur-teaser-text">Cada canal ativado é um dom consistente que você carrega — uma qualidade que flui sem esforço. Seu mapa completo descreve o que cada canal significa especificamente para sua vida e trabalho.</div>
+  </div>
 
-      <!-- PORTÕES -->
-      <div class="info-section" id="info-portoes" style="border-bottom: 1px solid rgba(155,125,97,0.18); border-radius: 0 0 6px 6px;">
-        <p class="info-section-label">Portões Ativados</p>
-        <div class="gates-wrap" id="portoes-list"></div>
-      </div>
-      <div class="info-blur-teaser" style="border-bottom: 1px solid rgba(155,125,97,0.18); border-radius: 0 0 6px 6px; background: rgba(233,215,192,0.25);">
-        <div class="info-blur-teaser-text">Seus portões ativados revelam os temas recorrentes da sua vida — padrões que aparecem uma e outra vez em diferentes contextos. Entender cada um é como ganhar um manual de instruções da sua própria mente.</div>
-      </div>
+  <!-- PORTÕES -->
+  <div class="info-section" id="info-portoes" style="border-bottom: 1px solid rgba(155,125,97,0.18); border-radius: 0 0 6px 6px;">
+    <p class="info-section-label">Portões Ativados</p>
+    <div class="gates-wrap" id="portoes-list"></div>
+  </div>
+  <div class="info-blur-teaser" style="border-bottom: 1px solid rgba(155,125,97,0.18); border-radius: 0 0 6px 6px; background: rgba(233,215,192,0.25);">
+    <div class="info-blur-teaser-text">Seus portões ativados revelam os temas recorrentes da sua vida — padrões que aparecem uma e outra vez em diferentes contextos. Entender cada um é como ganhar um manual de instruções da sua própria mente.</div>
+  </div>
 
-    </div>
+</div>
+```
 
   </div>
 
   <div class="mapa-divider"></div>
 
   <!-- CTA único -->
+
   <div class="mapa-cta-wrap">
     <button class="mapa-cta-btn" id="upsell-btn">Quero entender como o mapa se aplica à minha carreira</button>
   </div>
