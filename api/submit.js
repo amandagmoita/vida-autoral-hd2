@@ -853,7 +853,19 @@ await sendEmail(
 );
 console.log('[6] PDF enviado com sucesso');
 
-return res.status(200).json({ ok:true });
+return res.status(200).json({
+  ok: true,
+  svg: hd.SVG,
+  properties: {
+    tipo:       (props.Type        && props.Type.id)          || null,
+    estrategia: (props.Strategy    && props.Strategy.id)      || null,
+    autoridade: (props.InnerAuthority && props.InnerAuthority.id) || null,
+    perfil:     (props.Profile     && props.Profile.id)       || null,
+  },
+  portoes: portoes,
+  canais:  canais,
+});
+
 
 } catch(err) {
 console.error('[Erro]', err.message);
