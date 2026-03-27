@@ -179,7 +179,10 @@
       font-size: 0.6rem;
     }
 
-    /* ── WHAT IS HD ──────────────────────────────────── */
+    @media (max-width: 600px) {
+      .strip { justify-content: center; gap: 1.2rem; }
+      .strip-item { justify-content: center; text-align: center; }
+    }
     .what {
       padding: 6rem 2rem;
       max-width: 900px;
