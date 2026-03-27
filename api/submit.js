@@ -856,15 +856,14 @@ console.log('[6] PDF enviado com sucesso');
 return res.status(200).json({
   ok: true,
   svg: hd.SVG,
-  properties: {
-    tipo:       (props.Type        && props.Type.id)          || null,
-    estrategia: (props.Strategy    && props.Strategy.id)      || null,
-    autoridade: (props.InnerAuthority && props.InnerAuthority.id) || null,
-    perfil:     (props.Profile     && props.Profile.id)       || null,
-  },
-  portoes: portoes,
-  canais:  canais,
+  properties: { tipo, estrategia, autoridade, perfil, definicao, assinatura, cruz },
+  portoes, canais,
+  planets: { design: {Sun:"34.5",...}, personality: {Sun:"17.2",...} },
+  variaveis: { tl:"left", tr:"right", bl:"left", br:"right",
+               tl_label:"Digestão", tr_label:"Perspectiva",
+               bl_label:"Ambiente", br_label:"Consciência" }
 });
+
 
 
 } catch(err) {
