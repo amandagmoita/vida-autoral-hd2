@@ -116,10 +116,10 @@ const DESC = {
     'Surprise':     'Quando está alinhada, a vida te surpreende de formas que não planejou. Se a surpresa sumiu, algo precisa mudar.',
   },
   naoself: {
-    'Frustration':    'Frustrada? Isso não é falha sua. É sinal de que você disse sim quando seu corpo dizia não. Pare e redirecione.',
-     'Anger':          'Se a raiva aparece muito, preste atenção: você agiu sem avisar quem seria impactado. Avise antes — e a raiva some.',
-    'Bitterness':     'Amargura aparece quando você dá seu melhor sem ninguém ter pedido. Seu dom é valioso — mas brilha quando é convidado.',
-    'Disappointment': 'Decepção é sinal de decisão apressada ou ambiente errado. Dê mais tempo a si mesma — a clareza vem devagar.',
+    'Frustration':    'Frustrada? Não é "não ser boa o suficiente". É ter dito sim quando seu corpo dizia não. É GPS, não sentença.',
+    'Anger':          'Raiva frequente não é defeito — é aviso. Você agiu sem comunicar. Ajuste a comunicação, não a si mesma.',
+    'Bitterness':     'Sente que ninguém valoriza o que faz? Observe: ofereceu sem ser convidada? Seu valor é real — espere o convite.',
+    'Disappointment': 'Decepção frequente? Pergunte: decidi rápido demais? Estou no lugar certo? Seu design pede mais tempo.',
   },
   cruz: {},
 };
@@ -904,6 +904,7 @@ var estrategiaId = extractStr(props.Strategy);
 // A API usa InnerAuthority, não Authority
 var autoridadeId = extractStr(props.InnerAuthority) || extractStr(props.Authority);
 var perfilId     = extractStr(props.Profile);
+var perfilNorm   = perfilId ? perfilId.replace(/\s/g, '') : null;
 var definicaoId  = extractStr(props.Definition);
 var assinaturaId = extractStr(props.Signature);
 // A API usa NotSelfTheme, não NotSelf
@@ -930,7 +931,7 @@ var mapaPayload = {
   tipo:      { id: tipoId, label: tr(tipoId), desc: getDesc('tipo', tipoId), frase: (getTipoObj(tipoId)||{}).fraseIdentidade || '' },
   estrategia:{ id: estrategiaId, label: tr(estrategiaId), desc: getDesc('estrategia', estrategiaId) },
   autoridade:{ id: autoridadeId, label: tr(autoridadeId), desc: getDesc('autoridade', autoridadeId) },
-  perfil:    { id: perfilId, label: perfilId, desc: getDesc('perfil', perfilId) },
+  perfil:    { id: perfilId, label: perfilNorm || perfilId, desc: getDesc('perfil', perfilNorm) },
   definicao: { id: definicaoId, label: tr(definicaoId), desc: getDesc('definicao', definicaoId) },
   assinatura:{ id: assinaturaId, label: tr(assinaturaId), desc: getDesc('assinatura', assinaturaId) },
   desalinhamento: { id: naoselfId, label: tr(naoselfId), desc: getDesc('naoself', naoselfId) },
