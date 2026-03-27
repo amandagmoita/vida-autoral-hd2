@@ -1218,7 +1218,7 @@
     ═══════════════════════════════════════════════════ */
     #mapa-section {
       display: none;
-      background: linear-gradient(170deg, #1a1410 0%, #2e1f14 100%);
+      background: #ffffff;
     }
     #mapa-section.visible { display: block; }
 
@@ -1273,7 +1273,7 @@
       font-size: 0.68rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: var(--roasted-peach);
+      color: var(--milky-coffee);
       margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
@@ -1288,7 +1288,7 @@
 
     .bodygraph-wrap {
       background: #fff;
-      border: 1px solid rgba(155,125,97,0.25);
+      border: 1px solid rgba(155,125,97,0.2);
       padding: 1.5rem;
       position: relative;
       overflow: hidden;
@@ -1309,7 +1309,7 @@
       font-size: 0.68rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: var(--roasted-peach);
+      color: var(--milky-coffee);
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
@@ -1327,7 +1327,7 @@
       font-size: 0.82rem;
     }
     .planetas-table thead tr {
-      border-bottom: 1px solid rgba(155,125,97,0.25);
+      border-bottom: 1px solid rgba(155,125,97,0.2);
     }
     .planetas-table thead th {
       padding: 0.4rem 0.6rem;
@@ -1335,7 +1335,7 @@
       font-weight: 400;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(233,215,192,0.45);
+      color: var(--milky-coffee);
       text-align: center;
     }
     .planetas-table thead th:first-child { text-align: left; }
@@ -1345,7 +1345,7 @@
     .planetas-table tbody tr:last-child { border-bottom: none; }
     .planetas-table tbody td {
       padding: 0.45rem 0.6rem;
-      color: rgba(233,215,192,0.75);
+      color: #4a3a2e;
       font-weight: 300;
       text-align: center;
       vertical-align: middle;
@@ -1359,114 +1359,169 @@
     .planet-sym {
       width: 22px;
       text-align: center;
-      color: var(--roasted-peach);
+      color: var(--milky-coffee);
       font-size: 0.95rem;
       flex-shrink: 0;
     }
     .col-design { color: #C7826F; }
-    .col-pers   { color: #7DAAA0; }
+    .col-pers   { color: #4a9a8e; }
 
     /* Coluna direita — informações */
     .mapa-info-col {}
 
     .info-section {
-      margin-bottom: 1.2rem;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(155,125,97,0.18);
-      padding: 1.5rem;
+      margin-bottom: 0;
+      background: #fff;
+      border: 1px solid rgba(155,125,97,0.15);
+      border-bottom: none;
+      padding: 1.4rem 1.5rem 1.2rem;
       position: relative;
       overflow: hidden;
+    }
+    .info-section:last-child {
+      border-bottom: 1px solid rgba(155,125,97,0.15);
     }
     .info-section::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--roasted-peach), transparent);
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--roasted-peach), var(--milky-coffee));
     }
     .info-section-label {
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: var(--roasted-peach);
-      margin-bottom: 0.4rem;
+      color: var(--milky-coffee);
+      margin-bottom: 0.3rem;
+      padding-left: 0.2rem;
     }
     .info-section-value {
       font-family: 'Aboreto', cursive;
-      font-size: 1.1rem;
-      color: var(--whole-wheat);
+      font-size: 1.05rem;
+      color: var(--dark);
       letter-spacing: 0.06em;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
       line-height: 1.3;
+      padding-left: 0.2rem;
     }
     .info-section-desc {
-      font-size: 0.83rem;
-      font-weight: 200;
+      font-size: 0.82rem;
+      font-weight: 300;
       line-height: 1.75;
-      color: rgba(233,215,192,0.65);
+      color: #5a4535;
+      padding-left: 0.2rem;
     }
     .info-frase {
-      margin-top: 0.75rem;
-      padding: 0.75rem 1rem;
-      border-left: 2px solid rgba(218,163,143,0.35);
-      font-size: 0.8rem;
+      margin-top: 0.7rem;
+      padding: 0.65rem 0.9rem;
+      border-left: 2px solid rgba(218,163,143,0.4);
+      font-size: 0.79rem;
       font-style: italic;
-      color: rgba(233,215,192,0.5);
+      color: #7a6050;
       line-height: 1.7;
     }
 
-    /* Portões e Canais */
-    .portoes-canais {
-      margin-top: 0;
+    /* Faixa blur de curiosidade após cada card */
+    .info-blur-teaser {
+      background: linear-gradient(135deg, #fdf8f4 0%, #f5ede3 100%);
+      border: 1px solid rgba(155,125,97,0.15);
+      border-top: none;
+      border-bottom: none;
+      padding: 0.9rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0;
     }
+    .info-blur-teaser::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      background: linear-gradient(90deg, rgba(253,248,244,0.3) 0%, rgba(253,248,244,0.85) 100%);
+      pointer-events: none;
+    }
+    .info-blur-teaser-text {
+      font-size: 0.8rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: #7a6050;
+      filter: blur(4px);
+      user-select: none;
+      pointer-events: none;
+    }
+    .info-blur-lock {
+      position: absolute;
+      top: 50%;
+      right: 1.2rem;
+      transform: translateY(-50%);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--milky-coffee);
+    }
+
+    /* Portões e Canais */
     .gates-wrap {
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
-      margin-top: 0.6rem;
+      margin-top: 0.5rem;
     }
     .gate-pill {
-      background: rgba(155,125,97,0.15);
-      border: 1px solid rgba(155,125,97,0.25);
+      background: rgba(155,125,97,0.1);
+      border: 1px solid rgba(155,125,97,0.2);
       padding: 0.2rem 0.55rem;
       font-size: 0.75rem;
       font-weight: 300;
-      color: rgba(233,215,192,0.7);
+      color: #6b5040;
       letter-spacing: 0.04em;
     }
     .canal-pill {
-      background: rgba(146,173,164,0.1);
-      border: 1px solid rgba(146,173,164,0.25);
+      background: rgba(146,173,164,0.12);
+      border: 1px solid rgba(146,173,164,0.3);
       padding: 0.2rem 0.7rem;
       font-size: 0.78rem;
       font-weight: 300;
-      color: rgba(146,173,164,0.8);
+      color: #3d7a70;
       letter-spacing: 0.06em;
     }
 
-    /* Email CTA dentro do mapa */
-    .mapa-email-note {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1.5rem 1.5rem;
-      text-align: center;
-    }
-    .mapa-email-note p {
-      font-size: 0.82rem;
-      font-weight: 200;
-      color: rgba(233,215,192,0.4);
-      letter-spacing: 0.06em;
-    }
-    .mapa-email-note strong { color: rgba(233,215,192,0.65); font-weight: 400; }
-
-    /* Divisor para upsell dentro do mapa */
+    /* Divisor */
     .mapa-divider {
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(155,125,97,0.3), transparent);
-      margin: 0 1.5rem 0;
+      background: linear-gradient(90deg, transparent, rgba(155,125,97,0.25), transparent);
       max-width: 1100px;
-      margin: 2rem auto;
+      margin: 2.5rem auto;
     }
+
+    /* Botão único de CTA */
+    .mapa-cta-wrap {
+      text-align: center;
+      padding: 0 1.5rem 4rem;
+    }
+    .mapa-cta-btn {
+      display: inline-block;
+      background: var(--milky-coffee);
+      color: #fff;
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.88rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 1.15rem 3rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+    }
+    .mapa-cta-btn:hover { background: #7d6249; }
   </style>
 
 </head>
@@ -1659,7 +1714,6 @@
             </tr>
           </thead>
           <tbody id="planetas-body">
-            <!-- linhas injetadas via JS -->
           </tbody>
         </table>
       </div>
@@ -1669,101 +1723,112 @@
     <!-- Coluna direita: informações do mapa -->
     <div class="mapa-info-col">
 
+      <!-- TIPO -->
       <div class="info-section" id="info-tipo">
         <p class="info-section-label">Tipo</p>
         <p class="info-section-value" id="info-tipo-value">—</p>
         <p class="info-section-desc" id="info-tipo-desc"></p>
         <p class="info-frase" id="info-tipo-frase" style="display:none;"></p>
       </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">Seu tipo define como você interage com o mundo e qual é a melhor forma de usar sua energia sem se esgotar. Existem padrões únicos no seu gráfico que revelam seus talentos ocultos e onde você perde energia desnecessariamente.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
+      </div>
 
+      <!-- ESTRATÉGIA -->
       <div class="info-section" id="info-estrategia">
         <p class="info-section-label">Estratégia</p>
         <p class="info-section-value" id="info-estrategia-value">—</p>
         <p class="info-section-desc" id="info-estrategia-desc"></p>
       </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">Quando você ignora sua estratégia, a resistência aparece em forma de cansaço, frustração ou sensação de estar sempre lutando contra a correnteza. Seu mapa completo mostra os momentos exatos em que sua estratégia se ativa.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
+      </div>
 
+      <!-- AUTORIDADE -->
       <div class="info-section" id="info-autoridade">
         <p class="info-section-label">Autoridade</p>
         <p class="info-section-value" id="info-autoridade-value">—</p>
         <p class="info-section-desc" id="info-autoridade-desc"></p>
       </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">A sua autoridade é o motivo pelo qual certas decisões te custam energia e outras fluem naturalmente. Entender isso em profundidade muda completamente como você toma decisões no trabalho e nos relacionamentos.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
+      </div>
 
+      <!-- PERFIL -->
       <div class="info-section" id="info-perfil">
         <p class="info-section-label">Perfil</p>
         <p class="info-section-value" id="info-perfil-value">—</p>
         <p class="info-section-desc" id="info-perfil-desc"></p>
       </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">Seu perfil revela o papel que você veio desempenhar nesta vida e como as pessoas naturalmente te percebem. Há uma missão específica codificada na combinação dos seus números que vai além do que você já imaginou.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
+      </div>
 
+      <!-- DEFINIÇÃO -->
       <div class="info-section" id="info-definicao">
         <p class="info-section-label">Definição</p>
         <p class="info-section-value" id="info-definicao-value">—</p>
         <p class="info-section-desc" id="info-definicao-desc"></p>
       </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">A definição do seu gráfico explica por que você se sente completa com certas pessoas e esvaziada com outras. Este padrão afeta seus relacionamentos, parcerias e até onde você escolhe trabalhar.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
+      </div>
 
+      <!-- ASSINATURA / NÃO-SELF -->
       <div class="info-section" id="info-assinatura">
         <p class="info-section-label">Assinatura / Não-Self</p>
         <p class="info-section-value" id="info-assinatura-value">—</p>
         <p class="info-section-desc" id="info-assinatura-desc"></p>
       </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">Reconhecer seu estado de não-self é como ter um GPS interno que avisa quando você saiu do caminho. Seu mapa completo traz os sinais específicos que aparecem na sua vida quando você está desalinhada.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
+      </div>
 
+      <!-- CRUZ DE ENCARNAÇÃO -->
       <div class="info-section" id="info-cruz">
         <p class="info-section-label">Cruz de Encarnação</p>
         <p class="info-section-value" id="info-cruz-value">—</p>
       </div>
-
-      <div class="info-section portoes-canais" id="info-canais">
-        <p class="info-section-label">Canais Ativados</p>
-        <div class="gates-wrap" id="canais-list">
-          <!-- canal pills injetados via JS -->
-        </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">Sua Cruz de Encarnação é a sua missão de vida — o tema central que atravessa tudo que você faz. Compreendê-la é o que transforma confusão em clareza de propósito e direção.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
-      <div class="info-section portoes-canais" id="info-portoes">
+      <!-- CANAIS -->
+      <div class="info-section" id="info-canais">
+        <p class="info-section-label">Canais Ativados</p>
+        <div class="gates-wrap" id="canais-list"></div>
+      </div>
+      <div class="info-blur-teaser">
+        <div class="info-blur-teaser-text">Cada canal ativado é um dom consistente que você carrega — uma qualidade que flui sem esforço. Seu mapa completo descreve o que cada canal significa especificamente para sua vida e trabalho.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
+      </div>
+
+      <!-- PORTÕES -->
+      <div class="info-section" id="info-portoes" style="border-bottom: 1px solid rgba(155,125,97,0.15);">
         <p class="info-section-label">Portões Ativados</p>
-        <div class="gates-wrap" id="portoes-list">
-          <!-- gate pills injetados via JS -->
-        </div>
+        <div class="gates-wrap" id="portoes-list"></div>
+      </div>
+      <div class="info-blur-teaser" style="border-bottom: 1px solid rgba(155,125,97,0.15);">
+        <div class="info-blur-teaser-text">Seus portões ativados revelam os temas recorrentes da sua vida — padrões que aparecem uma e outra vez em diferentes contextos. Entender cada um é como ganhar um manual de instruções da sua própria mente.</div>
+        <span class="info-blur-lock">🔒 análise completa</span>
       </div>
 
     </div>
 
-  </div>
-
-  <div class="mapa-email-note">
-    <p>📩 Seu mapa completo em PDF foi enviado para <strong id="mapa-email-destino">seu e-mail</strong></p>
   </div>
 
   <div class="mapa-divider"></div>
 
-  <!-- UPSELL dentro do mapa -->
-  <div class="upsell-wrapper" id="mapa-upsell" style="display:none;">
-    <div class="upsell-card">
-      <div class="upsell-urgency">
-        <div class="urgency-dot"></div>
-        <span>Oferta especial ativa por <strong id="upsell-timer">14:58</strong></span>
-      </div>
-      <p class="upsell-eyebrow">Análise Premium</p>
-      <h2 class="upsell-title">Desbloqueie seu mapa<br/><em>completo e personalizado</em></h2>
-      <p class="upsell-body">Seu mapa revelou o essencial — mas é apenas a superfície. A análise premium decodifica cada camada da sua configuração e entrega um <strong style="color:var(--whole-wheat); font-weight:400;">PDF exclusivo com mais de 60 páginas</strong> explicando exatamente como você foi desenhada para operar, prosperar e obter sucesso na vida.</p>
-      <ul class="upsell-benefits">
-        <li><div class="benefit-check">◇</div>Descubra exatamente qual carreira e tipo de trabalho geram energia em vez de esgotamento</li>
-        <li><div class="benefit-check">◇</div>Entenda o que está travando sua prosperidade financeira — e como destravar</li>
-        <li><div class="benefit-check">◇</div>Encontre seu propósito de vida com clareza, sem mais tentativa e erro</li>
-        <li><div class="benefit-check">◇</div>Elimine os bloqueios invisíveis que sabotam seus relacionamentos e decisões</li>
-        <li><div class="benefit-check">◇</div>Aprenda a viver com leveza seguindo seu ritmo natural — sem forçar, sem culpa</li>
-      </ul>
-      <div class="upsell-price-row">
-        <div class="upsell-price-current"><sup>R$</sup>97</div>
-        <div class="upsell-price-old">R$297</div>
-        <div class="upsell-price-badge">67% off</div>
-      </div>
-      <button class="upsell-btn" id="upsell-btn">
-        <span>Quero meu mapa completo →</span>
-      </button>
-      <button class="upsell-skip" id="skip-btn">
-        Não, prefiro ficar com o básico
-      </button>
-    </div>
+  <!-- CTA único -->
+  <div class="mapa-cta-wrap">
+    <button class="mapa-cta-btn" id="upsell-btn">Quero desbloquear meu mapa completo →</button>
   </div>
 
 </section>
@@ -2090,8 +2155,6 @@
       primeiroNome + ', este é o seu<br/><em>Mapa do Desenho Humano</em>';
     document.getElementById('mapa-subtitulo').textContent =
       mapa.data + ' · ' + mapa.hora + ' · ' + mapa.local;
-    document.getElementById('mapa-email-destino').textContent = email;
-
     // Bodygraph SVG
     var container = document.getElementById('bodygraph-container');
     if (mapa.svg && mapa.svg.length > 100) {
@@ -2198,34 +2261,14 @@
     setTimeout(function() {
       sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
-    // Exibe o upsell dentro do mapa após 1.5s
-    setTimeout(function() {
-      var upsell = document.getElementById('mapa-upsell');
-      if (upsell) {
-        upsell.style.display = '';
-        startUpsellTimer();
-        upsell.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }, 1500);
   }
 
   // ══════════════════════════════════════════════════
-  // TIMER DO UPSELL
+  // BOTÃO CTA
   // ══════════════════════════════════════════════════
-  function startUpsellTimer() {
-    var seconds = 14 * 60 + 58;
-    var el = document.getElementById('upsell-timer');
-    var interval = setInterval(function() {
-      if (seconds <= 0) { clearInterval(interval); el.textContent = 'Expirado'; return; }
-      seconds--;
-      var m = Math.floor(seconds / 60).toString().padStart(2, '0');
-      var s = (seconds % 60).toString().padStart(2, '0');
-      el.textContent = m + ':' + s;
-    }, 1000);
-  }
-
-  // ══════════════════════════════════════════════════
-  // SUBMIT DO FORM
+  document.getElementById('upsell-btn').addEventListener('click', function() {
+    window.location.href = 'https://vidaautoral.com.br/checkout-premium';
+  });
   // ══════════════════════════════════════════════════
   document.getElementById('hd-form').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -2281,18 +2324,6 @@
         }
       }, 600);
     }, 4000);
-  });
-
-  // ══════════════════════════════════════════════════
-  // BOTÕES DO UPSELL
-  // ══════════════════════════════════════════════════
-  document.getElementById('upsell-btn').addEventListener('click', function() {
-    // Substitua pela URL do seu checkout
-    window.location.href = 'https://vidaautoral.com.br/checkout-premium';
-  });
-
-  document.getElementById('skip-btn').addEventListener('click', function() {
-    window.location.href = 'https://dh.vidaautoral.com.br';
   });
 
   // ══════════════════════════════════════════════════
