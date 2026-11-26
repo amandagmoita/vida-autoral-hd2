@@ -21,7 +21,7 @@ Vercel /api/submit
 
 - Conta [Vercel](https://vercel.com) (plano gratuito funciona)
 - Conta [Resend](https://resend.com) (plano gratuito = 3.000 e-mails/mês)
-- API Key do Bodygraph (já tem: `cea5ef7e-c3c9-4289-a29a-7d983d643989`)
+- API Key do Bodygraph obtida no painel da conta, guardada somente como segredo de ambiente
 - Domínio verificado no Resend (`vidaautoral.com.br`)
 
 ---
@@ -30,11 +30,7 @@ Vercel /api/submit
 
 ### 1. Gere uma nova chave no Resend
 
-⚠️ A chave anterior foi exposta no GitHub e precisa ser substituída:
-1. Acesse [resend.com/api-keys](https://resend.com/api-keys)
-2. Delete a chave antiga
-3. Clique em **Create API Key**
-4. Copie a nova chave
+Use uma chave exclusiva desta aplicação, apenas com permissão de envio e domínio restrito. Configure o valor somente nas variáveis de ambiente da Vercel, como **Secret**. Nunca copie o valor para este repositório, exemplos, logs ou mensagens. Uma chave comprometida deve ser revogada no provedor.
 
 ### 2. Suba o projeto na Vercel
 
@@ -56,7 +52,7 @@ No painel da Vercel → Settings → Environment Variables:
 | `FROM_EMAIL` | `mapa@vidaautoral.com.br` |
 | `FROM_NAME` | `Vida Autoral` |
 | `REPLY_TO` | `contato@vidaautoral.com.br` |
-| `BODYGRAPH_API_KEY` | `cea5ef7e-c3c9-4289-a29a-7d983d643989` |
+| `BODYGRAPH_API_KEY` | `CONFIGURE_NO_SERVIDOR` |
 
 Após salvar, faça um novo deploy:
 ```bash
@@ -103,3 +99,13 @@ Acesse `http://localhost:3000` e preencha o form.
 - O e-mail de confirmação é enviado antes de gerar o PDF — o lead recebe feedback imediato
 - O PDF é gerado e enviado em background sem bloquear a resposta do formulário
 - A API do Bodygraph usa o parâmetro `design=default` para retornar o SVG do gráfico
+
+## Segurança e rotação de credenciais
+
+- Exemplos contêm apenas marcadores. Nenhuma credencial real deve entrar no Git.
+- Use valores distintos em produção e ambientes de teste quando o provedor permitir.
+- Antes de rotacionar o Bodygraph, inventarie todos os projetos que usam a chave.
+- A pessoa responsável pela conta deve substituir/revogar a chave exposta no painel do Bodygraph. Se o painel não oferecer essa opção, solicitar a rotação ao suporte oficial.
+- Salve a substituta diretamente na Vercel, como Secret, e faça novos deploys dos projetos dependentes. Não cole a chave em PRs, documentação ou relatórios.
+- A remoção deste arquivo não revoga a chave nem apaga versões antigas do Git ou deploys. A rotação é obrigatória para invalidar cópias anteriores.
+- `npm run check:security` confere os arquivos antes da publicação; `npm run build` publica somente os arquivos estáticos permitidos. A checagem também roda em push e pull request, sem agenda e sem chamadas ao Bodygraph ou Resend.

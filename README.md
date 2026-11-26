@@ -45,3 +45,9 @@ Consulte o arquivo `SETUP.md` para o passo a passo completo de configuração da
 - **E-mail:** Resend
 - **Automação:** Make (ex-Integromat)
 - **Gráfico:** Bodygraph embed
+
+## Proteção de credenciais
+
+Depois de clonar o projeto, execute `npm run security:install-hook`. O hook verifica o conteúdo preparado para commit e bloqueia valores com formato de credenciais Bodygraph/Resend e arquivos de ambiente privados. `npm run check:security` e o build repetem a checagem sem consultar provedores. Pushes e pull requests executam a mesma verificação no GitHub. Marcadores dos exemplos nunca devem ser substituídos por credenciais reais.
+
+Somente os arquivos estáticos explicitamente listados em `scripts/build-static.cjs` entram em `site-output`; código servidor, documentação e exemplos não são publicados como assets. Funções em `api/` e a fonte usada pelo PDF continuam disponíveis para o backend. A exclusão de um segredo do código não invalida cópias anteriores: credenciais expostas precisam ser rotacionadas no provedor.
