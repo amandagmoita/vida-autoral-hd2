@@ -1,0 +1,8 @@
+/.env*
+/*.md
+/.git/
+/.github/
+/node_modules/
+/submit.js
+/submit*.js
+/vercelignore
