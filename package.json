@@ -6,7 +6,7 @@
     "svg-to-pdfkit": "^0.1.8"
   },
   "engines": {
-    "node": "20.x"
+    "node": "26.x"
   },
   "scripts": {
     "check:security": "node scripts/security-check.cjs",
